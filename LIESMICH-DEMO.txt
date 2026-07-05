@@ -1,0 +1,8 @@
+FlaechenKlar Browser-Demo — generiert von tool/tools/build-demo.js
+Automatisch erzeugt, NICHT von Hand editieren (Neubau ueberschreibt alles).
+
+Neu bauen : node tools/build-demo.js  (im tool/-Ordner)
+Beispielplan ersetzen: tool/tools/demo-assets/beispielplan.gfproj austauschen,
+  dann neu bauen. Format = .gfproj (ZIP mit projekt.json + PDF).
+
+NICHT ohne Freigabe deployen. Subdomain (demo.flaechenklar.de) legt Alexander an.

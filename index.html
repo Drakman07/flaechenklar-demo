@@ -85,7 +85,7 @@
       <div class="werkzeug-liste" id="werkzeugListe">
         <button type="button" class="wkz aktiv" data-werkzeug="pan" title="Plan verschieben (Standard) — Taste H">🖱 Plan</button>
         <button type="button" class="wkz"       data-werkzeug="region" title="Rechteck-Region pro Geschoss ziehen — Taste R">▭ Region</button>
-        <button type="button" class="wkz" data-werkzeug="massstab" title="Maßstab direkt eingeben (z. B. 1:100) oder zwei Punkte einer bekannten Bemaßung anklicken — Taste M">↔ Maßstab</button>
+        <button type="button" class="wkz" data-werkzeug="massstab" title="Referenzmaß messen: zwei Punkte einer bekannten Bemaßung anklicken — Taste M">↔ Maßstab</button>
         <button type="button" class="wkz" data-werkzeug="polygon" title="Außenkontur abklicken, Enter oder Doppelklick zum Schließen — Taste P">⌒ Polygon</button>
         <button type="button" class="wkz" data-werkzeug="rechteck" title="Rechteck aufziehen: erste Ecke klicken, Gegenecke klicken — Taste K">▢ Rechteck</button>
       </div>
@@ -93,6 +93,12 @@
         <input type="checkbox" id="massstabToggle" checked>
         <span>Maßstab-Linien anzeigen</span>
       </label>
+      <!-- v1.2.5-Redesign: die EINE Maßstab-Ampel (gruen gesetzt / rot fehlt /
+           gelb Widerspruch) fuer die aktive Region. Texte aus GF.massstabUi.statusText. -->
+      <div class="mass-status" id="massstabStatus" hidden>
+        <span id="massstabStatusText"></span>
+        <button type="button" class="btn btn-small" id="btnMassstabStatusMessen" hidden>Messen</button>
+      </div>
     </section>
 
     <section class="sb-section">
@@ -115,7 +121,7 @@
   <div class="mass-banner" id="massBanner" role="status" hidden>
     <span class="mass-banner-text" id="massBannerText"></span>
     <span class="mass-banner-aktionen">
-      <button type="button" class="btn btn-small" id="btnMassBannerVerwerfen">Verwerfen</button>
+      <button type="button" class="btn btn-small" id="btnMassBannerVerwerfen" title="Vorschlag verwerfen und stattdessen selbst ein Referenzmaß messen">Selbst messen</button>
       <button type="button" class="btn btn-small btn-primary" id="btnMassBannerOk">Übernehmen</button>
     </span>
   </div>
@@ -139,29 +145,9 @@
     </div>
   </div>
 
-  <!-- Maßstab-Methodenwahl (erscheint beim Aktivieren des Maßstab-Tools) -->
-  <div class="mass-eingabe" id="massstabMethode" hidden>
-    <div class="lbl">Maßstab festlegen:</div>
-    <div class="row massstab-schnell" id="massstabSchnell">
-      <button type="button" class="btn btn-small" data-massstab="50">1:50</button>
-      <button type="button" class="btn btn-small" data-massstab="100">1:100</button>
-      <button type="button" class="btn btn-small" data-massstab="200">1:200</button>
-      <button type="button" class="btn btn-small" data-massstab="500">1:500</button>
-      <button type="button" class="btn btn-small" data-massstab="1000">1:1000</button>
-    </div>
-    <div class="row">
-      <span class="einheit">oder&nbsp;&nbsp;1&nbsp;:</span>
-      <input type="text" id="massstabNInput" inputmode="numeric" placeholder="z. B. 75">
-      <button type="button" class="btn btn-primary btn-small" id="btnMassstabNOk">Übernehmen</button>
-    </div>
-    <div class="hint" id="massstabMethodeHinweis">
-      Direkteingabe nur bei maßhaltigen CAD-/Vektor-PDFs (ohne Druck/Scan-Zwischenschritt).
-    </div>
-    <div class="row massstab-trenner">
-      <button type="button" class="btn btn-small" id="btnMassstabStrecke">Strecke messen (zwei Punkte)</button>
-      <button type="button" class="btn btn-small" id="btnMassstabMethodeAbbrechen">Abbrechen</button>
-    </div>
-  </div>
+  <!-- v1.2.5-Redesign: Methodenwahl (Schnellwahl + Direkteingabe) entfernt —
+       einziger manueller Weg ist die Referenzmessung (zwei Punkte + Sollmaß).
+       Plankopf-Angaben koennen bei verzerrten/Fit-to-Page-PDFs luegen. -->
 
   <!-- Maßstab-Eingabe-Panel (erscheint nach dem 2. Klick im Maßstab-Tool) -->
   <div class="mass-eingabe" id="massEingabe" hidden>

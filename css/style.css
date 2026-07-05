@@ -183,9 +183,8 @@ body {
   background: #e5e7eb;
   color: var(--text);
 }
-.badge.vektor-hoch   { background: #d1fae5; color: var(--ok); }
-.badge.vektor-mittel { background: #fef3c7; color: var(--warn); }
-.badge.vektor-niedrig{ background: #fee2e2; color: var(--fehlt); }
+/* v1.2.5-Redesign: Badge bewusst neutral (reine PDF-Info). Die einzige
+   Ampel im Tool ist der Maßstab-Status (.mass-status / .rg-kal). */
 
 /* ===================== Workarea (Sidebar + Canvas) ===================== */
 .workarea {
@@ -328,11 +327,30 @@ body {
   white-space: nowrap;
   font-weight: 600;
 }
+/* v1.2.5-Redesign: EINE Ampel-Semantik — gruen gesetzt, gelb Widerspruch
+   ("zweites Maß empfohlen"), rot fehlt. Gleiche Palette wie .mass-status. */
 .rg-kal-ok       { background: #d1fae5; color: var(--ok); }
-.rg-kal-hinweis  { background: #fef3c7; color: var(--warn); }
-.rg-kal-warn     { background: #fee2e2; color: var(--fehlt); }
-.rg-kal-fehlt    { background: #f3f4f6; color: var(--text-muted); font-style: italic; }
-.rg-kal-direkt   { background: #e5e7eb; color: var(--text-muted); }
+.rg-kal-pruefen  { background: #fef3c7; color: var(--warn); }
+.rg-kal-fehlt    { background: #fee2e2; color: var(--fehlt); font-weight: 600; }
+
+/* Persistente Maßstab-Statusanzeige der aktiven Region (Sidebar, Werkzeug-Sektion) */
+.mass-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  line-height: 1.35;
+  font-weight: 600;
+}
+.mass-status[hidden] { display: none; }
+.mass-status span { flex: 1; min-width: 0; }
+.mass-status .btn { flex-shrink: 0; }
+.mass-status.mass-status-ok      { background: #d1fae5; color: var(--ok); }
+.mass-status.mass-status-pruefen { background: #fef3c7; color: var(--warn); }
+.mass-status.mass-status-fehlt   { background: #fee2e2; color: var(--fehlt); }
 
 .polygon-subliste {
   list-style: none;
@@ -531,18 +549,6 @@ body {
 .mass-eingabe .einheit { color: var(--text-muted); font-size: 13px; }
 .mass-eingabe .hint { color: var(--text-muted); font-size: 11px; line-height: 1.4; }
 
-/* Maßstab-Methodenwahl: Schnellbuttons + Trennlinie vor dem Zwei-Punkt-Weg */
-.mass-eingabe .massstab-schnell { flex-wrap: wrap; }
-.mass-eingabe .massstab-trenner {
-  border-top: 1px solid var(--border);
-  padding-top: 8px;
-  margin-top: 8px;
-  margin-bottom: 0;
-}
-.mass-eingabe .hint.gesperrt { color: var(--warn); font-weight: 600; }
-.mass-eingabe .hint.mittel   { color: var(--warn); }
-.mass-eingabe .hint.ok       { color: var(--ok); font-weight: 600; }
-
 /* v1.2 Politur: nicht-blockierendes Maßstab-Banner oben im canvasHost.
    Deckt den Plan nicht ab (kein Modal), Navy/Teal, parallel-tauglich. */
 .mass-banner {
@@ -569,7 +575,6 @@ body {
 .mass-banner[hidden] { display: none; }
 .mass-banner-text { flex: 1 1 200px; min-width: 0; }
 .mass-banner-aktionen { display: flex; gap: 6px; flex-shrink: 0; margin-left: auto; }
-.mass-banner.mass-banner-unsicher { border-color: var(--warn); border-left-color: var(--warn); }
 
 /* Statusbar im Canvas-Host */
 .canvas-statusbar {

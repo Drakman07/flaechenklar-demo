@@ -81,7 +81,7 @@ body {
 <header class="hb-head">
   <div>
     <h1>FlächenKlar — Benutzerhandbuch</h1>
-    <div class="hb-meta">Version 1.2.5 · Stand 2026-07-04</div>
+    <div class="hb-meta">Version 1.2.6 · Stand 2026-07-05</div>
   </div>
   <button type="button" class="hb-print-btn" onclick="window.print()">Drucken</button>
 </header>
@@ -216,60 +216,54 @@ welchem Geschoss die Region zugeordnet werden soll (nummerierte Liste,
 Nummer eintippen). Bei nur einem Geschoss erfolgt die Zuordnung automatisch.</li>
 </ol>
 <h3 id="schritt-2-maßstab-festlegen-maßstab">Schritt 2 — Maßstab festlegen (<code>↔ Maßstab</code>)</h3>
-<p>Nach dem Wählen des Werkzeugs <strong><code>↔ Maßstab</code></strong> erscheint eine Methodenwahl
-mit zwei Wegen:</p>
-<p><strong>Weg A — Maßstab direkt eingeben (für CAD-PDFs):</strong></p>
+<p>Seit dem Maßstab-Redesign (v1.2.6) gibt es genau <strong>einen manuellen Weg</strong>:
+das <strong>Referenzmaß</strong> (zwei Punkte anklicken + echte Länge eingeben). Eine
+Direkteingabe des Maßstabs (Schnell-Buttons, <code>1 : ___</code>-Feld) gibt es bewusst
+nicht mehr — ein mit „an Seite anpassen&quot; gedrucktes, verkleinertes oder als
+Sammelblatt exportiertes PDF hält den im Plankopf angegebenen Maßstab nicht
+ein, ohne dass man es ihm ansieht. Die Referenzmessung prüft die tatsächliche
+Skala des Blattes dagegen automatisch mit.</p>
+<p><strong>Referenzmaß messen:</strong></p>
 <ol>
-<li>Einen der Schnell-Buttons klicken (1:50, 1:100, 1:200, 1:500, 1:1000)
-oder einen anderen Maßstab in das Feld <code>1 : ___</code> eintragen (z. B. <code>75</code>)
-→ <strong>Übernehmen</strong>. Es zählt nur die ganze Maßstabszahl; ein Punkt oder
-Leerzeichen gilt als Tausender-Trenner (<code>1.000</code> = 1000), Kommazahlen
-werden abgelehnt.</li>
-<li>Fertig — der Maßstab gilt sofort für die aktive Region.</li>
-</ol>
-<p>Dieser Weg ist <strong>maximal genau</strong>, wenn der Bauantrag direkt aus dem
-CAD-Programm als PDF erzeugt wurde (ohne Zwischenschritt Ausdrucken und
-Einscannen). Bei erkannt gescannten Plänen ist die Direkteingabe gesperrt —
-dann Weg B nutzen. Auch ein Vektor-PDF kann mit „an Seite anpassen&quot; gedruckt,
-verkleinert oder als Sammelblatt mit mehreren Maßstäben exportiert sein —
-dann stimmt der nominelle Maßstab nicht mehr. Das Tool fängt das ab: Konnte
-es die Bemaßung im Plan lesen, gleicht es Ihre Eingabe still dagegen ab.
-Weicht der eingegebene Maßstab spürbar von der gemessenen Skala ab, meldet es
-das („Planbemaßung ergibt 1:52, eingegeben wurde 1:50&quot;) und bietet an, den
-gemessenen Maßstab zu übernehmen — empfohlen. Bestätigen dagegen genügend
-echte Maßlinien einen Norm-Maßstab (etwa 1:100), hat diese Bestätigung
-Vorrang: Ihre dazu passende Eingabe wird angenommen, ohne Fehlmeldung — auch
-bei detailreichen Plänen mit vielen Winkel- und Gradangaben (schräge Wände),
-die sonst eine falsche Messung vortäuschen könnten. Stimmen beide überein,
-bestätigt es kurz; ist keine Bemaßung lesbar, messen Sie im Zweifel ein
-bekanntes Maß zur Kontrolle nach.</p>
-<p>Die Methodenwahl meldet direkt, <strong>wie die PDF erkannt wurde</strong>: grün
-„Vektor-PDF erkannt (… %) — bei unskaliertem Export maßstabsgetreu; das Tool
-gleicht den Nennmaßstab gegen die Bemaßung ab&quot;, gelb „Gemischtes PDF erkannt
-(… %) — Direkteingabe möglich,
-im Zweifel ein bekanntes Maß nachmessen&quot; oder rot „Gescannter Plan erkannt
-(… %) — Direkteingabe nicht zuverlässig&quot; (dann gesperrt). Der Prozentwert
-ist der Vektor-Anteil der Seite und entspricht dem Vektor-Badge oben in der
-Plan-Toolbar.</p>
-<p>Schlägt die automatische Analyse einer Seite fehl, meldet das Panel
-„PDF-Analyse fehlgeschlagen — Direkteingabe nicht verfügbar&quot; und bleibt
-gesperrt; nutzen Sie dann Weg B (Strecke messen).</p>
-<p>In der Geschoss-Liste erkennen Sie hinterher, <strong>wie</strong> ein Maßstab gesetzt
-wurde: ein direkt eingegebener Maßstab erscheint neutral-grau mit dem Zusatz
-„(direkt)&quot;, ein gemessener (oder von einer Messung übernommener) in Grün. So
-sehen Sie auf einen Blick, welche Regionen geprüft sind und welche nur auf
-Ihrer Eingabe beruhen. Ein vorangestelltes ⇆ markiert übernommene Maßstäbe.</p>
-<p><strong>Weg B — Strecke messen (zwei Punkte, immer möglich):</strong></p>
-<ol>
-<li>In der Methodenwahl <strong>„Strecke messen (zwei Punkte)&quot;</strong> klicken.</li>
+<li>Werkzeug <strong><code>↔ Maßstab</code></strong> wählen (Taste <code>M</code>) — oder einfach dem Tool
+folgen: Nach dem Aufziehen einer Region ohne sicher erkannten Maßstab
+springt es von selbst in die Messung („Klick auf den ERSTEN Punkt einer
+bekannten Bemaßung.&quot;).</li>
 <li>Eine Bemaßungsstrecke im Plan suchen, deren echte Länge bekannt ist
 (z. B. eine Wand mit Maßeintrag „11,20 m&quot;).</li>
-<li>Die zwei Endpunkte der bekannten Strecke nacheinander anklicken.</li>
+<li>Die zwei Endpunkte der bekannten Strecke nacheinander anklicken
+(die Linie rastet bei 90°/0° ein, Shift zeichnet frei).</li>
 <li>Im erscheinenden Eingabefeld die echte Länge in Metern eintragen
-(z. B. <code>11,20</code>) → OK.</li>
-<li>Das Tool prüft die Plausibilität (passt zu 1:50 / 1:100 / 1:200?) und
-speichert den Maßstab für diese Region.</li>
+(z. B. <code>11,20</code>) → OK. Der Maßstab gilt für diese Region.</li>
 </ol>
+<p><strong>Automatische Erkennung — nur bei harter Beweislage:</strong></p>
+<p>Nach dem Aufziehen einer Region liest das Tool die Planbemaßung. <strong>Nur</strong>
+wenn die Beweislage streng geprüft eindeutig ist (mindestens fünf
+unabhängige Bemaßungen bestätigen exakt denselben Norm-Maßstab, kein
+konkurrierender Kandidat, keine widersprechende Mess-Skala), erscheint oben
+ein Banner mit der Beweislage: <em>„Maßstab 1:100 erkannt — 6 Bemaßungen
+bestätigen, Abweichung 0,4 %. Für Region „EG&quot; übernehmen?&quot;</em> Übernommen wird
+<strong>ausschließlich per Klick</strong> — das Tool setzt nie von allein einen Maßstab.
+<strong>„Selbst messen&quot;</strong> verwirft den Vorschlag und startet direkt die
+Referenzmessung. Besteht auch nur ein Rest Zweifel, kommt <strong>kein</strong> Banner —
+das Tool wechselt dann direkt ins Messwerkzeug.</p>
+<p><strong>Die Maßstab-Ampel:</strong></p>
+<p>Links in der Sidebar (und als Pille an jeder Region in der Geschoss-Liste)
+zeigt genau <strong>eine</strong> Ampel den Maßstab-Stand der aktiven Region:</p>
+<ul>
+<li><strong>Grün</strong> — Maßstab gesetzt (selbst gemessen oder bewusst aus dem Banner
+übernommen).</li>
+<li><strong>Rot</strong> — Maßstab fehlt. Polygon-Zeichnen bleibt gesperrt, bis gemessen
+ist; der Knopf <strong>„Messen&quot;</strong> springt direkt ins Werkzeug.</li>
+<li><strong>Gelb</strong> — Sonderfall: Maßstab ist gesetzt, aber die sicher gelesene
+Planbemaßung weicht mehr als 3 % von Ihrer Messung ab → <em>„Zweites Maß
+empfohlen&quot;</em>. Ihre Messung bleibt dabei der gültige Wert (vielleicht IST
+das PDF verzerrt) — das Gelb ist eine Kontroll-Erinnerung, kein Fehler.</li>
+</ul>
+<p>Ein vorangestelltes ⇆ markiert übernommene Maßstäbe. Der Badge
+<strong>„Vektor … %&quot;</strong> oben in der Plan-Toolbar ist reine PDF-Information
+(Vektor-PDF vs. Scan) und absichtlich neutral grau — er sagt nichts über
+den Maßstab aus.</p>
 <p>Pro Geschoss reicht <strong>eine</strong> Kalibrierung — alle nachfolgenden Polygone in
 derselben Region nutzen diesen Maßstab automatisch. Die Kalibrierungs-Linie
 bleibt sichtbar; mit dem Toggle <strong>„Maßstab-Linien anzeigen&quot;</strong> oben kann man
