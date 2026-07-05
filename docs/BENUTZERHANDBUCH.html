@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>FlaechenKlar - Benutzerhandbuch</title>
+<style>
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #1f2a37;
+  background: #f7f8fa;
+}
+.hb-head {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: #003399;
+  color: #fff;
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+.hb-head h1 { margin: 0; font-size: 18px; font-weight: 600; }
+.hb-meta { font-size: 12px; opacity: 0.85; margin-left: 16px; }
+.hb-print-btn {
+  background: #fff;
+  color: #003399;
+  border: 1px solid #fff;
+  border-radius: 4px;
+  padding: 6px 14px;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+.hb-print-btn:hover { background: #e6ecf7; }
+.hb-main {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 24px;
+  background: #fff;
+  min-height: calc(100vh - 56px);
+  box-shadow: 0 0 12px rgba(0,0,0,0.04);
+}
+.hb-main h1 { color: #003399; font-size: 26px; border-bottom: 2px solid #003399; padding-bottom: 6px; margin-top: 0; }
+.hb-main h2 { color: #003399; font-size: 20px; margin-top: 32px; padding-top: 12px; border-top: 1px solid #d8dde4; }
+.hb-main h3 { color: #00224d; font-size: 16px; margin-top: 20px; }
+.hb-main p { margin: 10px 0; }
+.hb-main ul, .hb-main ol { padding-left: 22px; }
+.hb-main li { margin: 4px 0; }
+.hb-main code { background: #eef1f6; padding: 1px 5px; border-radius: 3px; font-family: 'Consolas', monospace; font-size: 13px; }
+.hb-main strong { color: #00224d; }
+.hb-main a { color: #003399; }
+.hb-toc {
+  background: #f0f3f8;
+  border: 1px solid #d8dde4;
+  border-radius: 4px;
+  padding: 10px 14px;
+  margin-bottom: 24px;
+}
+.hb-toc summary { cursor: pointer; font-weight: 600; color: #003399; }
+.hb-toc ol { margin: 8px 0 4px 0; padding-left: 22px; }
+.hb-toc li { margin: 2px 0; }
+.hb-toc a { color: #1f2a37; text-decoration: none; }
+.hb-toc a:hover { text-decoration: underline; color: #003399; }
+@media print {
+  body { background: #fff; color: #000; font-size: 12pt; }
+  .hb-head, .hb-print-btn, .hb-toc { display: none !important; }
+  .hb-main { max-width: none; margin: 0; padding: 0; box-shadow: none; }
+  .hb-main h1, .hb-main h2, .hb-main h3 { color: #000; border-color: #000; }
+  .hb-main a { color: #000; text-decoration: none; }
+  .hb-main code { background: #eee; }
+}
+</style>
+</head>
+<body>
+<header class="hb-head">
+  <div>
+    <h1>FlächenKlar — Benutzerhandbuch</h1>
+    <div class="hb-meta">Version 1.2.5 · Stand 2026-07-04</div>
+  </div>
+  <button type="button" class="hb-print-btn" onclick="window.print()">Drucken</button>
+</header>
+<main class="hb-main">
+<h1 id="benutzerhandbuch-flächenklar">Benutzerhandbuch — FlächenKlar</h1>
+<p><strong>Version:</strong> 1.2.4
+<strong>Stand:</strong> 2026-07-02</p>
+<hr>
+<h2 id="inhalt">Inhalt</h2>
+<ol>
+<li><a href="#1-%C3%BCber-das-tool">Über das Tool</a></li>
+<li><a href="#2-installation-und-start">Installation und Start</a></li>
+<li><a href="#3-erste-schritte-bauantrags-pdf-importieren">Erste Schritte: Bauantrags-PDF importieren</a></li>
+<li><a href="#4-projektdaten-erfassen">Projektdaten erfassen</a></li>
+<li><a href="#5-geschosse-anlegen">Geschosse anlegen</a></li>
+<li><a href="#6-ma%C3%9Fstab-kalibrieren">Maßstab kalibrieren</a></li>
+<li><a href="#7-au%C3%9Fenkontur-als-polygon-zeichnen">Außenkontur als Polygon zeichnen</a></li>
+<li><a href="#8-manuelle-korrekturen">Manuelle Korrekturen</a></li>
+<li><a href="#9-vollgeschoss-beurteilung">Vollgeschoss-Beurteilung</a></li>
+<li><a href="#10-aufma%C3%9Fprotokoll-als-pdf-exportieren">Aufmaßprotokoll als PDF exportieren</a></li>
+<li><a href="#11-projekt-speichern-und-wieder-%C3%B6ffnen">Projekt speichern und wieder öffnen</a></li>
+<li><a href="#12-lizenz-und-updates">Lizenz und Updates</a></li>
+<li><a href="#13-hilfe-men%C3%BC-und-diagnose-bericht">Hilfe-Menü und Diagnose-Bericht</a></li>
+<li><a href="#14-tastatur-shortcuts">Tastatur-Shortcuts</a></li>
+<li><a href="#15-h%C3%A4ufige-fragen">Häufige Fragen</a></li>
+</ol>
+<hr>
+<h2 id="1-über-das-tool">1. Über das Tool</h2>
+<p>FlächenKlar ermittelt <strong>Geschossflächen aus digitalen Bauantrags-PDFs</strong> und erzeugt
+daraus ein nachvollziehbares Aufmaßprotokoll als PDF. Es ist die Berechnungsgrundlage
+für den Herstellungsbeitrag nach Art. 5 KAG Bayern. Die Vollgeschoss-Beurteilung
+nach Art. 83 Abs. 7 BayBO ist integriert.</p>
+<h3 id="was-das-tool-tut">Was das Tool tut</h3>
+<ul>
+<li>PDF des Bauantrags einlesen, Plan im Browser anzeigen, Seiten zoomen</li>
+<li>Maßstab manuell aus dem Plan kalibrieren</li>
+<li>Außenkonturen pro Geschoss durch Klick-Polygone abnehmen</li>
+<li>Flächen automatisch berechnen, Kanten und Eckpunkte manuell nachjustieren</li>
+<li>Vollgeschoss-Beurteilung mit Live-Diagrammen</li>
+<li>Aufmaßprotokoll als druckfertiges PDF mit Deckblatt, Berechnungsdarstellung
+und VG-Beurteilungsblättern</li>
+</ul>
+<h3 id="was-das-tool-bewusst-nicht-tut">Was das Tool bewusst NICHT tut</h3>
+<ul>
+<li>Keine Beitragsberechnung in Euro (Satzungsanwendung bleibt bei der Behörde)</li>
+<li>Keine automatische Erkennung von Konturen aus dem Plan (Maus klickt, nicht KI)</li>
+<li>Keine Cloud, keine Online-Verarbeitung — alles bleibt offline auf dem PC</li>
+<li>Keine Verarbeitung von Schrägbildern oder Fotos (nur orthogonale Grundrisse)</li>
+</ul>
+<hr>
+<h2 id="2-installation-und-start">2. Installation und Start</h2>
+<h3 id="voraussetzungen">Voraussetzungen</h3>
+<ul>
+<li>Windows-PC mit Browser: <strong>Firefox 90+</strong> (empfohlen), Edge 100+ oder Chrome 100+</li>
+<li>Keine Adminrechte nötig</li>
+<li>Keine Internet-Verbindung zum Arbeiten erforderlich (nur für „Auf Updates prüfen&quot;)</li>
+</ul>
+<h3 id="installation">Installation</h3>
+<ol>
+<li>Den vom Anbieter erhaltenen ZIP-Ordner an einen festen Ort entpacken
+(z. B. <code>C:\Programme\FlaechenKlar\</code> oder einen Ordner auf dem Netzlaufwerk).</li>
+<li>Lizenz-Datei <code>data/lizenz.js</code> einspielen — wird mit der Lizenzbestellung mitgeliefert.</li>
+<li><strong>Doppelklick auf <code>index.html</code></strong> — der Standardbrowser öffnet das Tool.</li>
+</ol>
+<p>Ohne <code>data/lizenz.js</code> startet das Tool als <strong>14-Tage-Demo</strong>. Demo-PDFs tragen
+ein diagonales Wasserzeichen.</p>
+<h3 id="erstkontrolle-nach-dem-start">Erstkontrolle nach dem Start</h3>
+<p>Unten links steht eine Status-Zeile: <code>Libs: pdf.js:✓ · jsPDF:✓ · fflate:✓</code>.
+Wenn dort statt <code>✓</code> ein <code>✗</code> erscheint, fehlt eine Hilfsbibliothek im <code>lib/</code>-Ordner —
+in diesem Fall den Anbieter kontaktieren.</p>
+<hr>
+<h2 id="3-erste-schritte-bauantrags-pdf-importieren">3. Erste Schritte: Bauantrags-PDF importieren</h2>
+<p>Der erste Arbeitsschritt ist immer das Laden eines Bauantragsplans. Erst danach
+werden die übrigen Werkzeuge (Projektdaten, Maßstab, Polygon, Aufmaßprotokoll)
+aktiv — vorher sind sie ausgegraut.</p>
+<ol>
+<li>In der Plan-Werkzeugleiste oberhalb des Plan-Bereichs <strong>„PDF laden&quot;</strong> klicken
+(oder mehrere PDFs nacheinander).</li>
+<li>Datei auswählen — der Plan erscheint im Hauptbereich.</li>
+<li>Bei mehreren PDFs oder mehreren Seiten oben mit den <code>‹</code> / <code>›</code>-Knöpfen
+navigieren. Aktuelle Seite wird angezeigt.</li>
+<li>Mit <code>+</code> / <code>−</code> zoomen oder <strong>Fit</strong> für Seite einpassen.</li>
+</ol>
+<p>Mehrere PDFs sind erlaubt — typischer Fall: ein PDF mit dem Grundriss DG, ein
+zweites mit OG. Beide werden im selben Projekt verwaltet.</p>
+<hr>
+<h2 id="4-projektdaten-erfassen">4. Projektdaten erfassen</h2>
+<p>Sobald mindestens ein PDF geladen ist, wird der <strong>„Projektdaten&quot;</strong>-Knopf in der
+Werkzeugleiste oben aktiv. Diese Daten landen später auf dem Deckblatt des
+Aufmaßprotokolls und im Datei-Header des gespeicherten Projekts.</p>
+<ol>
+<li>Oben in der Werkzeugleiste <strong>„Projektdaten&quot;</strong> klicken.</li>
+<li>Im Modal mindestens diese Felder ausfüllen:<ul>
+<li><strong>Projektname</strong> (taucht im Datei-Namen des Aufmaßprotokolls auf)</li>
+<li><strong>Bauvorhaben</strong> (Kurztext, z. B. „EFH mit Doppelgarage&quot;)</li>
+<li><strong>Bauort</strong> (Straße, PLZ, Ort)</li>
+<li><strong>Flurnummer</strong> und <strong>Gemarkung</strong></li>
+<li><strong>Bauherr</strong> (Name + Anschrift)</li>
+<li><strong>Sachbearbeiter</strong> (Ihr Name)</li>
+</ul>
+</li>
+<li>„Übernehmen&quot;.</li>
+</ol>
+<p>Die Projektdaten können jederzeit per <strong>„Projektdaten&quot;</strong> wieder bearbeitet werden.</p>
+<hr>
+<h2 id="5-geschosse-anlegen">5. Geschosse anlegen</h2>
+<ol>
+<li>In der Sidebar rechts gibt es die Geschoss-Liste.</li>
+<li>Mit dem <code>+</code>-Knopf neben „Geschosse&quot; ein neues Geschoss anlegen.</li>
+<li>Bezeichnung eintragen — üblich: <code>KG</code>, <code>EG</code>, <code>OG</code>, <code>DG</code>.</li>
+<li>Reihenfolge im Aufmaßprotokoll wird über die Anlage-Reihenfolge bestimmt;
+bei Bedarf neu sortieren, indem du Geschosse in der gewünschten
+Reihenfolge neu anlegst.</li>
+</ol>
+<p>Jedes Geschoss kann <strong>mehrere Polygone</strong> halten (z. B. Hauptgebäude + separates
+Garagengebäude im selben Geschoss). Die Region-Zuordnung geschieht im
+Plan-Region-Schritt (siehe 6.1) — Geschosse selbst müssen nicht extra
+„aktiviert&quot; werden, das passiert über die zugeordnete Region automatisch.</p>
+<hr>
+<h2 id="6-maßstab-kalibrieren">6. Maßstab kalibrieren</h2>
+<p>Damit Flächen in echten Quadratmetern herauskommen, muss der Plan einmal
+kalibriert werden. Das macht man <strong>pro Plan-Region</strong> (= ein abgegrenzter
+Bereich auf einer PDF-Seite, der zu einem Geschoss gehört). Dafür gibt es
+<strong>zwei aufeinander folgende Werkzeuge</strong> in der Plan-Toolbar.</p>
+<h3 id="schritt-1-region-aufziehen-region">Schritt 1 — Region aufziehen (<code>▭ Region</code>)</h3>
+<ol>
+<li>Werkzeug <strong><code>▭ Region</code></strong> wählen.</li>
+<li>Mit der Maus ein Rechteck um den Geschoss-Bereich auf der Seite ziehen
+(umfasst den späteren Polygon-Zeichenbereich).</li>
+<li>Falls <strong>mehrere Geschosse</strong> vorhanden sind: das Tool fragt per Dialog,
+welchem Geschoss die Region zugeordnet werden soll (nummerierte Liste,
+Nummer eintippen). Bei nur einem Geschoss erfolgt die Zuordnung automatisch.</li>
+</ol>
+<h3 id="schritt-2-maßstab-festlegen-maßstab">Schritt 2 — Maßstab festlegen (<code>↔ Maßstab</code>)</h3>
+<p>Nach dem Wählen des Werkzeugs <strong><code>↔ Maßstab</code></strong> erscheint eine Methodenwahl
+mit zwei Wegen:</p>
+<p><strong>Weg A — Maßstab direkt eingeben (für CAD-PDFs):</strong></p>
+<ol>
+<li>Einen der Schnell-Buttons klicken (1:50, 1:100, 1:200, 1:500, 1:1000)
+oder einen anderen Maßstab in das Feld <code>1 : ___</code> eintragen (z. B. <code>75</code>)
+→ <strong>Übernehmen</strong>. Es zählt nur die ganze Maßstabszahl; ein Punkt oder
+Leerzeichen gilt als Tausender-Trenner (<code>1.000</code> = 1000), Kommazahlen
+werden abgelehnt.</li>
+<li>Fertig — der Maßstab gilt sofort für die aktive Region.</li>
+</ol>
+<p>Dieser Weg ist <strong>maximal genau</strong>, wenn der Bauantrag direkt aus dem
+CAD-Programm als PDF erzeugt wurde (ohne Zwischenschritt Ausdrucken und
+Einscannen). Bei erkannt gescannten Plänen ist die Direkteingabe gesperrt —
+dann Weg B nutzen. Auch ein Vektor-PDF kann mit „an Seite anpassen&quot; gedruckt,
+verkleinert oder als Sammelblatt mit mehreren Maßstäben exportiert sein —
+dann stimmt der nominelle Maßstab nicht mehr. Das Tool fängt das ab: Konnte
+es die Bemaßung im Plan lesen, gleicht es Ihre Eingabe still dagegen ab.
+Weicht der eingegebene Maßstab spürbar von der gemessenen Skala ab, meldet es
+das („Planbemaßung ergibt 1:52, eingegeben wurde 1:50&quot;) und bietet an, den
+gemessenen Maßstab zu übernehmen — empfohlen. Bestätigen dagegen genügend
+echte Maßlinien einen Norm-Maßstab (etwa 1:100), hat diese Bestätigung
+Vorrang: Ihre dazu passende Eingabe wird angenommen, ohne Fehlmeldung — auch
+bei detailreichen Plänen mit vielen Winkel- und Gradangaben (schräge Wände),
+die sonst eine falsche Messung vortäuschen könnten. Stimmen beide überein,
+bestätigt es kurz; ist keine Bemaßung lesbar, messen Sie im Zweifel ein
+bekanntes Maß zur Kontrolle nach.</p>
+<p>Die Methodenwahl meldet direkt, <strong>wie die PDF erkannt wurde</strong>: grün
+„Vektor-PDF erkannt (… %) — bei unskaliertem Export maßstabsgetreu; das Tool
+gleicht den Nennmaßstab gegen die Bemaßung ab&quot;, gelb „Gemischtes PDF erkannt
+(… %) — Direkteingabe möglich,
+im Zweifel ein bekanntes Maß nachmessen&quot; oder rot „Gescannter Plan erkannt
+(… %) — Direkteingabe nicht zuverlässig&quot; (dann gesperrt). Der Prozentwert
+ist der Vektor-Anteil der Seite und entspricht dem Vektor-Badge oben in der
+Plan-Toolbar.</p>
+<p>Schlägt die automatische Analyse einer Seite fehl, meldet das Panel
+„PDF-Analyse fehlgeschlagen — Direkteingabe nicht verfügbar&quot; und bleibt
+gesperrt; nutzen Sie dann Weg B (Strecke messen).</p>
+<p>In der Geschoss-Liste erkennen Sie hinterher, <strong>wie</strong> ein Maßstab gesetzt
+wurde: ein direkt eingegebener Maßstab erscheint neutral-grau mit dem Zusatz
+„(direkt)&quot;, ein gemessener (oder von einer Messung übernommener) in Grün. So
+sehen Sie auf einen Blick, welche Regionen geprüft sind und welche nur auf
+Ihrer Eingabe beruhen. Ein vorangestelltes ⇆ markiert übernommene Maßstäbe.</p>
+<p><strong>Weg B — Strecke messen (zwei Punkte, immer möglich):</strong></p>
+<ol>
+<li>In der Methodenwahl <strong>„Strecke messen (zwei Punkte)&quot;</strong> klicken.</li>
+<li>Eine Bemaßungsstrecke im Plan suchen, deren echte Länge bekannt ist
+(z. B. eine Wand mit Maßeintrag „11,20 m&quot;).</li>
+<li>Die zwei Endpunkte der bekannten Strecke nacheinander anklicken.</li>
+<li>Im erscheinenden Eingabefeld die echte Länge in Metern eintragen
+(z. B. <code>11,20</code>) → OK.</li>
+<li>Das Tool prüft die Plausibilität (passt zu 1:50 / 1:100 / 1:200?) und
+speichert den Maßstab für diese Region.</li>
+</ol>
+<p>Pro Geschoss reicht <strong>eine</strong> Kalibrierung — alle nachfolgenden Polygone in
+derselben Region nutzen diesen Maßstab automatisch. Die Kalibrierungs-Linie
+bleibt sichtbar; mit dem Toggle <strong>„Maßstab-Linien anzeigen&quot;</strong> oben kann man
+sie zur Übersichtlichkeit ausblenden, ohne dass die Kalibrierung verloren geht.</p>
+<blockquote>
+<p><strong>Tipp:</strong> Die längste verfügbare Bemaßung wählen — je länger die Referenz,
+desto kleiner der relative Fehler.</p>
+</blockquote>
+<blockquote>
+<p><strong>Genauigkeit:</strong> Bei der Eingabe akzeptiert FlächenKlar bis zu <strong>drei
+Nachkommastellen</strong> (z. B. <code>1,234 m</code>); intern werden Werte mit dieser
+Präzision gespeichert. Die Anzeige im Tool und im Aufmaßprotokoll wird
+zur besseren Lesbarkeit auf <strong>zwei Nachkommastellen</strong> mathematisch
+gerundet (1–4 ab, 5–9 auf). Beim manuellen Nachbearbeiten eines Werts
+steht im Eingabefeld der volle gespeicherte Wert — so geht keine
+Präzision verloren.</p>
+</blockquote>
+<hr>
+<h2 id="7-außenkontur-als-polygon-zeichnen">7. Außenkontur als Polygon zeichnen</h2>
+<ol>
+<li>In der Plan-Toolbar <strong>„Polygon&quot;</strong> als Werkzeug wählen.</li>
+<li>Reihum die Eckpunkte der Außenkontur anklicken — das Tool verbindet sie
+mit Linien.</li>
+<li><strong>Snap-Hilfen</strong> sind automatisch aktiv:<ul>
+<li>Vektor-Endpunkte aus dem PDF werden angeknüpft (grünes Halo)</li>
+<li>90°-Winkel werden eingefangen</li>
+</ul>
+</li>
+<li>Polygon schließen geht auf drei Arten:<ul>
+<li><strong>Doppelklick</strong> auf den letzten Eckpunkt (am einfachsten)</li>
+<li><strong>Startpunkt nochmal anklicken</strong> (Polygon schnappt zu)</li>
+<li><strong><code>Enter</code></strong> drücken</li>
+</ul>
+</li>
+<li>Optional Bezeichnung eintragen (z. B. „Hauptgebäude&quot;).</li>
+</ol>
+<p>Die berechnete Fläche erscheint sofort in der Sidebar neben dem Polygon.</p>
+<h3 id="polygon-abbrechen">Polygon abbrechen</h3>
+<p><code>ESC</code> während des Zeichnens → der letzte gesetzte Punkt fliegt zurück. Mehrfaches
+<code>ESC</code> baut Schritt für Schritt zurück, bis kein offenes Polygon mehr existiert.</p>
+<hr>
+<h2 id="8-manuelle-korrekturen">8. Manuelle Korrekturen</h2>
+<p>Drei Wege, ein Polygon nachträglich zu justieren:</p>
+<h3 id="8-1-eckpunkt-verschieben">8.1 Eckpunkt verschieben</h3>
+<p>Auf einen Eckpunkt klicken und ziehen — die anliegenden Kanten passen sich an.
+Snap-Hilfen sind aktiv.</p>
+<h3 id="8-2-kantenmaß-editieren">8.2 Kantenmaß editieren</h3>
+<p>Auf eine Kante doppelklicken → ein kleiner Editor erscheint mit dem
+gemessenen Maß. Wert in Metern eingeben (Komma erlaubt: <code>8,92</code>) und „OK&quot;.
+Die Kante wird auf dieses Maß gestreckt; der Eckpunkt am Ende verschiebt sich
+entlang der Kantenrichtung. Die Fläche wird aus der neuen Geometrie neu
+berechnet.</p>
+<h3 id="8-3-fläche-überschreiben">8.3 Fläche überschreiben</h3>
+<p>Wenn die mathematisch ermittelte Polygon-Fläche aus der Geometrie nicht das ist,
+was angesetzt werden soll (z. B. Rundungs-Vorschrift der Satzung):</p>
+<ol>
+<li>Beim Polygon in der Sidebar das Bleistift-Symbol klicken.</li>
+<li>Im Modal die <strong>angesetzte Fläche</strong> in m² eingeben und eine <strong>Begründung</strong>
+(Pflichtfeld — wird gespeichert und im CSV-/JSON-Export ausgegeben).</li>
+<li>„OK&quot;.</li>
+</ol>
+<p>Das Polygon zeigt jetzt im Tool einen <strong>„manuelle Korrektur&quot;</strong>-Hinweis (orange
+Markierung) und nutzt die überschriebene Fläche, nicht die berechnete. „Zurück
+auf Gemessen&quot; hebt die Korrektur auf. Im Aufmaßprotokoll erscheint nur noch der
+angesetzte Wert, ohne Korrektur-Vermerk.</p>
+<hr>
+<h2 id="9-vollgeschoss-beurteilung">9. Vollgeschoss-Beurteilung</h2>
+<p><strong>Wann anwenden:</strong> Üblicherweise nur für das oberste Geschoss (meist DG), bei
+dem zu prüfen ist, ob mindestens <strong>zwei Drittel der Geschossfläche</strong> eine lichte
+Höhe von <strong>≥ 2,30 m</strong> aufweisen (Art. 83 Abs. 7 BayBO).</p>
+<h3 id="9-1-modal-öffnen">9.1 Modal öffnen</h3>
+<p>In der Sidebar beim betreffenden Geschoss auf <strong>„VG-Berechnung&quot;</strong> klicken
+(Knopf erscheint bei jedem Geschoss; bei DG hervorgehoben). Es öffnet sich
+ein großes zweispaltiges Modal: links die Eingaben, rechts die Diagramme.</p>
+<p>Das Modal lässt sich am Kopf <strong>verschieben</strong> (per Maus-Drag) und über den
+<code>−</code>-Knopf <strong>minimieren</strong>, damit du parallel auf den Plan schauen kannst.</p>
+<h3 id="9-2-eingaben-alles-aus-dem-schnitt-plan-ablesen">9.2 Eingaben (alles aus dem Schnitt-Plan ablesen)</h3>
+<table>
+<thead>
+<tr>
+<th>Feld</th>
+<th>Was eintragen</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Breite L_B</td>
+<td>Quer-Maß des Gebäudes (m)</td>
+</tr>
+<tr>
+<td>Länge L_L</td>
+<td>Längs-Maß des Gebäudes (m)</td>
+</tr>
+<tr>
+<td>Kniestock links h_KL</td>
+<td>Höhe der Außenwand bis Dachansatz, linke Traufseite (m)</td>
+</tr>
+<tr>
+<td>Kniestock rechts h_KR</td>
+<td>Höhe der Außenwand bis Dachansatz, rechte Traufseite (m)</td>
+</tr>
+<tr>
+<td>Dachneigung links α_L</td>
+<td>Dachschräge links (°)</td>
+</tr>
+<tr>
+<td>Dachneigung rechts α_R</td>
+<td>Dachschräge rechts (°)</td>
+</tr>
+<tr>
+<td>Gauben links</td>
+<td>Pro Gaube: Breite <code>b</code>, Trauf-Abstand <code>a</code>, optional Ortgang</td>
+</tr>
+<tr>
+<td>Gauben rechts</td>
+<td>analog</td>
+</tr>
+<tr>
+<td>A_kleiner</td>
+<td>Abzug, falls Flächen aus der Grundfläche herauszunehmen sind, die unter 2,30 m liegen aber nicht aus der Geometrie folgen (m²)</td>
+</tr>
+<tr>
+<td>A_größer</td>
+<td>Abzug, falls Flächen über 2,30 m fälschlich angesetzt würden (m²)</td>
+</tr>
+<tr>
+<td>Grenzhöhe</td>
+<td>Lichte Höhe, ab der die DG-Fläche laut <strong>kommunaler Satzung</strong> angerechnet wird (m). Standard <strong>2,30</strong> — nur ändern, wenn die eigene Satzung abweicht (z. B. 1,50 m). Gilt <strong>projektweit</strong> für alle Geschosse.</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p><strong>Wichtig zur Grenzhöhe:</strong> Sie beeinflusst nur die <strong>anrechenbare Fläche</strong>
+für das Aufmaßblatt (anteilige Anrechnung). Die Vollgeschoss-Beurteilung
+selbst (2/3-Regel) rechnet immer mit <strong>2,30 m</strong> nach Art. 83 Abs. 7 BayBO —
+egal was hier eingetragen ist. Wird die Grenzhöhe geändert und gespeichert,
+rechnet das Tool alle bereits gespeicherten VG-Berechnungen des Projekts
+automatisch nach (Hinweis erscheint als Meldung).</p>
+</blockquote>
+<blockquote>
+<p><strong>Tipp:</strong> Symmetrische Dächer? Dann sind <code>h_KL</code> und <code>h_KR</code> identisch — kann
+man einfach übernehmen. Bei unsymmetrischen Pultdächern oder versetzten
+Kniestöcken die Werte getrennt eintragen.</p>
+</blockquote>
+<h3 id="9-3-diagramme-verstehen-rechts-im-modal">9.3 Diagramme verstehen (rechts im Modal)</h3>
+<ul>
+<li><strong>Querschnitt</strong> zeigt das Dachprofil mit Kniestöcken und der 2,30-m-Linie.
+Weicht die Anrechnungs-Grenzhöhe von 2,30 m ab, erscheint zusätzlich eine
+zweite (türkise) Linie mit eigener Schraffur für die anrechenbare Zone.</li>
+<li><strong>Grundriss</strong> zeigt von oben das Gebäude mit der schraffierten Zone, die
+<em>unter</em> 2,30 m liegt (= zählt nicht für die Vollgeschoss-Schwelle).</li>
+<li><strong>Aufriss links / rechts</strong> zeigt die Traufseiten mit Gauben.</li>
+</ul>
+<p>Alle Diagramme aktualisieren sich live mit jeder Eingabe (Verzögerung ~300 ms).</p>
+<h3 id="9-4-vergleichs-polygon">9.4 Vergleichs-Polygon</h3>
+<p>Oben im Modal ein Dropdown: <strong>„Vergleichs-Polygon&quot;</strong>. Hier wählst du das
+Polygon, dessen Fläche als <code>A_G</code> (Geschoss-Grundfläche) angesetzt wird.</p>
+<ul>
+<li>Bei mehreren Polygonen im Geschoss: das größte ist Default, du kannst
+wechseln.</li>
+<li><code>A_G</code> wird <strong>immer aus dem Polygon</strong> übernommen, nicht aus L_B × L_L.
+Damit ist die Geschossfläche im Aufmaßblatt und im VG-Beurteilungsblatt
+identisch.</li>
+<li>Falls <code>L_B × L_L</code> und Polygonfläche um mehr als 5 % auseinanderliegen,
+erscheint eine gelbe Plausi-Warnung — meistens ein Hinweis auf Tippfehler
+bei den VG-Eingaben.</li>
+</ul>
+<h3 id="9-5-ergebnis-pille">9.5 Ergebnis-Pille</h3>
+<p>Unten rechts im Modal:</p>
+<ul>
+<li><strong>Grün „Ist Vollgeschoss&quot;</strong> → mindestens 2/3 der Grundfläche haben ≥ 2,30 m.</li>
+<li><strong>Rot „Kein Vollgeschoss&quot;</strong> → unter 2/3.</li>
+</ul>
+<p>Zusätzlich werden gezeigt: <code>A_G</code>, <code>A_{2,30}</code> (Fläche mit lichter Höhe ≥ 2,30 m),
+<code>2/3-Schwelle</code> und der prozentuale Anteil. Bei abweichender Anrechnungs-
+Grenzhöhe kommt eine weitere Zeile mit der <strong>anrechenbaren Fläche</strong>
+(z. B. „A ≥ 1,50 m&quot;) dazu.</p>
+<p><strong>Fläche ≥ 2,30 m von Hand korrigieren:</strong> Stimmt der errechnete Wert
+<code>A ≥ 2,30 m</code> um Zentimeter nicht mit dem Plan überein, lässt er sich direkt
+korrigieren — analog zur Flächenkorrektur beim Polygon. Auf das Bleistift-Symbol
+(✎) neben dem Wert klicken, den korrigierten Wert in m² eingeben und mit „✓&quot;
+übernehmen. Der korrigierte Wert ist dann maßgeblich: Anteil, das Ja/Nein-Urteil
+und die anrechenbare Fläche rechnen damit; der errechnete Ausgangswert bleibt
+intern erhalten. Mit „↺&quot; geht es zurück auf den errechneten Wert. <strong>Ändert man
+danach eine Eingabe (Maße, Kniestock, Gauben …), verfällt die Korrektur
+automatisch</strong> — sie ist immer der letzte Feinschliff auf der aktuellen Geometrie.</p>
+<h3 id="9-6-speichern-und-schließen">9.6 Speichern und Schließen</h3>
+<ul>
+<li><strong>„Speichern&quot;</strong> legt die Berechnung am Geschoss ab.</li>
+<li><strong>„Abbrechen&quot;</strong> verwirft die Änderungen.</li>
+<li>Optional kann ein <strong>Kommentar</strong> mit eingetragen werden — landet im Protokoll.</li>
+</ul>
+<h3 id="9-7-vg-berechnung-wieder-entfernen">9.7 VG-Berechnung wieder entfernen</h3>
+<p>Wenn ein Geschoss doch keine Vollgeschoss-Beurteilung braucht (z. B.
+nachträglich klar geworden, dass es kein Vollgeschoss-Kandidat ist),
+gibt es <strong>zwei Wege</strong>, die bereits gespeicherte VG-Berechnung wieder
+loszuwerden:</p>
+<ol>
+<li><p><strong>Roter „VG-Berechnung löschen&quot;-Button im Modal-Footer</strong> (links unten).
+Eine Sicherheitsabfrage erscheint — bei „OK&quot; wird die VG-Berechnung
+am Geschoss entfernt, das Modal schließt sich, die Sidebar wird
+aktualisiert.</p>
+</li>
+<li><p><strong>Alle Eingabefelder leerräumen und auf „Speichern&quot; klicken.</strong>
+Wenn alle Pflichtfelder (L_B, L_L, Höhen, Winkel) und Gauben-Listen
+leer sind, interpretiert das Tool das als „VG-Berechnung entfernen&quot;
+und zeigt dieselbe Sicherheitsabfrage. Das ist die intuitive Geste,
+wenn man das Modal schon offen hat und merkt, dass man die Berechnung
+doch nicht braucht.</p>
+</li>
+</ol>
+<p>Bei beiden Wegen kann man die Löschung über „Abbrechen&quot; im Sicherheits-
+Dialog zurücknehmen, bevor sie ausgeführt wird.</p>
+<hr>
+<h2 id="10-aufmaßprotokoll-als-pdf-exportieren">10. Aufmaßprotokoll als PDF exportieren</h2>
+<ol>
+<li>In der Werkzeugleiste <strong>„Aufmaßprotokoll&quot;</strong> klicken.</li>
+<li>Inhalte wählen:<ul>
+<li><strong>Aufmaßblatt</strong> (Deckblatt mit Geschoss-Übersicht und Gesamtfläche)</li>
+<li><strong>Berechnungsdarstellung</strong> (jeder Polygon-Plan mit Maßen und Markierungen)</li>
+<li><strong>Kantenmaße</strong> (zusätzliche Detail-Tabelle, optional)</li>
+<li><strong>Rechenweg anzeigen</strong> (Additions-Schritte der Teilflächen zur
+Gesamtfläche, für die Nachvollziehbarkeit gegenüber Bürgern). Beim
+Ankreuzen wird die Berechnungsdarstellung automatisch mit aktiviert,
+da der ausführliche Rechenweg dort je Region unter der Polygon-Tabelle
+erscheint; eine kompakte Additionszeile steht zusätzlich im Aufmaßblatt.
+Zusätzlich wird jede Teilfläche hergeleitet: rechteckige Flächen als
+„Länge × Breite = Fläche&quot; direkt unter der Tabelle, unregelmäßige
+Flächen mit ihrer Koordinatentabelle nach der Gauß&#39;schen Flächenformel
+auf eigenen Rechenweg-Anhangseiten (bei manuell korrigierten Flächen
+wird der gemessene Wert hergeleitet und der angesetzte ausgewiesen).
+Beispiel einer Anhang-Formelzeile:
+„A = ½ · |Summe(xi·yi+1 - xi+1·yi)| = ½ · 121,00 = 60,50 m²&quot;.
+Das Häkchen ist bei jedem Öffnen des Dialogs abgewählt und wird je
+Export bewusst neu gesetzt.</li>
+</ul>
+</li>
+<li>Falls mindestens ein Geschoss eine <strong>VG-Berechnung</strong> hat, erscheint ein
+weiterer Dialog zur Anrechnungs-Wahl (siehe 10.1).</li>
+<li><strong>„PDF erstellen&quot;</strong> → Speicherdialog → fertiges PDF in der Akte ablegen.</li>
+</ol>
+<p>Pro Geschoss mit VG-Berechnung wird hinter dem Aufmaßblatt automatisch ein
+<strong>VG-Beurteilungsblatt</strong> mit allen Diagrammen und Eingaben angehängt — egal
+welche Anrechnung gewählt wurde.</p>
+<h3 id="10-1-anrechnungs-modus-voll-vs-anteilig">10.1 Anrechnungs-Modus „voll&quot; vs. „anteilig&quot;</h3>
+<p>Einige Kommunen rechnen das oberste Geschoss als <strong>volle Grundfläche</strong> ab,
+andere nur <strong>anteilig</strong> (= nur den Bereich mit lichter Höhe ≥ 2,30 m bzw.
+≥ der im Projekt eingestellten Satzungs-Grenzhöhe, siehe 9.2).</p>
+<p>Der Dialog zeigt beide Werte pro Geschoss als Vorschau. Die Wahl wird im
+Projekt gemerkt — beim nächsten Export ist die letzte Auswahl vorausgewählt.
+Weicht die Grenzhöhe von 2,30 m ab, beschriftet der Dialog die anteilige
+Option entsprechend (z. B. „Anteilig ≥ 1,50 m&quot;).</p>
+<p>Bei <strong>anteiliger Anrechnung</strong> erscheint im Aufmaßblatt unter dem Geschoss
+eine kleine Sub-Zeile mit dem Hinweis „Anrechnung: anteilig ≥ 2,30 m&quot; (bzw.
+der gewählten Grenzhöhe) plus voller Polygonfläche zur Information. Auf dem
+VG-Beurteilungsblatt steht bei abweichender Grenzhöhe zusätzlich die Zeile
+„Anrechenbare Fläche&quot;, und der Querschnitt zeigt beide Linien.
+Methodik-Erläuterung steht am Fuß und dokumentiert die verwendete Grenzhöhe.</p>
+<hr>
+<h2 id="11-projekt-speichern-und-wieder-öffnen">11. Projekt speichern und wieder öffnen</h2>
+<h3 id="speichern">Speichern</h3>
+<p><strong>„Speichern&quot;</strong> oder <code>Strg + S</code> erzeugt eine <code>.gfproj</code>-Datei (ZIP-Container).
+Sie enthält:</p>
+<ul>
+<li>Projektdaten und Historie</li>
+<li>Geometrie der Polygone, Geschosse, Plan-Regionen</li>
+<li>Vollgeschoss-Berechnungen (Eingaben + Ergebnis)</li>
+<li>Das <strong>Original-PDF</strong> des Bauantrags (eingebettet)</li>
+</ul>
+<p>Eine <code>.gfproj</code>-Datei ist also <strong>selbstcontainiert</strong> — sie kann ohne das Original-PDF
+wieder geöffnet werden, weil das PDF im Container steckt. Empfohlen für die
+DMS-Ablage.</p>
+<h3 id="öffnen">Öffnen</h3>
+<p><strong>„Öffnen&quot;</strong> oder <code>Strg + O</code> → <code>.gfproj</code>-Datei auswählen. Der komplette Stand
+wird wiederhergestellt. Bauantrag erscheint, Polygone und VG-Berechnungen sind
+sofort wieder da.</p>
+<blockquote>
+<p><strong>Tipp:</strong> Das Tool macht automatisch Recovery-Snapshots in der Browser-DB.
+Falls Firefox abstürzt oder du das Fenster versehentlich schließt, fragt das
+Tool beim nächsten Start, ob der letzte Stand wiederhergestellt werden soll.</p>
+</blockquote>
+<hr>
+<h2 id="12-lizenz-und-updates">12. Lizenz und Updates</h2>
+<h3 id="lizenz-prüfen">Lizenz prüfen</h3>
+<p>Die Datei <code>data/lizenz.js</code> enthält die Kommune-Lizenz-ID (<code>GF-…</code>). Beim Klick
+auf <strong>„Auf Updates prüfen&quot;</strong> hashed das Tool die ID und vergleicht den Hash
+gegen die Online-Whitelist. Drei Ergebnisse:</p>
+<ul>
+<li><strong>Hash bekannt + neue Version verfügbar</strong> → Update-Hinweis erscheint.</li>
+<li><strong>Hash bekannt + aktuelle Version</strong> → „Sie sind auf dem neuesten Stand.&quot;</li>
+<li><strong>Hash nicht in Whitelist</strong> → „Wartungsvertrag abgelaufen.&quot; Das Tool selbst
+funktioniert weiter wie gewohnt — nur die Update-Suche ist gesperrt.</li>
+</ul>
+<h3 id="update-durchführen">Update durchführen</h3>
+<p>Bei Update-Verfügbarkeit:</p>
+<ol>
+<li>Den vom Tool angegebenen Befehl in PowerShell ausführen (siehe <code>update.bat</code>
+oder <code>update.ps1</code> im Tool-Ordner) — dafür kurz das Verzeichnis öffnen.</li>
+<li>Das Skript prüft erneut die Lizenz, lädt die neue Version und ersetzt die
+Code-Dateien. <strong>Der <code>data/</code>-Ordner bleibt unangetastet</strong> — Wappen und
+Lizenz-Datei werden nicht überschrieben.</li>
+<li>Tool neu starten.</li>
+</ol>
+<h3 id="demo-modus">Demo-Modus</h3>
+<p>Ohne <code>data/lizenz.js</code> startet das Tool als <strong>14-Tage-Demo</strong>. Alle Funktionen
+sind aktiv, aber Aufmaßprotokolle tragen ein diagonales Wasserzeichen
+„DEMO – NICHT ZUR BEHÖRDLICHEN VERWENDUNG&quot;. Unten am Bildschirmrand zeigt
+ein Banner die verbleibenden Tage.</p>
+<p><strong>Ab 3 Tagen Restlaufzeit:</strong> Das Banner wechselt in den Warn-Modus (rote
+Hervorhebung).</p>
+<p><strong>Nach Ablauf der 14 Tage:</strong> Das Banner zeigt „Demo abgelaufen&quot; an, das
+Tool bleibt aber vollständig nutzbar — gespeicherte Projekte können
+weiter geöffnet werden, Aufmaßprotokolle werden weiterhin als PDF
+exportiert (mit Wasserzeichen). Um das Wasserzeichen zu entfernen, ist
+eine reguläre Lizenz nötig (<code>data/lizenz.js</code> einspielen).</p>
+<p>Der Demo-Zeitraum wird im Browser pro Profil gemerkt (<code>localStorage</code>) —
+Tool-Neuinstallation in dasselbe Browser-Profil verlängert ihn nicht.</p>
+<hr>
+<h2 id="13-hilfe-menü-und-diagnose-bericht">13. Hilfe-Menü und Diagnose-Bericht</h2>
+<p>Über den Button <strong>„Hilfe&quot;</strong> rechts oben öffnen Sie ein kleines Menü mit vier Einträgen:</p>
+<ol>
+<li><strong>Auf Updates prüfen</strong> — kontaktiert den Update-Server und zeigt an, ob eine
+neuere Programmversion verfügbar ist. Das ersetzt den früheren „Auf Updates
+prüfen&quot;-Button im Header.</li>
+<li><strong>Diagnose-Bericht erstellen</strong> — erzeugt eine JSON-Datei, die Sie dem Anbieter
+bei Problemen per E-Mail schicken können. <strong>Bauherrnamen, Adressen und
+Sachbearbeiter-Namen werden vor dem Speichern automatisch durch
+<code>&lt;redacted&gt;</code> ersetzt.</strong> PDF-Inhalte sind nie Teil des Berichts.</li>
+<li><strong>Benutzerhandbuch öffnen</strong> — öffnet diese Dokumentation als gestaltete
+HTML-Seite in einem neuen Browser-Tab. Oben rechts steht ein „Drucken&quot;-Button
+für ein druckfertiges PDF.</li>
+<li><strong>Über FlächenKlar</strong> — zeigt Version, Build-Datum und Lizenz-Status an.</li>
+</ol>
+<h3 id="diagnose-bericht-drei-tiefen">Diagnose-Bericht — drei Tiefen</h3>
+<p>Beim Klick auf „Diagnose-Bericht erstellen&quot; können Sie wählen, wie viel
+Information enthalten sein soll:</p>
+<ul>
+<li><strong>Minimal</strong> — nur App-Version + Browser-Info. Wählen Sie das, wenn der
+Anbieter nur prüfen will, <em>welche</em> Version Sie installiert haben.</li>
+<li><strong>Standard</strong> — zusätzlich anonymisierte Projekt-Metadaten und Zahlen (z. B.
+Anzahl PDFs, Geschosse, Polygone, Gesamtfläche). Keine Namen.</li>
+<li><strong>Mit Projekt-Snapshot (Default)</strong> — zusätzlich das gesamte Projekt-Modell
+(Geschosse, Polygone, VG-Berechnungen) inklusive Koordinaten, <strong>ohne PDF-Inhalte
+und ohne personenbezogene Felder</strong>. Wählen Sie das, wenn der Anbieter einen
+Rechenfehler nachvollziehen soll.</li>
+</ul>
+<p>Eine Vorschau zeigt Ihnen vor dem Speichern, <em>was genau</em> in die Datei kommt.
+Die Datei landet im Standard-Download-Ordner Ihres Browsers mit einem
+Datums-/Zeitstempel im Namen
+(<code>flaechenklar-diagnose-YYYY-MM-DD-HHMMSS.json</code>).</p>
+<hr>
+<h2 id="14-tastatur-shortcuts">14. Tastatur-Shortcuts</h2>
+<table>
+<thead>
+<tr>
+<th>Taste</th>
+<th>Wirkung</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Strg + S</code></td>
+<td>Projekt speichern</td>
+</tr>
+<tr>
+<td><code>Strg + O</code></td>
+<td>Projekt öffnen</td>
+</tr>
+<tr>
+<td><code>Enter</code></td>
+<td>Beim Polygon-Zeichnen: aktuellen Polygonzug schließen</td>
+</tr>
+<tr>
+<td><code>ESC</code></td>
+<td>Aktion abbrechen (Polygon, Drag, Modal) — in dieser Reihenfolge: Eckpunkt-Drag → VG-Modal → Anrechnungs-Dialog → andere Modals → Polygon-Abbruch</td>
+</tr>
+<tr>
+<td><code>+</code> / <code>−</code></td>
+<td>Plan zoomen</td>
+</tr>
+<tr>
+<td><code>← ↑ → ↓</code></td>
+<td>Plan in die jeweilige Richtung verschieben (auch während einer laufenden Polygon-Zeichnung)</td>
+</tr>
+<tr>
+<td><code>Shift + ← ↑ → ↓</code></td>
+<td>Plan in größeren Sprüngen verschieben (5× Schrittweite)</td>
+</tr>
+<tr>
+<td><code>Leertaste</code> halten + ziehen</td>
+<td>Plan mit der Maus pannen (Alternative zum mittleren Mausrad)</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="15-häufige-fragen">15. Häufige Fragen</h2>
+<h3 id="mein-pdf-kommt-nicht-orthogonal-was-tun">Mein PDF kommt nicht orthogonal — was tun?</h3>
+<p>Wenn das PDF gedreht ist (z. B. Querformat-Seite), zeigt das Tool es so an, wie
+es im PDF enthalten ist. Manche PDFs haben eine eingebettete Rotation; falls
+das Polygon-Zeichnen schräg wirkt, das PDF in Acrobat / einem Viewer drehen
+und neu speichern, bevor du es importierst.</p>
+<h3 id="was-wenn-die-bemaßung-im-plan-nicht-100-genau-ist">Was, wenn die Bemaßung im Plan nicht 100% genau ist?</h3>
+<p>Das passiert: Pläne sind manchmal mit ±1 % gezeichnet. Wähle die <strong>längste</strong>
+verfügbare Bemaßung als Referenz (z. B. eine Gesamtlänge statt einer
+1-Meter-Strecke). Du kannst auch Kantenmaße nachträglich per Doppelklick auf
+die richtigen Werte überschreiben — die Fläche wird dann neu berechnet.</p>
+<h3 id="das-polygon-zeichnen-rastet-manchmal-an-unerwartete-punkte">Das Polygon-Zeichnen rastet manchmal an unerwartete Punkte</h3>
+<p>Das Vektor-Snap arbeitet auf den Original-Vektoren des PDFs. Komplexe Pläne
+haben oft viele kleine Hilfslinien. Wenn der Snap nervt, beim Klick <code>Shift</code>
+gedrückt halten — das schaltet den Snap kurzfristig aus.</p>
+<h3 id="wieso-ist-meine-geschoss-grundfläche-im-pdf-anders-als-beim-polygon">Wieso ist meine Geschoss-Grundfläche im PDF anders als beim Polygon?</h3>
+<p>Sie <strong>muss</strong> identisch sein — der Wert im Aufmaßblatt und im VG-Beurteilungsblatt
+kommt aus demselben Polygon. Falls du unterschiedliche Werte siehst, prüfe:</p>
+<ul>
+<li>Ist das richtige <strong>Vergleichs-Polygon</strong> im VG-Modal gewählt?</li>
+<li>Hast du beim Polygon eine <strong>manuelle Flächenkorrektur</strong> eingetragen? Dann
+zählt die angesetzte Fläche, nicht die gemessene.</li>
+</ul>
+<h3 id="demo-wasserzeichen-wegbekommen">Demo-Wasserzeichen wegbekommen?</h3>
+<p>Nur über eine gültige Lizenz. Demo-Modus ist absichtlich gekennzeichnet, damit
+keine versehentlichen Demo-PDFs in echten Akten landen.</p>
+<h3 id="ich-habe-ein-polygon-falsch-gezeichnet-kann-ich-s-korrigieren">Ich habe ein Polygon falsch gezeichnet — kann ich&#39;s korrigieren?</h3>
+<p>Ja. Drei Möglichkeiten:</p>
+<ol>
+<li>Einzelne Eckpunkte mit der Maus verschieben.</li>
+<li>Kanten-Doppelklick → Maß editieren (siehe 8.2).</li>
+<li>Polygon ganz löschen (Mülleimer-Symbol in der Sidebar) und neu zeichnen.</li>
+</ol>
+<h3 id="funktioniert-das-tool-auf-einem-mac">Funktioniert das Tool auf einem Mac?</h3>
+<p>Technisch ja (HTML/JS, Browser-basiert), aber nicht explizit getestet. Auch
+Safari ist nicht im Zielband. Für den behördlichen Einsatz: Firefox auf Windows.</p>
+<hr>
+<h2 id="anhang-akten-aufbewahrung">Anhang: Akten-Aufbewahrung</h2>
+<p>Eine <code>.gfproj</code>-Datei ist die rekonstruierbare Berechnungsgrundlage für die
+beitragsrechtliche Entscheidung. Da Beitrags-Akten lange aufbewahrt werden
+(typisch 30+ Jahre), empfiehlt sich:</p>
+<ol>
+<li>Pro Bauantrag genau eine <code>.gfproj</code>-Datei im DMS ablegen.</li>
+<li>Das exportierte Aufmaßprotokoll-PDF dazu — als „menschenlesbare&quot; Variante.</li>
+<li>Bei späterem Widerspruch: <code>.gfproj</code>-Datei im Tool öffnen, alle Werte sind
+wieder genau so wie zum Zeitpunkt der Bearbeitung.</li>
+</ol>
+<p>Das Tool speichert keine Daten im Browser-Profil ab — alles steckt in der
+<code>.gfproj</code>-Datei. Wer die Datei hat, hat die volle Berechnungsgrundlage.</p>
+<hr>
+<p><em>Bei Fragen oder Problemen: Anbieter kontaktieren. Tickets über das DMS oder
+direkt an die in der Lizenzbestätigung angegebene E-Mail-Adresse.</em></p>
+
+</main>
+</body>
+</html>

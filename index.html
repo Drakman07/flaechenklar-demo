@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FlächenKlar</title>
+<link rel="icon" type="image/svg+xml" href="assets/flaechenklar_icon.svg">
+<link rel="stylesheet" href="css/style.css">
+<meta name="robots" content="noindex, nofollow">
+<style id="demo-styles">
+  .demo-banner-inner{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .demo-cta-btn{margin-left:auto;background:#1EA596;color:#fff;font-weight:600;padding:6px 14px;border-radius:6px;text-decoration:none;white-space:nowrap;font-size:13px;line-height:1.2}
+  .demo-cta-btn:hover{background:#17897d}
+</style>
+</head>
+<body>
+
+<div class="demo-banner aktiv" id="demoBanner" role="region" aria-label="Demo-Status">
+  <div class="demo-banner-inner">
+    <div class="demo-banner-info">
+      <strong>Online-Demo</strong> · FlächenKlar mit vorgeladenem Musterplan — Geschossfläche nach Außenmaßen in Minuten.
+    </div>
+    <a class="demo-cta-btn" id="demoCtaVollversion" href="https://download.flaechenklar.de" target="_blank" rel="noopener">Vollversion 14 Tage kostenlos testen →</a>
+  </div>
+</div>
+
+<div id="appRoot">
+
+<header class="app-header">
+  <div class="app-header-inner">
+    <div class="brand">
+      <img class="app-logo" src="assets/flaechenklar_logo_dark.svg" alt="FlächenKlar">
+      <img class="logo" id="wappenLogo" src="" alt="Wappen" onerror="this.style.display='none'">
+      <div id="kommunenName" class="behoerde-anzeige"></div>
+    </div>
+    <div class="header-actions">
+      <button type="button" id="btnHilfe" class="btn btn-ghost" title="Hilfe, Diagnose-Bericht und Über">Hilfe</button>
+      <button type="button" id="btnKuerzel" class="btn btn-ghost" title="Tastenkürzel anzeigen (Taste ?)" aria-label="Tastenkürzel anzeigen">?</button>
+      <button type="button" id="btnNeu" class="btn btn-ghost" title="Aktuelles Projekt verwerfen und mit leerem Stand neu beginnen">+ Neu</button>
+      <button type="button" id="btnOeffnen" class="btn btn-ghost" title="Projekt (.zip) öffnen (Strg+O)">Öffnen</button>
+      <input type="file" id="gfprojInput" accept=".zip,application/zip" hidden>
+      <button type="button" id="btnProjektdaten" class="btn btn-ghost" disabled title="Projektdaten bearbeiten">Projektdaten</button>
+      <button type="button" id="btnSpeichern" class="btn btn-ghost" disabled title="Projekt speichern (Strg+S)">Speichern</button>
+      <button type="button" id="btnProtokoll" class="btn btn-primary" disabled>Aufmaßprotokoll</button>
+    </div>
+  </div>
+</header>
+
+<!-- ===================== Toolbar (Phase 1) ===================== -->
+<div class="toolbar">
+  <div class="tb-group">
+    <label class="btn" id="lblPdfLaden" for="pdfInput">PDF laden</label>
+    <input type="file" id="pdfInput" accept="application/pdf" multiple hidden>
+    <span class="tb-info" id="pdfDateiInfo">— keine Datei —</span>
+    <select class="tb-select" id="pdfSelect" hidden title="Aktive PDF wechseln"></select>
+    <button type="button" class="btn btn-small btn-outline" id="btnPdfUmbenennen" hidden title="Anzeigename der aktiven PDF ändern" aria-label="Aktive PDF umbenennen">Umbenennen</button>
+    <button type="button" class="btn btn-small btn-danger" id="btnPdfLoeschen" hidden title="Aktive PDF aus dem Projekt entfernen" aria-label="Aktive PDF löschen">Löschen</button>
+  </div>
+
+  <div class="tb-group" id="seitenNav" hidden>
+    <button type="button" class="btn btn-small" id="btnSeitePrev" title="Vorherige Seite">‹</button>
+    <span class="tb-info">Seite <strong id="seiteAktuell">1</strong> / <span id="seiteGesamt">1</span></span>
+    <button type="button" class="btn btn-small" id="btnSeiteNext" title="Nächste Seite">›</button>
+  </div>
+
+  <div class="tb-group" id="zoomGroup" hidden>
+    <button type="button" class="btn btn-small" id="btnZoomOut" title="Verkleinern">−</button>
+    <span class="tb-info"><span id="zoomAnzeige">100</span>%</span>
+    <button type="button" class="btn btn-small" id="btnZoomIn" title="Vergrößern">+</button>
+    <button type="button" class="btn btn-small" id="btnFit" title="Seite einpassen">Fit</button>
+  </div>
+
+  <div class="tb-group tb-right" id="vektorGruppe" hidden>
+    <span class="tb-info"><span id="vektorBadge" class="badge">—</span></span>
+  </div>
+</div>
+
+<!-- ===================== Arbeitsbereich: Sidebar + Canvas ===================== -->
+<div class="workarea">
+
+  <aside class="sidebar" id="sidebar">
+
+    <section class="sb-section">
+      <h3>Werkzeug</h3>
+      <div class="werkzeug-liste" id="werkzeugListe">
+        <button type="button" class="wkz aktiv" data-werkzeug="pan" title="Plan verschieben (Standard) — Taste H">🖱 Plan</button>
+        <button type="button" class="wkz"       data-werkzeug="region" title="Rechteck-Region pro Geschoss ziehen — Taste R">▭ Region</button>
+        <button type="button" class="wkz" data-werkzeug="massstab" title="Maßstab direkt eingeben (z. B. 1:100) oder zwei Punkte einer bekannten Bemaßung anklicken — Taste M">↔ Maßstab</button>
+        <button type="button" class="wkz" data-werkzeug="polygon" title="Außenkontur abklicken, Enter oder Doppelklick zum Schließen — Taste P">⌒ Polygon</button>
+        <button type="button" class="wkz" data-werkzeug="rechteck" title="Rechteck aufziehen: erste Ecke klicken, Gegenecke klicken — Taste K">▢ Rechteck</button>
+      </div>
+      <label class="anzeige-toggle" title="Die zwei-Punkt-Kalibrierungslinien in den Plan-Regionen ein-/ausblenden. Nur visuell — die Kalibrierung selbst bleibt erhalten.">
+        <input type="checkbox" id="massstabToggle" checked>
+        <span>Maßstab-Linien anzeigen</span>
+      </label>
+    </section>
+
+    <section class="sb-section">
+      <h3>
+        Geschosse
+        <button type="button" class="btn btn-small" id="btnGeschossNeu" title="Neues Geschoss anlegen">+</button>
+      </h3>
+      <ul class="geschoss-liste" id="geschossListe">
+        <li class="sb-empty">— noch keine Geschosse —</li>
+      </ul>
+    </section>
+
+  </aside>
+
+<main class="canvas-host" id="canvasHost">
+  <canvas id="planCanvas" class="plan-canvas"></canvas>
+
+  <!-- v1.2 Politur: nicht-blockierendes Maßstab-Banner (deckt den Plan nicht ab,
+       Sachbearbeiter kann parallel weiterarbeiten) -->
+  <div class="mass-banner" id="massBanner" role="status" hidden>
+    <span class="mass-banner-text" id="massBannerText"></span>
+    <span class="mass-banner-aktionen">
+      <button type="button" class="btn btn-small" id="btnMassBannerVerwerfen">Verwerfen</button>
+      <button type="button" class="btn btn-small btn-primary" id="btnMassBannerOk">Übernehmen</button>
+    </span>
+  </div>
+
+  <!-- Drag-Drop-Hinweis / Empty-State -->
+  <div class="empty-state" id="emptyState">
+    <img class="empty-logo" src="assets/flaechenklar_logo.svg" alt="FlächenKlar">
+    <p>PDF hierhin ziehen oder oben auf <strong>PDF laden</strong> klicken</p>
+  </div>
+
+  <!-- Drag-Over-Overlay -->
+  <div class="drop-overlay" id="dropOverlay">
+    <div class="drop-message">PDF loslassen zum Laden</div>
+  </div>
+
+  <!-- Lade-Overlay (PDF-Aufbereitung: Rendern + Vektor-Pruefung) -->
+  <div class="lade-overlay" id="ladeOverlay" aria-live="polite" aria-busy="true">
+    <div class="lade-box">
+      <div class="lade-text" id="ladeText">Plan wird vorbereitet …</div>
+      <div class="lade-bar"><div class="lade-bar-fill"></div></div>
+    </div>
+  </div>
+
+  <!-- Maßstab-Methodenwahl (erscheint beim Aktivieren des Maßstab-Tools) -->
+  <div class="mass-eingabe" id="massstabMethode" hidden>
+    <div class="lbl">Maßstab festlegen:</div>
+    <div class="row massstab-schnell" id="massstabSchnell">
+      <button type="button" class="btn btn-small" data-massstab="50">1:50</button>
+      <button type="button" class="btn btn-small" data-massstab="100">1:100</button>
+      <button type="button" class="btn btn-small" data-massstab="200">1:200</button>
+      <button type="button" class="btn btn-small" data-massstab="500">1:500</button>
+      <button type="button" class="btn btn-small" data-massstab="1000">1:1000</button>
+    </div>
+    <div class="row">
+      <span class="einheit">oder&nbsp;&nbsp;1&nbsp;:</span>
+      <input type="text" id="massstabNInput" inputmode="numeric" placeholder="z. B. 75">
+      <button type="button" class="btn btn-primary btn-small" id="btnMassstabNOk">Übernehmen</button>
+    </div>
+    <div class="hint" id="massstabMethodeHinweis">
+      Direkteingabe nur bei maßhaltigen CAD-/Vektor-PDFs (ohne Druck/Scan-Zwischenschritt).
+    </div>
+    <div class="row massstab-trenner">
+      <button type="button" class="btn btn-small" id="btnMassstabStrecke">Strecke messen (zwei Punkte)</button>
+      <button type="button" class="btn btn-small" id="btnMassstabMethodeAbbrechen">Abbrechen</button>
+    </div>
+  </div>
+
+  <!-- Maßstab-Eingabe-Panel (erscheint nach dem 2. Klick im Maßstab-Tool) -->
+  <div class="mass-eingabe" id="massEingabe" hidden>
+    <div class="lbl">Sollmaß zwischen den orangen Punkten:</div>
+    <div class="row">
+      <input type="text" id="massEingabeInput" inputmode="decimal" placeholder="z. B. 11,79">
+      <span class="einheit">m</span>
+      <button type="button" class="btn btn-primary btn-small" id="btnMassOk">OK</button>
+      <button type="button" class="btn btn-small" id="btnMassAbbrechen">Abbrechen</button>
+    </div>
+    <div class="hint">
+      Du kannst weiterhin im Plan navigieren, um das Maß abzulesen.<br>
+      <strong>Mausrad-Klick + Ziehen</strong> = Pan · <strong>Mausrad-Drehen</strong> = Zoom · <strong>Esc</strong> = Abbrechen
+    </div>
+  </div>
+
+  <!-- Kantenmaß-Edit-Panel (erscheint beim Klick auf ein Kanten-Label) -->
+  <div class="mass-eingabe kanten-edit" id="kantenEdit" hidden>
+    <div class="lbl">Sollmaß für Kante <span id="kantenEditNr">?</span>:</div>
+    <div class="row">
+      <input type="text" id="kantenEditInput" inputmode="decimal" placeholder="z. B. 11,79">
+      <span class="einheit">m</span>
+      <button type="button" class="btn btn-primary btn-small" id="btnKantenOk">OK</button>
+      <button type="button" class="btn btn-small" id="btnKantenAbbrechen">Abbrechen</button>
+    </div>
+    <div class="hint">
+      Bisher: <strong id="kantenEditBisher">—</strong> · Der Endpunkt wandert entlang der Kantenrichtung; der Rest des Polygons bleibt stehen.
+    </div>
+  </div>
+
+  <!-- Status-Leiste am unteren Rand -->
+  <div class="canvas-statusbar">
+    <span id="appStartStatus">Initialisiere ...</span>
+    <span id="statusKontext" class="status-kontext"></span>
+    <span class="spacer"></span>
+    <span id="statusLive" class="status-live"></span>
+    <span id="mausPos" class="mono"></span>
+  </div>
+</main>
+
+</div><!-- /.workarea -->
+
+</div><!-- /#appRoot -->
+
+<!-- Tastenkürzel-Overlay -->
+<div class="modal-backdrop" id="kuerzelBackdrop" role="dialog" aria-modal="true" aria-labelledby="kuerzelTitel">
+  <div class="modal modal-kuerzel">
+    <div class="modal-head"><h2 id="kuerzelTitel">Tastenkürzel</h2></div>
+    <div class="modal-body">
+      <div class="kuerzel-grid">
+        <div class="kuerzel-spalte">
+          <h4>Werkzeuge</h4>
+          <dl>
+            <dt>Plan verschieben</dt><dd><kbd>H</kbd></dd>
+            <dt>Region</dt><dd><kbd>R</kbd></dd>
+            <dt>Maßstab</dt><dd><kbd>M</kbd></dd>
+            <dt>Polygon</dt><dd><kbd>P</kbd></dd>
+            <dt>Rechteck</dt><dd><kbd>K</kbd></dd>
+          </dl>
+        </div>
+        <div class="kuerzel-spalte">
+          <h4>Zeichnen</h4>
+          <dl>
+            <dt>Fläche schließen</dt><dd><kbd>Enter</kbd></dd>
+            <dt>Abbrechen</dt><dd><kbd>Esc</kbd></dd>
+            <dt>Letzten Punkt zurück</dt><dd><kbd>Rück</kbd></dd>
+            <dt>Snap aus (frei)</dt><dd><kbd>Shift</kbd></dd>
+            <dt>Magnet aus</dt><dd><kbd>Alt</kbd></dd>
+            <dt>Verschieben</dt><dd><kbd>Leertaste</kbd>&nbsp;+&nbsp;ziehen</dd>
+          </dl>
+        </div>
+        <div class="kuerzel-spalte">
+          <h4>Ansicht</h4>
+          <dl>
+            <dt>Vergrößern</dt><dd><kbd>+</kbd></dd>
+            <dt>Verkleinern</dt><dd><kbd>−</kbd></dd>
+            <dt>Verschieben</dt><dd><kbd>Pfeile</kbd></dd>
+          </dl>
+        </div>
+        <div class="kuerzel-spalte">
+          <h4>Projekt</h4>
+          <dl>
+            <dt>Öffnen</dt><dd><kbd>Strg</kbd>&nbsp;<kbd>O</kbd></dd>
+            <dt>Speichern</dt><dd><kbd>Strg</kbd>&nbsp;<kbd>S</kbd></dd>
+          </dl>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button type="button" class="btn" id="btnKuerzelSchliessen">Schließen</button>
+    </div>
+  </div>
+</div>
+
+<!-- Maßstab-Vorschlag aus Planbemaßung (Beleg-Dialog) -->
+<!-- v1.2 Politur: Maßstab-Vorschlag ist jetzt das nicht-blockierende #massBanner
+     im canvasHost (oben), kein Modal mehr. -->
+
+
+<!-- Aufmaßprotokoll-Modal -->
+<div class="modal-backdrop" id="protokollBackdrop" role="dialog" aria-modal="true" aria-labelledby="protokollTitel">
+  <div class="modal">
+    <div class="modal-head"><h2 id="protokollTitel">Aufmaßprotokoll erstellen</h2></div>
+    <div class="modal-body">
+      <p class="pd-hint">Wähle den Umfang. Bei "Beides" wird ein zusammengefügtes PDF erzeugt — vorne das Aufmaßblatt, dann die Berechnungsdarstellung.</p>
+      <fieldset class="pd-block">
+        <legend>Inhalt</legend>
+        <label class="pp-check"><input type="checkbox" id="ppAufmassblatt" checked> Aufmaßblatt (1 Seite, Akten-Zusammenfassung)</label>
+        <label class="pp-check"><input type="checkbox" id="ppBerechnung" checked> Berechnungsdarstellung (pro Region eine Seite mit Plan-Ausschnitt)</label>
+        <label class="pp-check pp-sub"><input type="checkbox" id="ppKantenmasse" checked> ↳ Kantenmaße der Polygone im Plan einzeichnen</label>
+        <label class="pp-check"><input type="checkbox" id="ppRechenweg"> Rechenweg anzeigen (Additions-Schritte für Nachvollziehbarkeit)</label>
+      </fieldset>
+      <!-- v1.2: Datenexport vorerst ausgeblendet (hidden). Der generische CSV/JSON-
+           Export funktioniert, soll aber erst sichtbar werden, wenn die echte RIWA-
+           Beitragsmodul-Schnittstelle steht. Zum Reaktivieren: hidden entfernen. -->
+      <fieldset class="pd-block" id="datenexportBlock" hidden>
+        <legend>Datenexport (Fachverfahren)</legend>
+        <p class="pd-hint">Maschinenlesbare Ausgabe der Flächen zur Weiterverarbeitung im Beitragsverfahren — ohne Abtippen. Dieselben Werte wie im PDF.</p>
+        <div class="pd-grid">
+          <label>Format<select id="exFormat"></select></label>
+          <label class="pp-check"><input type="checkbox" id="exKanten"> Kantenmaße + Koordinaten einbetten</label>
+        </div>
+        <button type="button" class="btn" id="btnDatenexport">Datenexport erstellen</button>
+      </fieldset>
+      <p class="fk-fehler" id="ppFehler" hidden></p>
+      <p class="pp-info" id="ppInfo" hidden></p>
+    </div>
+    <div class="modal-foot">
+      <button type="button" class="btn" id="btnProtokollAbbrechen">Abbrechen</button>
+      <button type="button" class="btn btn-primary" id="btnProtokollErzeugen">PDF erstellen</button>
+    </div>
+  </div>
+</div>
+
+<!-- Projektdaten-Modal -->
+<div class="modal-backdrop" id="projektdatenBackdrop" role="dialog" aria-modal="true" aria-labelledby="projektdatenTitel">
+  <div class="modal modal-breit">
+    <div class="modal-head"><h2 id="projektdatenTitel">Projektdaten</h2></div>
+    <div class="modal-body">
+      <p class="pd-hint">Diese Angaben erscheinen auf dem Aufmaßprotokoll. Pflichtfelder sind mit * gekennzeichnet.</p>
+
+      <fieldset class="pd-block">
+        <legend>Projekt</legend>
+        <div class="pd-grid">
+          <label>Projektname *<input type="text" id="pdProjektName" maxlength="120"></label>
+          <label>Projekt-Nummer<input type="text" id="pdProjektNummer" placeholder="z. B. 2022/16"></label>
+        </div>
+        <label class="pd-full">Bauvorhaben<input type="text" id="pdBauvorhaben" placeholder="z. B. Neubau eines EFH mit Doppelgarage"></label>
+      </fieldset>
+
+      <fieldset class="pd-block">
+        <legend>Bauort</legend>
+        <label class="pd-full">Straße + Hausnummer<input type="text" id="pdBauortStrasse"></label>
+        <div class="pd-grid pd-grid-13">
+          <label>PLZ<input type="text" id="pdBauortPLZ" maxlength="10"></label>
+          <label>Ort<input type="text" id="pdBauortOrt"></label>
+        </div>
+        <div class="pd-grid">
+          <label>Flurnummer<input type="text" id="pdFlurnummer"></label>
+          <label>Gemarkung<input type="text" id="pdGemarkung"></label>
+        </div>
+      </fieldset>
+
+      <fieldset class="pd-block">
+        <legend>Bauherr</legend>
+        <label class="pd-full">Name<input type="text" id="pdBauherr"></label>
+        <label class="pd-full">Straße + Hausnummer<input type="text" id="pdBauherrStrasse"></label>
+        <div class="pd-grid pd-grid-13">
+          <label>PLZ<input type="text" id="pdBauherrPLZ" maxlength="10"></label>
+          <label>Ort<input type="text" id="pdBauherrOrt"></label>
+        </div>
+        <label class="pd-full">PK-Nr. (optional)<input type="text" id="pdBauherrPKNr" placeholder="Personen-/Kundennummer im Verwaltungssystem"></label>
+      </fieldset>
+
+      <fieldset class="pd-block">
+        <legend>Bearbeitung</legend>
+        <label class="pd-full">Sachbearbeiter<input type="text" id="pdSachbearbeiter"></label>
+        <label class="pd-full">Zusatzinfo (Freitext, mehrzeilig)<textarea id="pdZusatzinfo" rows="3" placeholder="Hinweise, die im Aufmaßprotokoll erscheinen sollen"></textarea></label>
+      </fieldset>
+
+      <p class="fk-fehler" id="pdFehler" hidden></p>
+    </div>
+    <div class="modal-foot">
+      <button type="button" class="btn" id="btnProjektdatenAbbrechen">Abbrechen</button>
+      <button type="button" class="btn btn-primary" id="btnProjektdatenOk">Übernehmen</button>
+    </div>
+  </div>
+</div>
+
+<!-- Flächen-Korrektur-Modal -->
+<div class="modal-backdrop" id="flaecheBackdrop" role="dialog" aria-modal="true" aria-labelledby="flaecheTitel">
+  <div class="modal">
+    <div class="modal-head"><h2 id="flaecheTitel">Flächenkorrektur</h2></div>
+    <div class="modal-body">
+      <p class="fk-info">
+        Polygon: <strong id="flaecheModalName">—</strong>
+      </p>
+      <p class="fk-info">
+        Gemessen aus Polygon-Geometrie: <strong id="flaecheModalGemessen">—</strong>
+      </p>
+      <label class="fk-label">Angesetzte Fläche (m²)</label>
+      <input type="text" id="flaecheModalAngesetzt" inputmode="decimal" placeholder="z. B. 142,50">
+      <label class="fk-label">Begründung (Pflicht, wird im Aufmaßprotokoll vermerkt)</label>
+      <textarea id="flaecheModalKommentar" rows="3" placeholder="z. B. Rundung gemäß Kommunalsatzung §3 Abs. 2"></textarea>
+      <p class="fk-fehler" id="flaecheModalFehler" hidden></p>
+    </div>
+    <div class="modal-foot">
+      <button type="button" class="btn btn-ghost" id="btnFlaecheZuruecksetzen">Zurück auf Gemessen</button>
+      <span class="spacer"></span>
+      <button type="button" class="btn" id="btnFlaecheAbbrechen">Abbrechen</button>
+      <button type="button" class="btn btn-primary" id="btnFlaecheOk">OK</button>
+    </div>
+  </div>
+</div>
+
+<!-- Export-Anrechnungs-Dialog (erscheint vor PDF-Export wenn VG-Berechnung vorliegt) -->
+<div class="modal-backdrop" id="exportDialogBackdrop" role="dialog" aria-modal="true" aria-labelledby="exportDialogTitel">
+  <div class="modal modal-export">
+    <div class="modal-head"><h2 id="exportDialogTitel">Anrechnung der VG-Geschosse</h2></div>
+    <div class="modal-body">
+      <p class="ex-info" id="exportDialogIntro">
+        Für ein oder mehrere Geschosse liegt eine Vollgeschoss-Berechnung vor.
+        Welche Fläche soll im Aufmaßblatt eingetragen werden?
+      </p>
+      <div class="ex-optionen">
+        <label class="ex-option" id="exOptVoll">
+          <input type="radio" name="exVgAnrechnung" value="voll" checked>
+          <div class="ex-option-body">
+            <strong>Volle Geschoss-Grundfläche</strong>
+            <span class="ex-option-hint">Polygonfläche — komplette Geschoss-Grundfläche.</span>
+            <ul class="ex-vorschau" id="exVorschauVoll"></ul>
+          </div>
+        </label>
+        <label class="ex-option" id="exOptAnteilig">
+          <input type="radio" name="exVgAnrechnung" value="anteilig">
+          <div class="ex-option-body">
+            <strong>Anteilig ≥ 2,30 m</strong>
+            <span class="ex-option-hint">Nur Bereich mit lichter Höhe ≥ 2,30 m (A_2,30 aus VG-Berechnung).</span>
+            <ul class="ex-vorschau" id="exVorschauAnteilig"></ul>
+          </div>
+        </label>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <span class="spacer"></span>
+      <button type="button" class="btn" id="btnExportAbbrechen">Abbrechen</button>
+      <button type="button" class="btn btn-primary" id="btnExportOk">PDF erstellen</button>
+    </div>
+  </div>
+</div>
+
+<!-- Vollgeschoss-Beurteilung-Modal (zweispaltig: Eingaben links, Diagramme rechts) -->
+<div class="modal-backdrop" id="vgBackdrop" role="dialog" aria-modal="true" aria-labelledby="vgTitel">
+  <div class="modal modal-vg">
+    <div class="modal-head">
+      <h2 id="vgTitel">Vollgeschoss-Beurteilung — <span id="vgGeschossName">Geschoss</span></h2>
+      <div class="vg-head-rechts">
+        <label class="vg-vergleich-label">
+          Vergleichs-Polygon
+          <select id="vgVergleichPolygon"></select>
+        </label>
+        <span class="vg-vergleich-info" id="vgVergleichInfo">—</span>
+        <button type="button" class="vg-head-btn" id="vgBtnMinimieren" title="Minimieren — Plan unten sichtbar machen">−</button>
+        <button type="button" class="vg-head-btn" id="vgBtnSchliessen" title="Schließen (ESC)">×</button>
+      </div>
+    </div>
+    <div class="modal-body vg-body">
+      <div class="vg-plausi" id="vgPlausi" hidden></div>
+
+      <div class="vg-spalten">
+
+        <div class="vg-spalte-eingaben">
+          <fieldset class="vg-block">
+            <legend>Gebäude</legend>
+            <div class="vg-grid">
+              <label>Breite L_B <span class="vg-einheit">m</span>
+                <input type="text" id="vgLB" inputmode="decimal" data-vg-feld="L_B" placeholder="0,00">
+              </label>
+              <label>Länge L_L <span class="vg-einheit">m</span>
+                <input type="text" id="vgLL" inputmode="decimal" data-vg-feld="L_L" placeholder="0,00">
+              </label>
+            </div>
+          </fieldset>
+
+          <fieldset class="vg-block">
+            <legend>Kniestöcke</legend>
+            <div class="vg-grid">
+              <label>links h_KL <span class="vg-einheit">m</span>
+                <input type="text" id="vgHKL" inputmode="decimal" data-vg-feld="h_KL" placeholder="0,00">
+              </label>
+              <label>rechts h_KR <span class="vg-einheit">m</span>
+                <input type="text" id="vgHKR" inputmode="decimal" data-vg-feld="h_KR" placeholder="0,00">
+              </label>
+            </div>
+          </fieldset>
+
+          <fieldset class="vg-block">
+            <legend>Dachneigungen</legend>
+            <div class="vg-grid">
+              <label>links α_L <span class="vg-einheit">°</span>
+                <input type="text" id="vgAlphaL" inputmode="decimal" data-vg-feld="alpha_L" placeholder="z. B. 38">
+              </label>
+              <label>rechts α_R <span class="vg-einheit">°</span>
+                <input type="text" id="vgAlphaR" inputmode="decimal" data-vg-feld="alpha_R" placeholder="z. B. 38">
+              </label>
+            </div>
+          </fieldset>
+
+          <fieldset class="vg-block">
+            <legend>Gauben links</legend>
+            <div class="vg-gauben" id="vgGaubenLinks"></div>
+            <button type="button" class="vg-gauben-add" id="vgGaubeLinksPlus">+ Gaube links hinzufügen</button>
+          </fieldset>
+
+          <fieldset class="vg-block">
+            <legend>Gauben rechts</legend>
+            <div class="vg-gauben" id="vgGaubenRechts"></div>
+            <button type="button" class="vg-gauben-add" id="vgGaubeRechtsPlus">+ Gaube rechts hinzufügen</button>
+          </fieldset>
+          <p class="vg-hint vg-gauben-hint">
+            <strong>Breite (b)</strong> und <strong>Trauf-Abstand (a)</strong> sind Pflichtfelder für die Berechnung.
+            Der <strong>Ortgang-Abstand</strong> ist optional und beeinflusst nur die Position der Gaube in der Diagramm-Darstellung.
+          </p>
+
+          <fieldset class="vg-block">
+            <legend>Abzüge</legend>
+            <div class="vg-grid">
+              <label>A_kleiner <span class="vg-einheit">m²</span>
+                <input type="text" id="vgAKleiner" inputmode="decimal" data-vg-feld="A_kleiner" placeholder="0,00">
+              </label>
+              <label>A_größer <span class="vg-einheit">m²</span>
+                <input type="text" id="vgAGroesser" inputmode="decimal" data-vg-feld="A_groesser" placeholder="0,00">
+              </label>
+            </div>
+            <p class="vg-hint">A_kleiner: Flächen mit lichter Höhe &lt; 2,30 m, die vom Geschoss-Nenner abzuziehen sind (z. B. Treppe, Aussparung). A_größer: Flächen ≥ 2,30 m, die vom Zähler abzuziehen sind.</p>
+          </fieldset>
+
+          <fieldset class="vg-block">
+            <legend>Anrechnungs-Grenzhöhe</legend>
+            <div class="vg-grid">
+              <label>Grenzhöhe <span class="vg-einheit">m</span>
+                <input type="text" id="vgGrenzhoehe" inputmode="decimal" data-vg-feld="grenzhoehe" placeholder="2,30">
+              </label>
+            </div>
+            <p class="vg-hint">Lichte Höhe, ab der die DG-Fläche laut kommunaler Satzung angerechnet wird (Standard 2,30 m). Gilt projektweit für alle VG-Berechnungen. Die Vollgeschoss-Beurteilung selbst bleibt unabhängig davon bei 2,30 m (Art. 83 Abs. 7 BayBO).</p>
+          </fieldset>
+
+          <fieldset class="vg-block">
+            <legend>Kommentar</legend>
+            <label class="vg-full">
+              <textarea id="vgKommentar" rows="3" placeholder="Quelle der Maße im Bauantrag, Sonderfälle, …"></textarea>
+            </label>
+          </fieldset>
+        </div>
+
+        <div class="vg-spalte-diagramme">
+          <div class="vg-diagramm-host">
+            <h3 class="vg-diagramm-titel">Grundriss</h3>
+            <svg id="vgSvgGrundriss" viewBox="0 0 400 240" preserveAspectRatio="xMidYMid meet"></svg>
+          </div>
+          <div class="vg-aufrisse">
+            <div class="vg-diagramm-host">
+              <h3 class="vg-diagramm-titel">Aufriss links</h3>
+              <svg id="vgSvgAufrissL" viewBox="0 0 400 200" preserveAspectRatio="xMidYMid meet"></svg>
+            </div>
+            <div class="vg-diagramm-host">
+              <h3 class="vg-diagramm-titel">Aufriss rechts</h3>
+              <svg id="vgSvgAufrissR" viewBox="0 0 400 200" preserveAspectRatio="xMidYMid meet"></svg>
+            </div>
+          </div>
+          <div class="vg-diagramm-host">
+            <h3 class="vg-diagramm-titel">Querschnitt</h3>
+            <svg id="vgSvgQuerschnitt" viewBox="0 0 400 240" preserveAspectRatio="xMidYMid meet"></svg>
+          </div>
+
+          <div class="vg-hero" id="vgHero">
+            <div class="vg-hero-pille" id="vgHeroPille">
+              <span class="vg-hero-icon" id="vgHeroIcon">…</span>
+              <span class="vg-hero-text" id="vgHeroText">Eingaben für Ergebnis ergänzen</span>
+            </div>
+            <table class="vg-stats">
+              <tbody>
+                <tr><th>A_G (Grundfläche)</th><td id="vgStatAG">—</td></tr>
+                <tr><th>A ≥ 2,30 m</th>
+                  <td class="vg-stat-a230">
+                    <span id="vgStatA230">—</span>
+                    <button type="button" id="vgBtnA230Edit" class="vg-a230-btn" title="Fläche ≥ 2,30 m manuell korrigieren" hidden>✎</button>
+                    <button type="button" id="vgBtnA230Reset" class="vg-a230-btn" title="Auf errechneten Wert zurücksetzen" hidden>↺</button>
+                    <span id="vgA230Edit" class="vg-a230-edit" hidden>
+                      <input type="text" id="vgA230Input" inputmode="decimal" aria-label="Korrigierte Fläche größer gleich 2,30 m in Quadratmeter">
+                      <span class="vg-einheit">m²</span>
+                      <button type="button" id="vgBtnA230Ok" class="vg-a230-btn" title="Übernehmen">✓</button>
+                      <button type="button" id="vgBtnA230Cancel" class="vg-a230-btn" title="Abbrechen">×</button>
+                    </span>
+                  </td></tr>
+                <tr id="vgRowAanr" hidden><th id="vgStatAanrLabel">Anrechenbar</th><td id="vgStatAanr">—</td></tr>
+                <tr><th>2/3-Schwelle</th><td id="vgStatZdF">—</td></tr>
+                <tr><th>Anteil ≥ 2,30 m</th><td id="vgStatAnteil">—</td></tr>
+                <tr><th>Bm (Restbreite)</th><td id="vgStatBm">—</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="vg-warnungen" id="vgWarnungen" hidden></div>
+          <div class="vg-fehler" id="vgFehler" hidden></div>
+        </div>
+
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button type="button" class="btn btn-danger" id="btnVgZuruecksetzen" title="Entfernt die gesamte VG-Berechnung für dieses Geschoss (mit Bestätigung).">VG-Berechnung löschen</button>
+      <span class="spacer"></span>
+      <button type="button" class="btn" id="btnVgAbbrechen">Abbrechen</button>
+      <button type="button" class="btn btn-primary" id="btnVgOk">Speichern</button>
+    </div>
+  </div>
+</div>
+
+<!-- Update-Modal -->
+<div class="modal-backdrop" id="updateBackdrop" role="dialog" aria-modal="true" aria-labelledby="updateTitel">
+  <div class="modal">
+    <div class="modal-head"><h2 id="updateTitel">Update</h2></div>
+    <div class="modal-body" id="updateBody"></div>
+    <div class="modal-foot">
+      <button type="button" class="btn" id="updateSpaeter">Später</button>
+      <a href="#" target="_blank" rel="noopener" class="btn btn-primary" id="updateDownload">Zum Download</a>
+    </div>
+  </div>
+</div>
+
+<!-- Hilfe-Modal -->
+<div class="modal-backdrop" id="hilfeBackdrop" role="dialog" aria-modal="true" aria-labelledby="hilfeTitel">
+  <div class="modal">
+    <div class="modal-head"><h2 id="hilfeTitel">FlächenKlar Hilfe</h2></div>
+    <div class="modal-body">
+      <ul class="hilfe-liste" style="list-style:none; padding:0; margin:0;">
+        <li style="margin:8px 0;"><button type="button" class="btn" style="width:100%; justify-content:flex-start;" id="hilfeUpdate">Auf Updates prüfen</button></li>
+        <li style="margin:8px 0;"><button type="button" class="btn" style="width:100%; justify-content:flex-start;" id="hilfeDiagnose">Diagnose-Bericht erstellen</button></li>
+        <li style="margin:8px 0;"><button type="button" class="btn" style="width:100%; justify-content:flex-start;" id="hilfeHandbuch">Benutzerhandbuch öffnen</button></li>
+        <li style="margin:8px 0;"><button type="button" class="btn" style="width:100%; justify-content:flex-start;" id="hilfeUeber">Über FlächenKlar</button></li>
+      </ul>
+      <div id="hilfeUeberInhalt" hidden style="margin-top:12px; padding-top:8px; border-top:1px solid #ddd; font-size:13px;"></div>
+    </div>
+    <div class="modal-foot">
+      <span class="spacer"></span>
+      <button type="button" class="btn" id="hilfeSchliessen">Schließen</button>
+    </div>
+  </div>
+</div>
+
+<!-- Diagnose-Modal -->
+<div class="modal-backdrop" id="diagnoseBackdrop" role="dialog" aria-modal="true" aria-labelledby="diagnoseTitel">
+  <div class="modal">
+    <div class="modal-head"><h2 id="diagnoseTitel">Diagnose-Bericht erstellen</h2></div>
+    <div class="modal-body">
+      <p>Inhaltstiefe:</p>
+      <label style="display:block; margin:4px 0;">
+        <input type="radio" name="diagnoseTiefe" value="minimal"> Minimal — nur App-Version + Browser-Info
+      </label>
+      <label style="display:block; margin:4px 0;">
+        <input type="radio" name="diagnoseTiefe" value="standard"> Standard — + Projekt-Metadaten (Zahlen, keine Namen)
+      </label>
+      <label style="display:block; margin:4px 0;">
+        <input type="radio" name="diagnoseTiefe" value="voll" checked> Mit Projekt-Snapshot (Default) — anonymisiert, ohne PDFs
+      </label>
+      <p style="margin-top:12px;">Vorschau (das wird gespeichert):</p>
+      <textarea id="diagnosePreview" readonly style="width:100%; min-height:240px; font-family:Consolas,monospace; font-size:12px;"></textarea>
+    </div>
+    <div class="modal-foot">
+      <button type="button" class="btn" id="diagnoseAbbrechen">Abbrechen</button>
+      <span class="spacer"></span>
+      <button type="button" class="btn btn-primary" id="diagnoseSpeichern">Speichern …</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<footer class="app-footer">
+  <span id="versionInfo">Version —</span>
+  <span class="spacer"></span>
+  <span id="libStatusKurz" class="mono">Libs: prüfe …</span>
+</footer>
+
+<!-- Reihenfolge: util -> state -> infra -> drittlibs -> domains -> data -> app -->
+<script src="js/version.js"></script>
+<script src="js/util.js"></script>
+<script src="js/state.js"></script>
+<script src="js/lizenz.js"></script>
+<script src="js/updates.js"></script>
+<script src="js/recovery.js"></script>
+
+<script src="lib/pdf.min.js" onerror="this.dataset.fehlt='1'"></script>
+<script src="lib/jspdf.umd.min.js" onerror="this.dataset.fehlt='1'"></script>
+<script src="lib/fflate.min.js" onerror="this.dataset.fehlt='1'"></script>
+
+<script src="js/pdf-loader.js"></script>
+<script src="js/pdf-renderer.js"></script>
+<script src="js/pdf-vektor.js"></script>
+<script src="js/pdf-massketten.js"></script>
+<script src="js/region.js"></script>
+<script src="js/geschoss.js"></script>
+<script src="js/polygon.js"></script>
+<script src="js/snap.js"></script>
+<script src="js/rechteck.js"></script>
+<script src="js/projekt.js"></script>
+<script src="js/vollgeschoss.js"></script>
+<script src="js/vg-geometrie.js"></script>
+<script src="js/vg-validierung.js"></script>
+<script src="js/vg-diagramm.js"></script>
+<script src="js/vg-modal.js"></script>
+<script src="js/export.js"></script>
+<script src="js/exportdaten.js"></script>
+<script src="js/exportformat.js"></script>
+<!-- <script src="js/exportformat-riwa.js"></script>  RIWA-Adapter folgt mit Format-Spez -->
+<script src="js/export-dialog.js"></script>
+<script src="js/diagnose.js"></script>
+<script src="js/hilfe.js"></script>
+
+
+<script src="js/massstab-ui.js"></script>
+<script src="js/app.js"></script>
+<script src="js/demo-bootstrap.js"></script>
+</body>
+</html>
