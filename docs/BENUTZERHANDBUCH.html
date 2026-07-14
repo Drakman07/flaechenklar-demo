@@ -81,7 +81,7 @@ body {
 <header class="hb-head">
   <div>
     <h1>FlächenKlar — Benutzerhandbuch</h1>
-    <div class="hb-meta">Version 1.2.6 · Stand 2026-07-05</div>
+    <div class="hb-meta">Version 1.2.7 · Stand 2026-07-06</div>
   </div>
   <button type="button" class="hb-print-btn" onclick="window.print()">Drucken</button>
 </header>
@@ -688,6 +688,15 @@ keine versehentlichen Demo-PDFs in echten Akten landen.</p>
 <li>Kanten-Doppelklick → Maß editieren (siehe 8.2).</li>
 <li>Polygon ganz löschen (Mülleimer-Symbol in der Sidebar) und neu zeichnen.</li>
 </ol>
+<h3 id="plan-wird-nicht-angezeigt-rendering-abgebrochen-was-tun">„Plan wird nicht angezeigt — Rendering abgebrochen&quot; — was tun?</h3>
+<p>Bei sehr großen oder sehr detailreichen Sammelblättern (z. B. mehrere Geschosse
+und Ansichten auf einem einzigen PDF-Blatt) kann die Vorschau-Erzeugung so
+aufwändig werden, dass das Tool sie nach 20 Sekunden automatisch abbricht und
+diese Meldung zeigt — statt den Browser-Tab endlos hängen zu lassen. Abhilfe:
+das Blatt in kleinere Bereiche aufteilen (z. B. je Geschoss/Ansicht ein
+eigenes PDF) und einzeln importieren. Bei sehr großen, aber noch handhabbaren
+Plänen reduziert das Tool außerdem automatisch die Render-Auflösung (Hinweis
+per Toast) — das ist normal und beeinträchtigt die Maßgenauigkeit nicht.</p>
 <h3 id="funktioniert-das-tool-auf-einem-mac">Funktioniert das Tool auf einem Mac?</h3>
 <p>Technisch ja (HTML/JS, Browser-basiert), aber nicht explizit getestet. Auch
 Safari ist nicht im Zielband. Für den behördlichen Einsatz: Firefox auf Windows.</p>

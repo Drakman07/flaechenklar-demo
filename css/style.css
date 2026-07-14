@@ -1071,7 +1071,16 @@ kbd {
 }
 .vg-a230-btn:hover { background: #f3f4f6; color: var(--text); }
 .vg-a230-edit { display: inline-flex; align-items: center; gap: 2px; justify-content: flex-end; }
-.vg-a230-edit input {
+/* Ohne dies gewinnt die eigene display:inline-flex ueber die UA-Regel fuer
+   [hidden] (Autor-CSS schlaegt immer UA-Stylesheet) — die Box bliebe nach dem
+   Bestaetigen/Abbrechen sichtbar und ueberlappt den fertigen Wert. Gleiches
+   Muster wie .mass-status[hidden] / .mass-banner[hidden] oben im Dokument. */
+.vg-a230-edit[hidden] { display: none; }
+/* Selektor braucht die zusaetzliche .vg-hero-Ebene, damit die Spezifitaet die
+   generische ".modal-body input[type=text]" Regel (width:100%) schlaegt — sonst
+   gewinnt die 100%-Breite, der Input fuellt die ganze Zelle und OK/Abbrechen
+   werden aus der sichtbaren Box gedraengt. */
+.vg-hero .vg-a230-edit input {
   width: 80px;
   font-family: Consolas, monospace;
   font-size: 12px;
