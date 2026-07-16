@@ -1,6 +1,10 @@
 FlaechenKlar Browser-Demo — generiert von tool/tools/build-demo.js
 Automatisch erzeugt, NICHT von Hand editieren (Neubau ueberschreibt alles).
 
+Laeuft per Doppelklick auf index.html (auch offline/file://) UND online
+(demo.flaechenklar.de) — der Beispielplan ist als Base64 eingebettet
+(js/demo-plan-data.js), kein fetch() zur Laufzeit noetig.
+
 Neu bauen : node tools/build-demo.js  (im tool/-Ordner)
 Beispielplan ersetzen: tool/tools/demo-assets/beispielplan.gfproj austauschen,
   dann neu bauen. Format = .gfproj (ZIP mit projekt.json + PDF).
