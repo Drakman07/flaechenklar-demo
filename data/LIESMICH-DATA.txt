@@ -1,0 +1,22 @@
+FlaechenKlar Demo — Ordner data/
+===================================
+
+Damit die erlassende Behoerde (Gemeinde) dauerhaft gespeichert bleibt —
+auch nach dem Verschieben/Entpacken des Ordners auf einen anderen Rechner —
+legst du hier eine Datei "kommune.js" ab:
+
+  1. Im Tool oben auf das Wappen-Symbol > "Gemeinde-Stammdaten verwalten".
+  2. Name, Anschrift und (fuer den Bescheid) die Beitragssaetze eintragen.
+  3. Unten auf "Stammdaten-Datei erzeugen" klicken — es wird eine Datei
+     "kommune.js" heruntergeladen.
+  4. Diese Datei in genau diesen Ordner data/ legen (neben diese Anleitung).
+  5. index.html neu laden (F5) oder neu oeffnen.
+
+Danach verschwindet der Hinweis "Erlassende Behoerde (Kommune) fehlt" und
+der Bescheid wird mit deinen Behoerdendaten erstellt.
+
+Als Vorlage/Beispiel liegt kommune.example.js bei — du kannst sie auch
+einfach zu kommune.js kopieren und die Werte von Hand anpassen.
+
+Hinweis: Dies bleibt eine DEMO (Wasserzeichen im PDF). Eine Lizenzdatei
+wird bewusst NICHT mitgeliefert.

@@ -547,7 +547,7 @@
 
       <fieldset class="pd-block">
         <legend>Behörde</legend>
-        <label class="pd-full">Name der Gemeinde/Stadt/Markt<input type="text" id="sdName" maxlength="120" placeholder="z. B. Markt Postbauer-Heng"></label>
+        <label class="pd-full">Name der Gemeinde/Stadt/Markt<input type="text" id="sdName" maxlength="120" placeholder="z. B. Mustergemeinde"></label>
         <label class="pd-full">Straße + Hausnummer<input type="text" id="sdStrasse" maxlength="120"></label>
         <div class="pd-grid pd-grid-13">
           <label>PLZ<input type="text" id="sdPlz" maxlength="10"></label>
@@ -991,6 +991,7 @@
 <script src="js/diagnose.js"></script>
 <script src="js/hilfe.js"></script>
 
+<script src="data/kommune.js" onerror="this.dataset.fehlt='1'"></script>
 
 <script src="js/kommune.js"></script>
 <script src="js/stammdaten.js"></script>
