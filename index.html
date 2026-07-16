@@ -1,4 +1,9 @@
 <!DOCTYPE html>
+<!--
+  FlächenKlar — © 2026 Alexander Geitner. Alle Rechte vorbehalten.
+  Proprietäre Software. Vervielfältigung, Bearbeitung und Reverse Engineering untersagt.
+  „FlächenKlar" ist eine Marke von Alexander Geitner.
+-->
 <html lang="de">
 <head>
 <meta charset="UTF-8">
@@ -40,8 +45,10 @@
       <button type="button" id="btnOeffnen" class="btn btn-ghost" title="Projekt (.zip) öffnen (Strg+O)">Öffnen</button>
       <input type="file" id="gfprojInput" accept=".zip,application/zip" hidden>
       <button type="button" id="btnProjektdaten" class="btn btn-ghost" disabled title="Projektdaten bearbeiten">Projektdaten</button>
+      <button type="button" id="btnStammdaten" class="btn btn-ghost" title="Gemeinde-Stammdaten verwalten (Anschrift, Wappen, Sachbearbeiter)">Stammdaten</button>
       <button type="button" id="btnSpeichern" class="btn btn-ghost" disabled title="Projekt speichern (Strg+S)">Speichern</button>
       <button type="button" id="btnProtokoll" class="btn btn-primary" disabled>Aufmaßprotokoll</button>
+      <button type="button" id="btnBescheid" class="btn btn-primary" disabled title="Beitragsbescheid erstellen (Herstellungsbeitrag)">Beitragsbescheid</button>
     </div>
   </div>
 </header>
@@ -51,6 +58,8 @@
   <div class="tb-group">
     <label class="btn" id="lblPdfLaden" for="pdfInput">PDF laden</label>
     <input type="file" id="pdfInput" accept="application/pdf" multiple hidden>
+    <label class="btn" id="lblFotoLaden" for="fotoInput" title="Handyfoto eines Plans laden und perspektivisch entzerren (4-Punkt-Auswahl)">+ Foto</label>
+    <input type="file" id="fotoInput" accept="image/jpeg,image/png" hidden>
     <span class="tb-info" id="pdfDateiInfo">— keine Datei —</span>
     <select class="tb-select" id="pdfSelect" hidden title="Aktive PDF wechseln"></select>
     <button type="button" class="btn btn-small btn-outline" id="btnPdfUmbenennen" hidden title="Anzeigename der aktiven PDF ändern" aria-label="Aktive PDF umbenennen">Umbenennen</button>
@@ -260,16 +269,22 @@
         <label class="pp-check pp-sub"><input type="checkbox" id="ppKantenmasse" checked> ↳ Kantenmaße der Polygone im Plan einzeichnen</label>
         <label class="pp-check"><input type="checkbox" id="ppRechenweg"> Rechenweg anzeigen (Additions-Schritte für Nachvollziehbarkeit)</label>
       </fieldset>
-      <!-- v1.2: Datenexport vorerst ausgeblendet (hidden). Der generische CSV/JSON-
-           Export funktioniert, soll aber erst sichtbar werden, wenn die echte RIWA-
-           Beitragsmodul-Schnittstelle steht. Zum Reaktivieren: hidden entfernen. -->
-      <fieldset class="pd-block" id="datenexportBlock" hidden>
+      <!-- v1.3: Datenexport (Fachverfahren). RIWA-Beitragsmodul-Export als .xlsx
+           passend zur RIWA-Vorlage (Arbeitsblatt "export"); CSV/JSON als generische
+           Formate. -->
+      <fieldset class="pd-block" id="datenexportBlock">
         <legend>Datenexport (Fachverfahren)</legend>
         <p class="pd-hint">Maschinenlesbare Ausgabe der Flächen zur Weiterverarbeitung im Beitragsverfahren — ohne Abtippen. Dieselben Werte wie im PDF.</p>
         <div class="pd-grid">
           <label>Format<select id="exFormat"></select></label>
           <label class="pp-check"><input type="checkbox" id="exKanten"> Kantenmaße + Koordinaten einbetten</label>
         </div>
+        <div class="pd-grid" id="exRiwaOptionen" hidden>
+          <label>beitragspfl. Kanal<select id="exKanal"><option value="ja" selected>ja</option><option value="nein">nein</option></select></label>
+          <label>beitragspfl. Wasser<select id="exWasser"><option value="ja" selected>ja</option><option value="nein">nein</option></select></label>
+          <label>historisch<select id="exHistorisch"><option value="ja">ja</option><option value="nein" selected>nein</option></select></label>
+        </div>
+        <p class="pd-hint" id="exRiwaHinweis" hidden>Kanal/Wasser/historisch werden als Vorgabe für alle Zeilen gesetzt — in Excel pro Zeile anpassbar.</p>
         <button type="button" class="btn" id="btnDatenexport">Datenexport erstellen</button>
       </fieldset>
       <p class="fk-fehler" id="ppFehler" hidden></p>
@@ -278,6 +293,175 @@
     <div class="modal-foot">
       <button type="button" class="btn" id="btnProtokollAbbrechen">Abbrechen</button>
       <button type="button" class="btn btn-primary" id="btnProtokollErzeugen">PDF erstellen</button>
+    </div>
+  </div>
+</div>
+
+<!-- Beitragsbescheid-Modal (Herstellungsbeitrag Art. 5 KAG Bayern) -->
+<div class="modal-backdrop" id="bescheidBackdrop" role="dialog" aria-modal="true" aria-labelledby="bescheidTitel">
+  <div class="modal modal-breit">
+    <div class="modal-head"><h2 id="bescheidTitel">Beitragsbescheid erstellen</h2></div>
+    <div class="modal-body">
+      <p class="pd-hint">Herstellungsbeitrag (Art. 5 KAG Bayern). Das Tool multipliziert nur <em>Fläche × hinterlegter Beitragssatz</em> — Satzungsanwendung (welcher Satz, welche Abzüge) bleibt Ihre Aufgabe.</p>
+
+      <fieldset class="pd-block">
+        <legend>Bescheiddatum</legend>
+        <div class="pd-grid">
+          <label>Datum des Bescheids <span class="pd-hint" style="font-weight:normal">(leer = Datum der Erstellung; zur Rückdatierung manuell setzen)</span><input type="date" id="beDatum"></label>
+        </div>
+      </fieldset>
+
+      <fieldset class="pd-block">
+        <legend>Empfänger</legend>
+        <div class="pd-grid">
+          <label>Anrede<select id="beEmpfAnrede"><option value="">—</option><option value="Herr">Herr</option><option value="Frau">Frau</option><option value="Firma">Firma</option></select></label>
+          <label class="pd-full">Name<input type="text" id="beEmpfName" placeholder="Vor- und Nachname / Firma"></label>
+          <label class="pd-full">Straße<input type="text" id="beEmpfStrasse"></label>
+          <label>PLZ<input type="text" id="beEmpfPlz"></label>
+          <label>Ort<input type="text" id="beEmpfOrt"></label>
+        </div>
+        <label class="pp-check"><input type="checkbox" id="beMehrereSchuldner"> Mehrere Beitragspflichtige (Gesamtschuldner, Art. 5 Abs. 6 S. 2 KAG)</label>
+        <div class="pd-grid" id="beWeitererBlock" hidden>
+          <label>Anrede (2.)<select id="beEmpf2Anrede"><option value="">—</option><option value="Herr">Herr</option><option value="Frau">Frau</option><option value="Firma">Firma</option></select></label>
+          <label class="pd-full">Name (2. Beitragspflichtige/r) <span class="pd-hint" style="font-weight:normal">(gemeinsame Anschrift wie oben — bei abweichender Anschrift je Pflichtigem einen eigenen Bescheid erstellen)</span><input type="text" id="beEmpf2Name" placeholder="Vor- und Nachname / Firma"></label>
+        </div>
+        <button type="button" class="btn btn-small" id="beBtnAusBauherr">Aus Bauherr übernehmen</button>
+      </fieldset>
+
+      <fieldset class="pd-block">
+        <legend>Grundstück</legend>
+        <div class="pd-grid">
+          <label>Grundstücksfläche (m²)<input type="text" id="beGrundflaeche" inputmode="decimal" placeholder="z. B. 750"></label>
+          <label>Geschossfläche neu (m²) <span class="pd-hint" style="font-weight:normal">(automatisch aus der Flächenermittlung)</span><input type="text" id="beGfNeu" readonly title="Aus der Flächenermittlung übernommen"></label>
+        </div>
+        <p class="pd-hint" id="beGrundInfo"></p>
+        <button type="button" class="btn btn-small" id="beLinkProjektdaten">Projektdaten bearbeiten …</button>
+      </fieldset>
+
+      <fieldset class="pd-block">
+        <legend>Veranlagung</legend>
+        <label class="pp-check"><input type="radio" name="beVeranlagung" id="beVeranlErst" value="ersterhebung" checked> Ersterhebung (erstmalige Festsetzung)</label>
+        <label class="pp-check"><input type="radio" name="beVeranlagung" id="beVeranlNach" value="nacherhebung"> Nacherhebung (Mehrfläche gegenüber bereits veranlagt)</label>
+        <div class="pd-grid" id="beNachBlock" hidden>
+          <label>bereits veranlagte Grundstücksfläche (m²)<input type="text" id="beVeranlagtGrund" inputmode="decimal"></label>
+          <label>bereits veranlagte Geschossfläche (m²)<input type="text" id="beVeranlagtGf" inputmode="decimal"></label>
+          <label>Vorbescheid vom <span class="pd-hint" style="font-weight:normal">(optional)</span><input type="date" id="beVeranlagtBescheidDatum"></label>
+          <label>Vorbescheid Az./Nr. <span class="pd-hint" style="font-weight:normal">(optional)</span><input type="text" id="beVeranlagtBescheidNummer" placeholder="z. B. 2024/7"></label>
+        </div>
+      </fieldset>
+
+      <fieldset class="pd-block">
+        <legend>Beitragsarten &amp; Sätze</legend>
+        <label class="pp-check"><input type="checkbox" id="beArtWasser" checked> Wasserversorgung (BGS-WAS)</label>
+        <div class="pd-grid be-art" id="beBlockWasser">
+          <label>Satzung<input type="text" id="beWSatzung" placeholder="BGS-WAS"></label>
+          <label>Satzung vom<input type="date" id="beWSatzungVom"></label>
+          <label>Satz Grundstücksfl. (€/m²)<input type="text" id="beWSatzGrund" inputmode="decimal"></label>
+          <label>Satz Geschossfl. (€/m²)<input type="text" id="beWSatzGf" inputmode="decimal"></label>
+          <label>Bescheidnummer<input type="text" id="beWBescheidNr"></label>
+          <label>Kassenzeichen<input type="text" id="beWKassenzeichen"></label>
+          <label>Satzungsverweis Maßstab (II.)<input type="text" id="beWSatzungsverweis" placeholder="z. B. § 4 BGS/WAS"></label>
+        </div>
+        <label class="pp-check"><input type="checkbox" id="beArtEntw" checked> Entwässerung / Kanal (BGS-EWS)</label>
+        <div class="pd-grid be-art" id="beBlockEntw">
+          <label>Satzung<input type="text" id="beESatzung" placeholder="BGS-EWS"></label>
+          <label>Satzung vom<input type="date" id="beESatzungVom"></label>
+          <label>Satz Grundstücksfl. (€/m²)<input type="text" id="beESatzGrund" inputmode="decimal"></label>
+          <label>Satz Geschossfl. (€/m²)<input type="text" id="beESatzGf" inputmode="decimal"></label>
+          <label>Bescheidnummer<input type="text" id="beEBescheidNr"></label>
+          <label>Kassenzeichen<input type="text" id="beEKassenzeichen"></label>
+          <label>Satzungsverweis Maßstab (II.)<input type="text" id="beESatzungsverweis" placeholder="z. B. § 5 BGS/EWS"></label>
+        </div>
+      </fieldset>
+
+      <fieldset class="pd-block">
+        <legend>Vorauszahlung / Anrechnung</legend>
+        <label class="pp-check"><input type="checkbox" id="beVzVorhanden"> Geleistete Vorauszahlung anrechnen (Art. 5 Abs. 5 KAG)</label>
+        <div class="pd-grid" id="beVzBlock" hidden>
+          <label>Betrag (€)<input type="text" id="beVzBetrag" inputmode="decimal" placeholder="z. B. 1.200,00"></label>
+          <label>Datum der Vorauszahlung<input type="date" id="beVzDatum"></label>
+          <label id="beVzArtLabel" hidden>Anrechnen auf
+            <select id="beVzArt">
+              <option value="">— bitte wählen —</option>
+              <option value="wasserversorgung">Wasserversorgung</option>
+              <option value="entwaesserung">Entwässerung</option>
+            </select>
+          </label>
+        </div>
+        <p class="pd-hint">Bei Wasser <em>und</em> Abwasser gleichzeitig (getrennte Bescheide) bitte oben zuordnen, welchem Teilbescheid die Vorauszahlung gutgeschrieben wird.</p>
+      </fieldset>
+
+      <fieldset class="pd-block">
+        <legend>Zahlung &amp; Rechtsbehelf</legend>
+        <div class="pd-grid">
+          <label>Bank<input type="text" id="beBank"></label>
+          <label>IBAN<input type="text" id="beIban"></label>
+          <label>BIC<input type="text" id="beBic"></label>
+          <div class="pd-full"><button type="button" class="btn btn-small be-reset-gruppe-btn" data-reset-gruppe="zahlung">Bank/IBAN/BIC aus Stammdaten übernehmen</button></div>
+          <label>Fälligkeit (Tage)<input type="text" id="beFaelligkeit" inputmode="numeric" placeholder="leer = 1 Monat"></label>
+          <label>Versanddatum (Aufgabe zur Post) <span class="pd-hint" style="font-weight:normal">(nur intern/Akte, § 122 Abs. 2 AO)</span><input type="date" id="beVersandDatum"></label>
+          <label class="pd-full">Fälligkeitsdatum (III.) <span class="pd-hint" style="font-weight:normal">(Bekanntgabefiktion)</span><input type="date" id="beFaelligkeitDatum"><button type="button" class="btn btn-small" id="beBtnFiktion">Aus Versanddatum berechnen</button><span class="pd-hint" style="font-weight:normal; display:block; margin-top:4px">Ohne gemeindespezifische Feiertage (z. B. Mariä Himmelfahrt) — Datum prüfen.</span></label>
+          <label class="pd-full">Betrag in Worten <span class="pd-hint" style="font-weight:normal">(optional)</span><input type="text" id="beBetragInWorten"></label>
+          <label class="pd-full">Zuständiges Verwaltungsgericht<input type="text" id="beGerichtName" placeholder="z. B. Bayerisches Verwaltungsgericht Regensburg"></label>
+          <label>Gericht PLZ<input type="text" id="beGerichtPlz"></label>
+          <label>Gericht Ort<input type="text" id="beGerichtOrt"></label>
+          <label>Gericht Postfachanschrift<input type="text" id="beGerichtPostanschrift" placeholder="z. B. Postfach 110165, 93014 Regensburg"></label>
+          <label>Gericht Hausanschrift<input type="text" id="beGerichtHausanschrift" placeholder="z. B. Haidplatz 1, 93047 Regensburg"></label>
+          <div class="pd-full"><button type="button" class="btn btn-small be-reset-gruppe-btn" data-reset-gruppe="gericht">Gericht aus Stammdaten übernehmen</button></div>
+          <label class="pd-full">Rechtsgrundlage <span class="pd-hint" style="font-weight:normal">(optional, nur bei Bedarf — Art. 5 KAG steht bereits in der Begründung IV.; leer = keine zusätzliche Fußnote)</span><textarea id="beRechtsgrundlage" rows="2"></textarea><button type="button" class="btn btn-small be-reset-btn" data-reset="beRechtsgrundlage">Standardtext</button></label>
+          <label class="pd-full">Rechtsbehelfsbelehrung <span class="pd-hint" style="font-weight:normal">(leer lassen = automatisch mit zuständigem Gericht)</span><textarea id="beRechtsbehelf" rows="4"></textarea><button type="button" class="btn btn-small be-reset-btn" data-reset="beRechtsbehelf">Standardtext</button></label>
+          <label class="pd-full">Hinweis Zahlungsverzug (Säumnis) <span class="pd-hint" style="font-weight:normal">(leer lassen = Standardtext)</span><textarea id="beSaeumnishinweis" rows="3"></textarea><button type="button" class="btn btn-small be-reset-btn" data-reset="beSaeumnishinweis">Standardtext</button></label>
+        </div>
+      </fieldset>
+
+      <fieldset class="pd-block">
+        <legend>Unterschrift</legend>
+        <p class="pd-hint">Regelfall: Name + Amtsbezeichnung (aus den Stammdaten) und der gesetzliche Hinweis, dass der Bescheid auch ohne Unterschrift gültig ist, erscheinen gemeinsam.</p>
+        <label class="pp-check"><input type="checkbox" id="beMitUnterschrift"> Ausnahmefall: tatsächlich eigenhändig unterschriebene Ausfertigung (kein Maschinen-Hinweis)</label>
+      </fieldset>
+
+      <details class="pd-block pd-block-details">
+        <summary>Begründung &amp; Hinweise <span class="pd-hint" style="font-weight:normal">(Begründung IV.: leer lassen = dynamischer Standardtext. Hinweise V.: leer lassen = Hinweis entfällt im Bescheid — Standardtext-Button zum Übernehmen)</span></summary>
+        <div class="pd-grid">
+          <label class="pd-full">Begründung (IV.)<textarea id="beBegruendung" rows="3"></textarea><button type="button" class="btn btn-small be-reset-btn" data-reset="beBegruendung">Standardtext</button></label>
+          <label class="pd-full">Begründung – Einzelfall-Zusatz<textarea id="beBegruendungZusatz" rows="2"></textarea></label>
+          <label class="pd-full">Hinweis Gesamtschuldner<textarea id="beHinweisGesamtschuldner" rows="2"></textarea><button type="button" class="btn btn-small be-reset-btn" data-reset="beHinweisGesamtschuldner">Standardtext</button></label>
+          <label class="pd-full">Hinweis Öffentliche Last<textarea id="beHinweisOeffLast" rows="2"></textarea><button type="button" class="btn btn-small be-reset-btn" data-reset="beHinweisOeffLast">Standardtext</button></label>
+          <label class="pd-full">Hinweis Meldepflicht<textarea id="beHinweisMeldepflicht" rows="2"></textarea><button type="button" class="btn btn-small be-reset-btn" data-reset="beHinweisMeldepflicht">Standardtext</button></label>
+          <label class="pd-full">Hinweis Keine aufschiebende Wirkung (§ 80 VwGO)<textarea id="beHinweisAufschiebend" rows="2"></textarea><button type="button" class="btn btn-small be-reset-btn" data-reset="beHinweisAufschiebend">Standardtext</button></label>
+          <label class="pd-full">Hinweis Billigkeit (Stundung/Erlass)<textarea id="beHinweisBilligkeit" rows="2"></textarea><button type="button" class="btn btn-small be-reset-btn" data-reset="beHinweisBilligkeit">Standardtext</button></label>
+        </div>
+      </details>
+
+      <div class="be-vorschau" id="beVorschau">
+        <div class="be-vorschau-betrag">Festgesetzter Beitrag: <strong id="beVorschauBetrag">–</strong></div>
+        <div class="be-vorschau-detail" id="beVorschauDetail"></div>
+        <ul class="be-fehler" id="beFehler" hidden></ul>
+      </div>
+      <p class="fk-fehler" id="beExportFehler" hidden></p>
+    </div>
+    <div class="modal-foot">
+      <button type="button" class="btn" id="beBtnAbbrechen">Abbrechen</button>
+      <button type="button" class="btn" id="beBtnZwischenspeichern">Zwischenspeichern</button>
+      <button type="button" class="btn" id="beBtnDocx">Word (.docx)</button>
+      <button type="button" class="btn btn-primary" id="beBtnPdf">PDF (DIN 5008)</button>
+    </div>
+  </div>
+</div>
+
+<!-- Zusatzmodul-Teaser: erscheint statt des Bescheid-Modals, wenn das
+     Beitragsbescheid-Modul in der Lizenz nicht freigeschaltet ist. -->
+<div class="modal-backdrop" id="bescheidTeaserBackdrop" role="dialog" aria-modal="true" aria-labelledby="beTeaserTitel">
+  <div class="modal">
+    <div class="modal-head"><h2 id="beTeaserTitel">🔒 Zusatzmodul: Beitragsbescheid</h2></div>
+    <div class="modal-body">
+      <p>Mit dem Zusatzmodul <strong>Beitragsbescheid</strong> erstellen Sie aus der ermittelten Geschossfläche direkt den fertigen Herstellungsbeitrags-Bescheid — als <strong>PDF (DIN 5008)</strong> oder editierbares <strong>Word-Dokument</strong>, inklusive Rechtsbehelfsbelehrung und Zahlungsangaben.</p>
+      <p class="pd-hint">Einmalpreis ab 250 € (gestaffelt nach Einwohnerzahl), Pflege der Mustertexte über die Wartung abgedeckt. Ihre Kernlizenz zur Flächenberechnung bleibt unberührt.</p>
+      <p>Interesse? Eine kurze Mail genügt:<br>
+        <a href="mailto:info@flaechenklar.de?subject=Zusatzmodul%20Beitragsbescheid">info@flaechenklar.de</a></p>
+    </div>
+    <div class="modal-foot">
+      <button type="button" class="btn btn-primary" id="beTeaserSchliessen">Schließen</button>
     </div>
   </div>
 </div>
@@ -296,6 +480,7 @@
           <label>Projekt-Nummer<input type="text" id="pdProjektNummer" placeholder="z. B. 2022/16"></label>
         </div>
         <label class="pd-full">Bauvorhaben<input type="text" id="pdBauvorhaben" placeholder="z. B. Neubau eines EFH mit Doppelgarage"></label>
+        <label class="pd-full" id="pdGemeindeWrap" hidden>Ausstellende Gemeinde<select id="pdGemeinde"></select></label>
       </fieldset>
 
       <fieldset class="pd-block">
@@ -325,6 +510,11 @@
       <fieldset class="pd-block">
         <legend>Bearbeitung</legend>
         <label class="pd-full">Sachbearbeiter<input type="text" id="pdSachbearbeiter"></label>
+        <div class="pd-grid">
+          <label>Telefon<input type="text" id="pdSachbearbeiterTelefon" placeholder="optional"></label>
+          <label>E-Mail<input type="text" id="pdSachbearbeiterEmail" placeholder="optional"></label>
+        </div>
+        <label class="pd-full">Amtsbezeichnung (Unterschriftszeile Beitragsbescheid) <span class="pd-hint" style="font-weight:normal">(aus Stammdaten vorbelegt, optional)</span><input type="text" id="pdUnterschriftAmtsbezeichnung" placeholder="optional"></label>
         <label class="pd-full">Zusatzinfo (Freitext, mehrzeilig)<textarea id="pdZusatzinfo" rows="3" placeholder="Hinweise, die im Aufmaßprotokoll erscheinen sollen"></textarea></label>
       </fieldset>
 
@@ -333,6 +523,100 @@
     <div class="modal-foot">
       <button type="button" class="btn" id="btnProjektdatenAbbrechen">Abbrechen</button>
       <button type="button" class="btn btn-primary" id="btnProjektdatenOk">Übernehmen</button>
+    </div>
+  </div>
+</div>
+
+<!-- Gemeinde-Stammdaten-Modal (Anschrift, Wappen, Sachbearbeiter selbst pflegen) -->
+<div class="modal-backdrop" id="stammdatenBackdrop" role="dialog" aria-modal="true" aria-labelledby="stammdatenTitel">
+  <div class="modal modal-breit">
+    <div class="modal-head"><h2 id="stammdatenTitel">Gemeinde-Stammdaten</h2></div>
+    <div class="modal-body">
+      <p class="pd-hint">Diese Angaben erscheinen im Briefkopf und in der Unterschrift des Beitragsbescheids. Mehrere Gemeinden (Verwaltungsgemeinschaft) sind möglich — je Gemeinde ein Profil. Änderungen werden erst dauerhaft, wenn Sie unten die Datei erzeugen und in den Ordner <code>data/</code> legen.</p>
+
+      <fieldset class="pd-block">
+        <legend>Gemeinde-Profil</legend>
+        <div class="pd-grid pd-grid-13">
+          <label>Profil<select id="sdProfilSelect"></select></label>
+          <div class="sd-profil-actions">
+            <button type="button" class="btn btn-small" id="sdNeu" title="Neues Gemeinde-Profil anlegen">+ Neu</button>
+            <button type="button" class="btn btn-small btn-danger" id="sdLoeschen" title="Aktuelles Profil löschen">Löschen</button>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset class="pd-block">
+        <legend>Behörde</legend>
+        <label class="pd-full">Name der Gemeinde/Stadt/Markt<input type="text" id="sdName" maxlength="120" placeholder="z. B. Markt Postbauer-Heng"></label>
+        <label class="pd-full">Straße + Hausnummer<input type="text" id="sdStrasse" maxlength="120"></label>
+        <div class="pd-grid pd-grid-13">
+          <label>PLZ<input type="text" id="sdPlz" maxlength="10"></label>
+          <label>Ort<input type="text" id="sdOrt" maxlength="120"></label>
+        </div>
+        <div class="pd-grid">
+          <label>Bundesland<input type="text" id="sdBundesland" maxlength="60" placeholder="Bayern"></label>
+          <label>Standard-Sachbearbeiter<input type="text" id="sdSachbearbeiter" maxlength="120" placeholder="optional"></label>
+        </div>
+        <div class="pd-grid">
+          <label>Telefon (Sachbearbeiter)<input type="text" id="sdSachbearbeiterTelefon" maxlength="60" placeholder="optional"></label>
+          <label>E-Mail (Sachbearbeiter)<input type="text" id="sdSachbearbeiterEmail" maxlength="120" placeholder="optional"></label>
+        </div>
+        <label class="pd-full">Amtsbezeichnung (Unterschriftszeile Beitragsbescheid) <span class="pd-hint" style="font-weight:normal">(z. B. „Kämmerer", „Leiter des Bauamts" — optional, leer = „Sachbearbeiter/in")</span><input type="text" id="sdUnterschriftAmtsbezeichnung" maxlength="120" placeholder="optional"></label>
+      </fieldset>
+
+      <fieldset class="pd-block">
+        <legend>Wappen</legend>
+        <div class="sd-wappen-row">
+          <img id="sdWappenPreview" class="sd-wappen-preview" alt="Wappen-Vorschau" hidden>
+          <div class="sd-wappen-ctrl">
+            <label class="btn btn-small" for="sdWappenInput">Wappen wählen …</label>
+            <input type="file" id="sdWappenInput" accept="image/png,image/jpeg" hidden>
+            <button type="button" class="btn btn-small btn-outline" id="sdWappenEntfernen" hidden>Entfernen</button>
+            <span class="tb-info" id="sdWappenInfo">PNG oder JPG, wird auf max. 256 px verkleinert. Am besten quadratisch zugeschnitten (z. B. 1:1) — so füllt es den Briefkopf am schönsten aus.</span>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset class="pd-block" id="sdBescheidBlock" hidden>
+        <legend>Beitragsbescheid-Sätze <span class="pd-hint" style="font-weight:normal">(pro Gemeinde einmalig — werden beim Erstellen eines Bescheids automatisch übernommen)</span></legend>
+        <p class="pd-hint">Nur die dauerhaften Gemeinde-Werte: Satzung und €/m²-Sätze je Beitragsart. Bescheidnummer und Kassenzeichen bleiben pro Fall im Bescheid-Dialog.</p>
+        <label class="pp-check" style="cursor:default"><strong>Wasserversorgung</strong></label>
+        <div class="pd-grid be-art">
+          <label>Satzung<input type="text" id="sdWSatzung" maxlength="120" placeholder="BGS-WAS"></label>
+          <label>Satzung vom<input type="date" id="sdWSatzungVom"></label>
+          <label>Satz Grundstücksfl. (€/m²)<input type="text" id="sdWSatzGrund" inputmode="decimal" placeholder="z. B. 3,50"></label>
+          <label>Satz Geschossfl. (€/m²)<input type="text" id="sdWSatzGf" inputmode="decimal" placeholder="z. B. 12,00"></label>
+          <label>Satzungsverweis Maßstab<input type="text" id="sdWSatzungsverweis" maxlength="60" placeholder="z. B. § 4 BGS/WAS"></label>
+        </div>
+        <label class="pp-check" style="cursor:default"><strong>Entwässerung / Kanal</strong></label>
+        <div class="pd-grid be-art">
+          <label>Satzung<input type="text" id="sdESatzung" maxlength="120" placeholder="BGS-EWS"></label>
+          <label>Satzung vom<input type="date" id="sdESatzungVom"></label>
+          <label>Satz Grundstücksfl. (€/m²)<input type="text" id="sdESatzGrund" inputmode="decimal" placeholder="z. B. 4,20"></label>
+          <label>Satz Geschossfl. (€/m²)<input type="text" id="sdESatzGf" inputmode="decimal" placeholder="z. B. 14,00"></label>
+          <label>Satzungsverweis Maßstab<input type="text" id="sdESatzungsverweis" maxlength="60" placeholder="z. B. § 5 BGS/EWS"></label>
+        </div>
+        <label class="pp-check" style="cursor:default"><strong>Bankverbindung</strong> <span class="pd-hint" style="font-weight:normal">(erscheint automatisch in jedem Bescheid)</span></label>
+        <div class="pd-grid">
+          <label>Bank<input type="text" id="sdBank" maxlength="120"></label>
+          <label>IBAN<input type="text" id="sdIban" maxlength="34"></label>
+          <label>BIC<input type="text" id="sdBic" maxlength="11"></label>
+        </div>
+        <label class="pp-check" style="cursor:default"><strong>Zuständiges Verwaltungsgericht</strong></label>
+        <div class="pd-grid">
+          <label class="pd-full">Name<input type="text" id="sdGerichtName" maxlength="120" placeholder="z. B. Bayerisches Verwaltungsgericht Regensburg"></label>
+          <label>PLZ<input type="text" id="sdGerichtPlz" maxlength="10"></label>
+          <label>Ort<input type="text" id="sdGerichtOrt" maxlength="120"></label>
+          <label>Postfachanschrift<input type="text" id="sdGerichtPostanschrift" maxlength="120" placeholder="z. B. Postfach 110165, 93014 Regensburg"></label>
+          <label>Hausanschrift<input type="text" id="sdGerichtHausanschrift" maxlength="120" placeholder="z. B. Haidplatz 1, 93047 Regensburg"></label>
+        </div>
+      </fieldset>
+
+      <p class="fk-fehler" id="sdStatus" hidden></p>
+    </div>
+    <div class="modal-foot">
+      <button type="button" class="btn" id="sdSchliessen">Schließen</button>
+      <button type="button" class="btn btn-primary" id="sdErzeugen" title="Fertige data/kommune.js zum Ablegen erzeugen">Stammdaten-Datei erzeugen</button>
     </div>
   </div>
 </div>
@@ -624,6 +908,38 @@
   </div>
 </div>
 
+<!-- ===================== Foto-Import-Modal (v1.3): 4-Punkt-Entzerrung ===================== -->
+<div class="modal-backdrop" id="fotoBackdrop" role="dialog" aria-modal="true" aria-labelledby="fotoModalTitel">
+  <div class="modal modal-foto">
+    <div class="modal-head"><h2 id="fotoModalTitel">Foto entzerren — 4 Ecken eines bekannten Rechtecks anklicken</h2></div>
+    <div class="modal-body foto-modal-body">
+      <div class="foto-canvas-wrap" id="fotoCanvasWrap">
+        <canvas id="fotoModalCanvas" title="Mausrad: zoomen. Rechte Maustaste gedrückt halten: verschieben."></canvas>
+        <canvas id="fotoLupe" width="140" height="140" hidden></canvas>
+        <div class="foto-zoom-toolbar">
+          <button type="button" class="btn btn-mini" id="btnFotoZoomAus" title="Verkleinern">−</button>
+          <span class="foto-zoom-label" id="fotoZoomLabel">100&nbsp;%</span>
+          <button type="button" class="btn btn-mini" id="btnFotoZoomEin" title="Vergrößern">+</button>
+          <button type="button" class="btn btn-mini" id="btnFotoZoomReset" title="Zoom zurücksetzen">1:1</button>
+        </div>
+      </div>
+      <div class="hint" id="fotoModalHinweis">Foto wird geladen …</div>
+      <div class="row foto-masse">
+        <label for="fotoBreiteM">Breite des Rechtecks (m):</label>
+        <input type="text" id="fotoBreiteM" inputmode="decimal" placeholder="z. B. 10,50">
+        <label for="fotoHoeheM">Höhe (m):</label>
+        <input type="text" id="fotoHoeheM" inputmode="decimal" placeholder="z. B. 8,00">
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button type="button" class="btn" id="btnFotoAbbrechen">Abbrechen</button>
+      <button type="button" class="btn" id="btnFotoZuruecksetzen">Ecken zurücksetzen</button>
+      <span class="spacer"></span>
+      <button type="button" class="btn btn-primary" id="btnFotoUebernehmen" disabled>Entzerren &amp; übernehmen</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <footer class="app-footer">
@@ -653,6 +969,8 @@
 <script src="js/polygon.js"></script>
 <script src="js/snap.js"></script>
 <script src="js/rechteck.js"></script>
+<script src="js/foto.js"></script>
+<script src="js/foto-modal.js"></script>
 <script src="js/projekt.js"></script>
 <script src="js/vollgeschoss.js"></script>
 <script src="js/vg-geometrie.js"></script>
@@ -662,12 +980,20 @@
 <script src="js/export.js"></script>
 <script src="js/exportdaten.js"></script>
 <script src="js/exportformat.js"></script>
-<!-- <script src="js/exportformat-riwa.js"></script>  RIWA-Adapter folgt mit Format-Spez -->
+<script src="js/riwa-mapping.js"></script>
+<script src="js/xlsx-min.js"></script>
+<script src="js/exportformat-riwa.js"></script>
 <script src="js/export-dialog.js"></script>
+<script src="js/bescheid.js"></script>
+<script src="js/bescheid-pdf.js"></script>
+<script src="js/bescheid-docx.js"></script>
+<script src="js/bescheid-ui.js"></script>
 <script src="js/diagnose.js"></script>
 <script src="js/hilfe.js"></script>
 
 
+<script src="js/kommune.js"></script>
+<script src="js/stammdaten.js"></script>
 <script src="js/massstab-ui.js"></script>
 <script src="js/app.js"></script>
 <script src="js/demo-bootstrap.js"></script>

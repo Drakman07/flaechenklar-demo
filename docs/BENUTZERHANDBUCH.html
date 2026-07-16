@@ -81,14 +81,14 @@ body {
 <header class="hb-head">
   <div>
     <h1>FlächenKlar — Benutzerhandbuch</h1>
-    <div class="hb-meta">Version 1.2.7 · Stand 2026-07-06</div>
+    <div class="hb-meta">Version 1.3.0 · Stand 2026-07-15</div>
   </div>
   <button type="button" class="hb-print-btn" onclick="window.print()">Drucken</button>
 </header>
 <main class="hb-main">
 <h1 id="benutzerhandbuch-flächenklar">Benutzerhandbuch — FlächenKlar</h1>
-<p><strong>Version:</strong> 1.2.4
-<strong>Stand:</strong> 2026-07-02</p>
+<p><strong>Version:</strong> 1.3.0
+<strong>Stand:</strong> 2026-07-15</p>
 <hr>
 <h2 id="inhalt">Inhalt</h2>
 <ol>
@@ -107,6 +107,7 @@ body {
 <li><a href="#13-hilfe-men%C3%BC-und-diagnose-bericht">Hilfe-Menü und Diagnose-Bericht</a></li>
 <li><a href="#14-tastatur-shortcuts">Tastatur-Shortcuts</a></li>
 <li><a href="#15-h%C3%A4ufige-fragen">Häufige Fragen</a></li>
+<li><a href="#16-gemeinde-stammdaten-selbst-pflegen">Gemeinde-Stammdaten selbst pflegen</a></li>
 </ol>
 <hr>
 <h2 id="1-über-das-tool">1. Über das Tool</h2>
@@ -129,7 +130,8 @@ und VG-Beurteilungsblättern</li>
 <li>Keine Beitragsberechnung in Euro (Satzungsanwendung bleibt bei der Behörde)</li>
 <li>Keine automatische Erkennung von Konturen aus dem Plan (Maus klickt, nicht KI)</li>
 <li>Keine Cloud, keine Online-Verarbeitung — alles bleibt offline auf dem PC</li>
-<li>Keine Verarbeitung von Schrägbildern oder Fotos (nur orthogonale Grundrisse)</li>
+<li>Keine automatische Perspektiv-Erkennung bei Fotos — die vier Referenz-Ecken
+für die Entzerrung (siehe 3.1) werden von Hand angeklickt, nicht per KI</li>
 </ul>
 <hr>
 <h2 id="2-installation-und-start">2. Installation und Start</h2>
@@ -167,6 +169,42 @@ navigieren. Aktuelle Seite wird angezeigt.</li>
 </ol>
 <p>Mehrere PDFs sind erlaubt — typischer Fall: ein PDF mit dem Grundriss DG, ein
 zweites mit OG. Beide werden im selben Projekt verwaltet.</p>
+<h3 id="3-1-alternative-handyfoto-eines-plans-importieren-4-punkt-entzerrung">3.1 Alternative: Handyfoto eines Plans importieren (4-Punkt-Entzerrung)</h3>
+<p>Liegt kein PDF vor, sondern nur ein Foto einer Papierzeichnung (z. B. ein
+Handyfoto vom Bauantrag), lässt sich das Foto perspektivisch entzerren und
+danach wie ein PDF weiterverarbeiten.</p>
+<ol>
+<li>In der Plan-Werkzeugleiste <strong>„+ Foto&quot;</strong> klicken, JPEG- oder PNG-Datei wählen.</li>
+<li>Im sich öffnenden Modal <strong>vier Ecken eines im Foto sichtbaren Rechtecks</strong>
+anklicken, dessen echte Maße bekannt sind — z. B. der Zeichnungsrahmen oder
+ein bemaßtes Bauteil. Reihenfolge der Klicks ist beliebig, solange alle
+vier Ecken desselben Rechtecks markiert werden. Gesetzte Punkte lassen sich
+mit der Maus nachziehen.</li>
+<li><strong>Breite</strong> und <strong>Höhe</strong> dieses Rechtecks in Metern eintragen.</li>
+<li><strong>„Entzerren &amp; übernehmen&quot;</strong> — das Foto wird perspektivisch geradegerückt
+und als eigenes Plan-Blatt ins Projekt übernommen, direkt mit dem aus den
+vier Ecken abgeleiteten Maßstab kalibriert.</li>
+</ol>
+<p><strong>Im Vorschaufenster zoomen und verschieben (ab v1.3):</strong> Bei kleinen oder
+unscharfen Handyfotos ist es schwierig, die vier Ecken im kleinen
+Vorschaufenster pixelgenau zu treffen. Dafür lässt sich das Vorschaubild
+vergrößern:</p>
+<ul>
+<li><strong>Mausrad</strong> zoomt zentriert auf die Cursor-Position (100–800 %).</li>
+<li><strong>Rechte Maustaste gedrückt halten</strong> und ziehen verschiebt den sichtbaren
+Ausschnitt (Pan).</li>
+<li>Die <strong>+ / − / 1:1-Buttons</strong> oben links im Vorschaufenster bieten dieselbe
+Funktion per Klick, mit Prozentanzeige des aktuellen Zooms.</li>
+</ul>
+<p>Beim Anfassen eines bereits gesetzten Eckpunkts erscheint zusätzlich eine
+<strong>Lupe</strong> oben rechts im Vorschaufenster, die den Bereich um den Punkt
+vergrößert nachzeichnet — nützlich, um den exakten Eck-Pixel zu treffen.</p>
+<blockquote>
+<p><strong>Wichtig:</strong> Nach der Übernahme immer ein zusätzliches, im Foto ablesbares
+Maß mit dem Maßstab-Werkzeug (Referenzmaß messen, siehe Abschnitt 6)
+nachmessen — als Kontrolle, dass die Entzerrung stimmt. Das Tool weist nach
+der Übernahme per Hinweis extra darauf hin.</p>
+</blockquote>
 <hr>
 <h2 id="4-projektdaten-erfassen">4. Projektdaten erfassen</h2>
 <p>Sobald mindestens ein PDF geladen ist, wird der <strong>„Projektdaten&quot;</strong>-Knopf in der
@@ -186,6 +224,13 @@ Aufmaßprotokolls und im Datei-Header des gespeicherten Projekts.</p>
 <li>„Übernehmen&quot;.</li>
 </ol>
 <p>Die Projektdaten können jederzeit per <strong>„Projektdaten&quot;</strong> wieder bearbeitet werden.</p>
+<p><strong>Gemeinde-Auswahl (nur bei mehreren hinterlegten Profilen):</strong> Sind über die
+Stammdaten mehrere Gemeinden hinterlegt (z. B. in einer Verwaltungsgemeinschaft),
+erscheint im Projektdaten-Modal zusätzlich ein Auswahlfeld <strong>„Gemeinde&quot;</strong>. Die dort
+gewählte Gemeinde (Anschrift, Wappen, Sachbearbeiter-Vorbelegung) wird fest in die
+Akte übernommen und erscheint später auf dem Beitragsbescheid. Bei nur einer
+hinterlegten Gemeinde ist das Feld ausgeblendet. Wie Gemeinden hinterlegt werden,
+steht in <a href="#16-gemeinde-stammdaten-selbst-pflegen">Abschnitt 16</a>.</p>
 <hr>
 <h2 id="5-geschosse-anlegen">5. Geschosse anlegen</h2>
 <ol>
@@ -264,6 +309,19 @@ das PDF verzerrt) — das Gelb ist eine Kontroll-Erinnerung, kein Fehler.</li>
 <strong>„Vektor … %&quot;</strong> oben in der Plan-Toolbar ist reine PDF-Information
 (Vektor-PDF vs. Scan) und absichtlich neutral grau — er sagt nichts über
 den Maßstab aus.</p>
+<p><strong>Maßstab-Konfidenz aus mehreren Quellen (Hinweis-Banner, ab v1.3):</strong> Das
+Tool zieht bis zu drei unabhängige Hinweise auf den Maßstab heran — die
+gelesene Planbemaßung, eine im Plan gedruckte Maßstabsangabe „1:N&quot; und, sobald
+Sie ein Polygon über einem beschrifteten Raum zeichnen, dessen gedruckte
+Raumfläche („F = 23,04 m²&quot;). Findet es keine belastbare Bemaßung für das
+Vorschlags-Banner, zeigt ein nicht-blockierendes Hinweis-Banner, wie gut diese
+Quellen zusammenpassen: grün „✓ Maßstab 1:100 — bestätigt durch 2 Quellen&quot;,
+gelb „⚠ Quellen uneinig … Plan evtl. nicht maßhaltig (Fit-to-Page?)&quot; oder ein
+Info-Hinweis „… nennt 1:100. Keine zweite Quelle — bitte eine Maßlinie
+nachmessen&quot;. <strong>Dieses Banner setzt nie selbst einen Maßstab</strong> — es ist eine
+reine Plausibilitäts-Gegenprobe, die Kalibrierung bleibt immer bei Ihnen
+(Referenzmaß messen). Zeichnen Sie ein Polygon über einen Raum mit gedruckter
+Fläche, wird die Gegenprobe mit dieser dritten Quelle aktualisiert.</p>
 <p>Pro Geschoss reicht <strong>eine</strong> Kalibrierung — alle nachfolgenden Polygone in
 derselben Region nutzen diesen Maßstab automatisch. Die Kalibrierungs-Linie
 bleibt sichtbar; mit dem Toggle <strong>„Maßstab-Linien anzeigen&quot;</strong> oben kann man
@@ -567,8 +625,12 @@ Lizenz-Datei werden nicht überschrieben.</li>
 </ol>
 <h3 id="demo-modus">Demo-Modus</h3>
 <p>Ohne <code>data/lizenz.js</code> startet das Tool als <strong>14-Tage-Demo</strong>. Alle Funktionen
-sind aktiv, aber Aufmaßprotokolle tragen ein diagonales Wasserzeichen
-„DEMO – NICHT ZUR BEHÖRDLICHEN VERWENDUNG&quot;. Unten am Bildschirmrand zeigt
+sind aktiv, aber Aufmaßprotokolle und Beitragsbescheide (PDF wie Word) tragen
+ein großes, gut lesbares diagonales Wasserzeichen
+„DEMO – NICHT ZUR BEHÖRDLICHEN VERWENDUNG&quot; (zweizeilig: „DEMO&quot; groß, der
+Zusatztext darunter kleiner). Bei der Word-Fassung des
+Beitragsbescheids erscheint der DEMO-Hinweis zusätzlich in Kopf- und
+Fußzeile jeder Seite. Unten am Bildschirmrand zeigt
 ein Banner die verbleibenden Tage.</p>
 <p><strong>Ab 3 Tagen Restlaufzeit:</strong> Das Banner wechselt in den Warn-Modus (rote
 Hervorhebung).</p>
@@ -579,6 +641,43 @@ exportiert (mit Wasserzeichen). Um das Wasserzeichen zu entfernen, ist
 eine reguläre Lizenz nötig (<code>data/lizenz.js</code> einspielen).</p>
 <p>Der Demo-Zeitraum wird im Browser pro Profil gemerkt (<code>localStorage</code>) —
 Tool-Neuinstallation in dasselbe Browser-Profil verlängert ihn nicht.</p>
+<h3 id="zusatzmodule-z-b-beitragsbescheid">Zusatzmodule (z. B. Beitragsbescheid)</h3>
+<p>Manche Funktionen — etwa die Erstellung des Beitragsbescheids — sind separat
+lizenzierte Zusatzmodule. Ist ein Modul für die eigene Lizenz nicht
+freigeschaltet, zeigt das Tool an der entsprechenden Stelle einen kurzen
+Hinweis statt der Funktion selbst. Die Freischaltung erfolgt beim Anbieter
+und wird zusammen mit der Lizenz-ID in <code>data/lizenz.js</code> eingespielt — eine
+eigenständige Aktion durch die Gemeinde ist nicht nötig oder möglich. Im
+14-Tage-Demo-Modus sind alle Zusatzmodule mit Wasserzeichen nutzbar, damit
+der volle Funktionsumfang testbar ist.</p>
+<p>Das Beitragsbescheid-Modul unterstützt auch <strong>zwei Beitragspflichtige</strong>
+(Gesamtschuldner, z. B. Ehepaar/Miteigentümer): über das Häkchen „mehrere
+Beitragspflichtige&quot; lassen sich Anrede und Name einer zweiten Person erfassen.
+Beide erscheinen mit <strong>gemeinsamer Anschrift</strong> auf dem Bescheid. Braucht eine
+Person eine abweichende Zustellanschrift, ist je Pflichtigem ein eigener Bescheid
+zu erstellen.</p>
+<h3 id="fälligkeit-vorauszahlung-und-standardtexte-im-bescheid-dialog">Fälligkeit, Vorauszahlung und Standardtexte im Bescheid-Dialog</h3>
+<ul>
+<li><strong>Bescheiddatum</strong> — leer lassen für „Datum der Erstellung&quot;; zur Rückdatierung
+manuell setzen.</li>
+<li><strong>Versanddatum (Aufgabe zur Post)</strong> — rein intern für die Akte (§ 122 Abs. 2 AO),
+erscheint nicht im Bescheid selbst.</li>
+<li><strong>Fälligkeitsdatum (III.)</strong> — Button „Aus Versanddatum berechnen&quot; ermittelt es
+aus der Bekanntgabefiktion (Versand + 3 Tage + Zahlungsfrist). Berücksichtigt
+keine gemeindespezifischen Feiertage — vor dem Export prüfen. Wird beim
+Eintragen des Versanddatums automatisch vorgeschlagen, wenn das Feld noch leer
+ist; ein bereits gesetztes Datum bleibt unangetastet.</li>
+<li><strong>Vorauszahlung bei getrennten Bescheiden</strong> — sind Wasser <em>und</em> Abwasser
+gleichzeitig, aber getrennt abgerechnet, wählt ein zusätzliches Feld, welcher
+der beiden Teilbescheide die Vorauszahlung gutgeschrieben bekommt.</li>
+<li><strong>Standardtext-Buttons</strong> — bei Begründung (IV.) und den Hinweisen (V., inkl.
+neuem Hinweis „Keine aufschiebende Wirkung&quot; nach § 80 VwGO) setzt der Button
+„Standardtext&quot; das jeweilige Feld auf den aktuellen Vorgabetext zurück; ein
+bereits vorhandener Text wird nur nach Rückfrage überschrieben.</li>
+<li><strong>Zwischenspeichern</strong> — übernimmt den aktuellen (auch unvollständigen)
+Formularinhalt ins Projekt, ohne zu exportieren, damit Eingaben beim
+Schließen des Dialogs nicht verloren gehen.</li>
+</ul>
 <hr>
 <h2 id="13-hilfe-menü-und-diagnose-bericht">13. Hilfe-Menü und Diagnose-Bericht</h2>
 <p>Über den Button <strong>„Hilfe&quot;</strong> rechts oben öffnen Sie ein kleines Menü mit vier Einträgen:</p>
@@ -700,6 +799,78 @@ per Toast) — das ist normal und beeinträchtigt die Maßgenauigkeit nicht.</p>
 <h3 id="funktioniert-das-tool-auf-einem-mac">Funktioniert das Tool auf einem Mac?</h3>
 <p>Technisch ja (HTML/JS, Browser-basiert), aber nicht explizit getestet. Auch
 Safari ist nicht im Zielband. Für den behördlichen Einsatz: Firefox auf Windows.</p>
+<hr>
+<h2 id="16-gemeinde-stammdaten-selbst-pflegen">16. Gemeinde-Stammdaten selbst pflegen</h2>
+<p>Die auf dem Beitragsbescheid gedruckten Absenderdaten — <strong>Behörden-Anschrift,
+Gemeinde-Wappen und Sachbearbeiter-Vorbelegung</strong> — pflegt die Gemeinde selbst,
+ohne beim Anbieter anfragen zu müssen. Eine Installation kann <strong>mehrere Gemeinden</strong>
+halten (Verwaltungsgemeinschaft: ein Sachbearbeiter bedient mehrere Gemeinden mit
+je eigenem Wappen und eigener Anschrift).</p>
+<h3 id="stammdaten-öffnen-und-bearbeiten">Stammdaten öffnen und bearbeiten</h3>
+<ol>
+<li>Oben in der Werkzeugleiste <strong>„Stammdaten&quot;</strong> klicken.</li>
+<li>Im Dialog je Gemeinde ausfüllen:<ul>
+<li><strong>Name</strong> der Gemeinde (erscheint als Absender)</li>
+<li><strong>Anschrift</strong> (Straße, PLZ, Ort)</li>
+<li><strong>Bundesland</strong></li>
+<li><strong>Sachbearbeiter</strong> (Vorbelegung — wird bei neuen Akten automatisch eingetragen,
+lässt sich pro Akte in den Projektdaten überschreiben) sowie optional
+<strong>Telefon</strong> und <strong>E-Mail</strong> des Sachbearbeiters.</li>
+<li><strong>Wappen</strong> über „Wappen wählen&quot; als Bilddatei (JPG oder PNG) hochladen.
+Das Bild wird automatisch verkleinert und in die Stammdaten-Datei eingebettet.
+Am besten quadratisch zuschneiden, damit es den Briefkopf sauber ausfüllt.</li>
+</ul>
+</li>
+<li>Für eine Verwaltungsgemeinschaft weitere Profile anlegen und das Standard-Profil
+festlegen.</li>
+</ol>
+<h3 id="beitragsbescheid-sätze-hinterlegen-nur-mit-zusatzmodul-beitragsbescheid">Beitragsbescheid-Sätze hinterlegen (nur mit Zusatzmodul Beitragsbescheid)</h3>
+<p>Ist das Zusatzmodul Beitragsbescheid freigeschaltet, erscheint im Stammdaten-Dialog
+zusätzlich der Abschnitt <strong>„Beitragsbescheid-Sätze&quot;</strong> — je Gemeinde-Profil einmalig
+auszufüllen. Pro Beitragsart (Wasserversorgung / Entwässerung) tragen Sie ein:</p>
+<ul>
+<li><strong>Satzung</strong> (Name/Fundstelle) und <strong>Satzung vom</strong> (Datum),</li>
+<li><strong>Satzungsverweis Maßstab</strong> (z. B. „§ 4 BGS/WAS&quot;) — erscheint im Bescheid unter
+Abschnitt II. als Fundstelle des Verteilungsmaßstabs,</li>
+<li><strong>€/m² Grundstücksfläche</strong> und <strong>€/m² Geschossfläche</strong>.</li>
+</ul>
+<p>Zusätzlich einmalig je Gemeinde-Profil hinterlegbar, weil sie sich praktisch nie
+ändern: <strong>Bankverbindung</strong> (Bank, IBAN, BIC) und <strong>zuständiges Verwaltungsgericht</strong>
+(Name, PLZ, Ort, Postfach- und Hausanschrift). Beide erscheinen automatisch in
+jedem neuen Bescheid; im Bescheid-Dialog selbst lassen sie sich über je einen
+Button „… aus Stammdaten übernehmen&quot; nachträglich neu einlesen — praktisch bei
+länger laufenden Akten, wenn sich z. B. die IBAN geändert hat.</p>
+<p>Diese Werte werden beim Erstellen eines Bescheids <strong>automatisch vorbelegt</strong>, sodass
+sie nicht bei jedem Bescheid neu eingegeben werden müssen. In einer Verwaltungs-
+gemeinschaft gelten je Gemeinde die eigenen Sätze. <strong>Bescheidnummer und Kassenzeichen
+gehören nicht hierher</strong> — die sind pro Fall und werden weiterhin direkt im Bescheid-
+Dialog eingetragen. Der tatsächlich verwendete Satz wird beim Erstellen in die Akte
+eingefroren; eine spätere Satzungsänderung berührt bereits erstellte Bescheide nicht.</p>
+<p>Neu eingetippte Sätze greifen <strong>sofort</strong> — im selben Browser, in dem Sie sie
+eingetragen haben, werden sie schon vor dem Erzeugen der Datei in den nächsten
+Bescheid übernommen. Dauerhaft und für alle Arbeitsplätze gelten sie erst, wenn
+Sie (wie unten) die Datei erzeugen und in den Ordner <code>data/</code> legen. Ein nur
+teilweise ausgefüllter Entwurf (z. B. Satzungsname getippt, aber noch kein €/m²-Satz)
+überschreibt dabei bereits gespeicherte Sätze <strong>nicht</strong> — erst ein eingetragener
+Satz wird übernommen.</p>
+<p>Ohne Zusatzmodul ist dieser Abschnitt ausgeblendet.</p>
+<h3 id="änderungen-wirksam-machen">Änderungen wirksam machen</h3>
+<p>Der Dialog erzeugt über <strong>„Stammdaten-Datei erzeugen&quot;</strong> eine fertige Datei
+<code>kommune.js</code>. Diese Datei:</p>
+<ol>
+<li>herunterladen,</li>
+<li>in den Ordner <code>data/</code> der Tool-Installation legen (vorhandene <code>data/kommune.js</code>
+ersetzen),</li>
+<li>das Tool <strong>neu laden</strong> (Seite aktualisieren).</li>
+</ol>
+<p>Danach stehen die neuen Stammdaten für alle neuen Akten zur Verfügung. Weil die
+Datei im Installations-Ordner liegt, gilt die Änderung für <strong>alle Mitarbeiter</strong>, die
+aus diesem Ordner arbeiten — nichts wird im Browser-Profil gespeichert.</p>
+<h3 id="bereits-gespeicherte-akten-bleiben-unverändert">Bereits gespeicherte Akten bleiben unverändert</h3>
+<p>Beim Anlegen einer Akte wird die gewählte Gemeinde als <strong>Momentaufnahme</strong> in die
+<code>.gfproj</code>-Datei eingefroren. Wird ein Profil später geändert, behalten bereits
+gespeicherte Akten ihren damaligen Absender und ihr damaliges Wappen — ein alter
+Bescheid lässt sich also jederzeit unverändert reproduzieren.</p>
 <hr>
 <h2 id="anhang-akten-aufbewahrung">Anhang: Akten-Aufbewahrung</h2>
 <p>Eine <code>.gfproj</code>-Datei ist die rekonstruierbare Berechnungsgrundlage für die
