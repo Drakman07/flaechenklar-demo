@@ -11,7 +11,7 @@
 <title>FlächenKlar</title>
 <link rel="icon" type="image/svg+xml" href="assets/flaechenklar_icon.svg">
 <link rel="stylesheet" href="css/style.css">
-  <meta name="fk-demo-version" content="1.3.1">
+  <meta name="fk-demo-version" content="1.3.2">
 <meta name="robots" content="noindex, nofollow">
 <style id="demo-styles">
   .demo-banner-inner{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
@@ -625,7 +625,7 @@
 <!-- Flächen-Korrektur-Modal -->
 <div class="modal-backdrop" id="flaecheBackdrop" role="dialog" aria-modal="true" aria-labelledby="flaecheTitel">
   <div class="modal">
-    <div class="modal-head"><h2 id="flaecheTitel">Flächenkorrektur</h2></div>
+    <div class="modal-head"><h2 id="flaecheTitel">Fläche bearbeiten</h2></div>
     <div class="modal-body">
       <p class="fk-info">
         Polygon: <strong id="flaecheModalName">—</strong>
@@ -635,7 +635,12 @@
       </p>
       <label class="fk-label">Angesetzte Fläche (m²)</label>
       <input type="text" id="flaecheModalAngesetzt" inputmode="decimal" placeholder="z. B. 142,50">
-      <label class="fk-label">Begründung (Pflicht, wird im Aufmaßprotokoll vermerkt)</label>
+      <label class="fk-abzug-check">
+        <input type="checkbox" id="flaecheModalAbzug">
+        <span>Abzugsfläche — wird von der Grundfläche des Geschosses <strong>abgezogen</strong>
+              (z.&nbsp;B. Luftraum bei Galerie, abgemauerter Bereich)</span>
+      </label>
+      <label class="fk-label">Begründung (Pflicht bei abweichender Fläche, wird im Aufmaßprotokoll vermerkt)</label>
       <textarea id="flaecheModalKommentar" rows="3" placeholder="z. B. Rundung gemäß Kommunalsatzung §3 Abs. 2"></textarea>
       <p class="fk-fehler" id="flaecheModalFehler" hidden></p>
     </div>

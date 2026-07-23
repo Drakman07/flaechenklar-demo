@@ -81,14 +81,14 @@ body {
 <header class="hb-head">
   <div>
     <h1>FlächenKlar — Benutzerhandbuch</h1>
-    <div class="hb-meta">Version 1.3.1 · Stand 2026-07-22</div>
+    <div class="hb-meta">Version 1.3.2 · Stand 2026-07-23</div>
   </div>
   <button type="button" class="hb-print-btn" onclick="window.print()">Drucken</button>
 </header>
 <main class="hb-main">
 <h1 id="benutzerhandbuch-flächenklar">Benutzerhandbuch — FlächenKlar</h1>
-<p><strong>Version:</strong> 1.3.1
-<strong>Stand:</strong> 2026-07-22</p>
+<p><strong>Version:</strong> 1.3.2
+<strong>Stand:</strong> 2026-07-23</p>
 <hr>
 <h2 id="inhalt">Inhalt</h2>
 <ol>
@@ -387,6 +387,29 @@ was angesetzt werden soll (z. B. Rundungs-Vorschrift der Satzung):</p>
 Markierung) und nutzt die überschriebene Fläche, nicht die berechnete. „Zurück
 auf Gemessen&quot; hebt die Korrektur auf. Im Aufmaßprotokoll erscheint nur noch der
 angesetzte Wert, ohne Korrektur-Vermerk.</p>
+<h3 id="8-4-abzugsflächen-luftraum-abgemauerte-bereiche">8.4 Abzugsflächen (Luftraum, abgemauerte Bereiche)</h3>
+<p>Manche Bereiche liegen innerhalb der Geschoss-Umrisse, sollen aber nicht zur
+Grundfläche zählen — z. B. Luftraum bei einer Galerie oder ein nachträglich
+abgemauerter Bereich. Zwei Wege, ein Ergebnis:</p>
+<ol>
+<li><strong>Im Plan gezeichnet:</strong> Polygon wie gewohnt zeichnen, dann im
+„Fläche bearbeiten&quot;-Modal (Bleistift-Symbol, siehe 8.3) das Häkchen
+<strong>„Abzugsfläche&quot;</strong> setzen. Das Polygon wird im Plan rot schraffiert
+dargestellt und mindert fortan die Grundfläche seines Geschosses.</li>
+<li><strong>Ohne Plan-Messung eingetippt:</strong> In der Sidebar beim jeweiligen Geschoss
+auf <strong>„+ Abzug&quot;</strong> klicken, Bezeichnung, Fläche in m² und Begründung
+eingeben (z. B. „Luftraum Galerie&quot;, 10 m²).</li>
+</ol>
+<p>Beide Abzugsarten erscheinen gemeinsam in der Abzugs-Liste des Geschosses und
+mindern die Geschossfläche im Aufmaßprotokoll, im CSV-/JSON-Export und in der
+RIWA-Ausgabe. Übersteigen die Abzüge die Grundfläche, klemmt das Tool auf
+0 m² und weist das im Protokoll aus.</p>
+<p><strong>Ausnahme bei anteiliger Vollgeschoss-Anrechnung:</strong> Wählen Sie beim Export
+„anteilig&quot; (siehe Abschnitt 9), wirken Abzüge auf einem Geschoss mit
+durchgeführter Vollgeschoss-Beurteilung <strong>nicht</strong> — die VG-Rechnung bringt
+mit den Flächen A&lt;2,30/A&gt;2,30 bereits eigene Abzugsgrößen mit, ein
+zweiter Abzug wäre Doppelerfassung. Die Posten bleiben sichtbar, werden aber
+als „nicht angesetzt&quot; ausgewiesen.</p>
 <hr>
 <h2 id="9-vollgeschoss-beurteilung">9. Vollgeschoss-Beurteilung</h2>
 <p><strong>Wann anwenden:</strong> Üblicherweise nur für das oberste Geschoss (meist DG), bei
