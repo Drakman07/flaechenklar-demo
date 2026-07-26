@@ -11,7 +11,8 @@
 <title>FlächenKlar</title>
 <link rel="icon" type="image/svg+xml" href="assets/flaechenklar_icon.svg">
 <link rel="stylesheet" href="css/style.css">
-  <meta name="fk-demo-version" content="1.3.3">
+<link rel="stylesheet" href="css/ux-lotse.css">
+  <meta name="fk-demo-version" content="1.4.0">
 <meta name="robots" content="noindex, nofollow">
 <style id="demo-styles">
   .demo-banner-inner{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
@@ -94,12 +95,12 @@
       <h3>Werkzeug</h3>
       <div class="werkzeug-liste" id="werkzeugListe">
         <button type="button" class="wkz aktiv" data-werkzeug="pan" title="Plan verschieben (Standard) — Taste H">🖱 Plan</button>
-        <button type="button" class="wkz"       data-werkzeug="region" title="Rechteck-Region pro Geschoss ziehen — Taste R">▭ Region</button>
-        <button type="button" class="wkz" data-werkzeug="massstab" title="Referenzmaß messen: zwei Punkte einer bekannten Bemaßung anklicken — Taste M">↔ Maßstab</button>
-        <button type="button" class="wkz" data-werkzeug="polygon" title="Außenkontur abklicken, Enter oder Doppelklick zum Schließen — Taste P">⌒ Polygon</button>
+        <button type="button" class="wkz"       data-werkzeug="region" title="Plan-Ausschnitt pro Geschoss aufziehen — Taste R">▭ Ausschnitt</button>
+        <button type="button" class="wkz" data-werkzeug="massstab" title="Maß nachmessen: zwei Punkte einer bekannten Bemaßung anklicken — Taste M">↔ Maßstab</button>
+        <button type="button" class="wkz" data-werkzeug="polygon" title="Außenkontur abklicken, Enter oder Doppelklick zum Schließen — Taste P">⌒ Fläche</button>
         <button type="button" class="wkz" data-werkzeug="rechteck" title="Rechteck aufziehen: erste Ecke klicken, Gegenecke klicken — Taste K">▢ Rechteck</button>
       </div>
-      <label class="anzeige-toggle" title="Die zwei-Punkt-Kalibrierungslinien in den Plan-Regionen ein-/ausblenden. Nur visuell — die Kalibrierung selbst bleibt erhalten.">
+      <label class="anzeige-toggle" title="Die zwei-Punkt-Maßlinien in den Plan-Ausschnitten ein-/ausblenden. Nur visuell — der festgelegte Maßstab bleibt erhalten.">
         <input type="checkbox" id="massstabToggle" checked>
         <span>Maßstab-Linien anzeigen</span>
       </label>
@@ -131,7 +132,7 @@
   <div class="mass-banner" id="massBanner" role="status" hidden>
     <span class="mass-banner-text" id="massBannerText"></span>
     <span class="mass-banner-aktionen">
-      <button type="button" class="btn btn-small" id="btnMassBannerVerwerfen" title="Vorschlag verwerfen und stattdessen selbst ein Referenzmaß messen">Selbst messen</button>
+      <button type="button" class="btn btn-small" id="btnMassBannerVerwerfen" title="Vorschlag verwerfen und das Maß stattdessen selbst nachmessen">Selbst messen</button>
       <button type="button" class="btn btn-small btn-primary" id="btnMassBannerOk">Übernehmen</button>
     </span>
   </div>
@@ -169,7 +170,7 @@
       <button type="button" class="btn btn-small" id="btnMassAbbrechen">Abbrechen</button>
     </div>
     <div class="hint">
-      Du kannst weiterhin im Plan navigieren, um das Maß abzulesen.<br>
+      Sie können weiterhin im Plan navigieren, um das Maß abzulesen.<br>
       <strong>Mausrad-Klick + Ziehen</strong> = Pan · <strong>Mausrad-Drehen</strong> = Zoom · <strong>Esc</strong> = Abbrechen
     </div>
   </div>
@@ -184,7 +185,7 @@
       <button type="button" class="btn btn-small" id="btnKantenAbbrechen">Abbrechen</button>
     </div>
     <div class="hint">
-      Bisher: <strong id="kantenEditBisher">—</strong> · Der Endpunkt wandert entlang der Kantenrichtung; der Rest des Polygons bleibt stehen.
+      Bisher: <strong id="kantenEditBisher">—</strong> · Der Endpunkt wandert entlang der Kantenrichtung; der Rest der Fläche bleibt stehen.
     </div>
   </div>
 
@@ -212,9 +213,9 @@
           <h4>Werkzeuge</h4>
           <dl>
             <dt>Plan verschieben</dt><dd><kbd>H</kbd></dd>
-            <dt>Region</dt><dd><kbd>R</kbd></dd>
+            <dt>Ausschnitt</dt><dd><kbd>R</kbd></dd>
             <dt>Maßstab</dt><dd><kbd>M</kbd></dd>
-            <dt>Polygon</dt><dd><kbd>P</kbd></dd>
+            <dt>Fläche</dt><dd><kbd>P</kbd></dd>
             <dt>Rechteck</dt><dd><kbd>K</kbd></dd>
           </dl>
         </div>
@@ -262,12 +263,12 @@
   <div class="modal">
     <div class="modal-head"><h2 id="protokollTitel">Aufmaßprotokoll erstellen</h2></div>
     <div class="modal-body">
-      <p class="pd-hint">Wähle den Umfang. Bei "Beides" wird ein zusammengefügtes PDF erzeugt — vorne das Aufmaßblatt, dann die Berechnungsdarstellung.</p>
+      <p class="pd-hint">Wählen Sie den Umfang. Bei "Beides" wird ein zusammengefügtes PDF erzeugt — vorne das Aufmaßblatt, dann die Berechnungsdarstellung.</p>
       <fieldset class="pd-block">
         <legend>Inhalt</legend>
         <label class="pp-check"><input type="checkbox" id="ppAufmassblatt" checked> Aufmaßblatt (1 Seite, Akten-Zusammenfassung)</label>
-        <label class="pp-check"><input type="checkbox" id="ppBerechnung" checked> Berechnungsdarstellung (pro Region eine Seite mit Plan-Ausschnitt)</label>
-        <label class="pp-check pp-sub"><input type="checkbox" id="ppKantenmasse" checked> ↳ Kantenmaße der Polygone im Plan einzeichnen</label>
+        <label class="pp-check"><input type="checkbox" id="ppBerechnung" checked> Berechnungsdarstellung (pro Plan-Ausschnitt eine Seite)</label>
+        <label class="pp-check pp-sub"><input type="checkbox" id="ppKantenmasse" checked> ↳ Kantenmaße der Flächen im Plan einzeichnen</label>
         <label class="pp-check"><input type="checkbox" id="ppRechenweg"> Rechenweg anzeigen (Additions-Schritte für Nachvollziehbarkeit)</label>
       </fieldset>
       <!-- v1.3: Datenexport (Fachverfahren). RIWA-Beitragsmodul-Export als .xlsx
@@ -305,14 +306,27 @@
     <div class="modal-body">
       <p class="pd-hint">Herstellungsbeitrag (Art. 5 KAG Bayern). Das Tool multipliziert nur <em>Fläche × hinterlegter Beitragssatz</em> — Satzungsanwendung (welcher Satz, welche Abzüge) bleibt Ihre Aufgabe.</p>
 
-      <fieldset class="pd-block">
+      <div class="be-wizard">
+        <div class="be-wizard-schritte" id="beWizardSchritte">
+          <button type="button" class="be-wizard-schritt" data-schritt="1"><span class="be-wizard-nr">1</span><span class="be-wizard-label">Empfänger &amp; Grundstück</span></button>
+          <span class="be-wizard-pfeil" aria-hidden="true">→</span>
+          <button type="button" class="be-wizard-schritt" data-schritt="2"><span class="be-wizard-nr">2</span><span class="be-wizard-label">Beitragssätze</span></button>
+          <span class="be-wizard-pfeil" aria-hidden="true">→</span>
+          <button type="button" class="be-wizard-schritt" data-schritt="3"><span class="be-wizard-nr">3</span><span class="be-wizard-label">Zahlung &amp; Unterschrift</span></button>
+          <span class="be-wizard-pfeil" aria-hidden="true">→</span>
+          <button type="button" class="be-wizard-schritt" data-schritt="4"><span class="be-wizard-nr">4</span><span class="be-wizard-label">Texte prüfen</span></button>
+        </div>
+        <p class="be-wizard-status" id="beWizardStatus" aria-live="polite"></p>
+      </div>
+
+      <fieldset class="pd-block" data-be-schritt="1">
         <legend>Bescheiddatum</legend>
         <div class="pd-grid">
           <label>Datum des Bescheids <span class="pd-hint" style="font-weight:normal">(leer = Datum der Erstellung; zur Rückdatierung manuell setzen)</span><input type="date" id="beDatum"></label>
         </div>
       </fieldset>
 
-      <fieldset class="pd-block">
+      <fieldset class="pd-block" data-be-schritt="1">
         <legend>Empfänger</legend>
         <div class="pd-grid">
           <label>Anrede<select id="beEmpfAnrede"><option value="">—</option><option value="Herr">Herr</option><option value="Frau">Frau</option><option value="Firma">Firma</option></select></label>
@@ -329,7 +343,7 @@
         <button type="button" class="btn btn-small" id="beBtnAusBauherr">Aus Bauherr übernehmen</button>
       </fieldset>
 
-      <fieldset class="pd-block">
+      <fieldset class="pd-block" data-be-schritt="1">
         <legend>Grundstück</legend>
         <div class="pd-grid">
           <label>Grundstücksfläche (m²)<input type="text" id="beGrundflaeche" inputmode="decimal" placeholder="z. B. 750"></label>
@@ -339,7 +353,7 @@
         <button type="button" class="btn btn-small" id="beLinkProjektdaten">Projektdaten bearbeiten …</button>
       </fieldset>
 
-      <fieldset class="pd-block">
+      <fieldset class="pd-block" data-be-schritt="1">
         <legend>Veranlagung</legend>
         <label class="pp-check"><input type="radio" name="beVeranlagung" id="beVeranlErst" value="ersterhebung" checked> Ersterhebung (erstmalige Festsetzung)</label>
         <label class="pp-check"><input type="radio" name="beVeranlagung" id="beVeranlNach" value="nacherhebung"> Nacherhebung (Mehrfläche gegenüber bereits veranlagt)</label>
@@ -351,7 +365,7 @@
         </div>
       </fieldset>
 
-      <fieldset class="pd-block">
+      <fieldset class="pd-block" data-be-schritt="2">
         <legend>Beitragsarten &amp; Sätze</legend>
         <label class="pp-check"><input type="checkbox" id="beArtWasser" checked> Wasserversorgung (BGS-WAS)</label>
         <div class="pd-grid be-art" id="beBlockWasser">
@@ -375,7 +389,7 @@
         </div>
       </fieldset>
 
-      <fieldset class="pd-block">
+      <fieldset class="pd-block" data-be-schritt="2">
         <legend>Vorauszahlung / Anrechnung</legend>
         <label class="pp-check"><input type="checkbox" id="beVzVorhanden"> Geleistete Vorauszahlung anrechnen (Art. 5 Abs. 5 KAG)</label>
         <div class="pd-grid" id="beVzBlock" hidden>
@@ -392,7 +406,7 @@
         <p class="pd-hint">Bei Wasser <em>und</em> Abwasser gleichzeitig (getrennte Bescheide) bitte oben zuordnen, welchem Teilbescheid die Vorauszahlung gutgeschrieben wird.</p>
       </fieldset>
 
-      <fieldset class="pd-block">
+      <fieldset class="pd-block" data-be-schritt="3">
         <legend>Zahlung &amp; Rechtsbehelf</legend>
         <div class="pd-grid">
           <label>Bank<input type="text" id="beBank"></label>
@@ -409,36 +423,43 @@
           <label>Gericht Postfachanschrift<input type="text" id="beGerichtPostanschrift" placeholder="z. B. Postfach 110165, 93014 Regensburg"></label>
           <label>Gericht Hausanschrift<input type="text" id="beGerichtHausanschrift" placeholder="z. B. Haidplatz 1, 93047 Regensburg"></label>
           <div class="pd-full"><button type="button" class="btn btn-small be-reset-gruppe-btn" data-reset-gruppe="gericht">Gericht aus Stammdaten übernehmen</button></div>
-          <label class="pd-full">Rechtsgrundlage <span class="pd-hint" style="font-weight:normal">(optional, nur bei Bedarf — Art. 5 KAG steht bereits in der Begründung IV.; leer = keine zusätzliche Fußnote)</span><textarea id="beRechtsgrundlage" rows="2"></textarea><button type="button" class="btn btn-small be-reset-btn" data-reset="beRechtsgrundlage">Standardtext</button></label>
-          <label class="pd-full">Rechtsbehelfsbelehrung <span class="pd-hint" style="font-weight:normal">(leer lassen = automatisch mit zuständigem Gericht)</span><textarea id="beRechtsbehelf" rows="4"></textarea><button type="button" class="btn btn-small be-reset-btn" data-reset="beRechtsbehelf">Standardtext</button></label>
-          <label class="pd-full">Hinweis Zahlungsverzug (Säumnis) <span class="pd-hint" style="font-weight:normal">(leer lassen = Standardtext)</span><textarea id="beSaeumnishinweis" rows="3"></textarea><button type="button" class="btn btn-small be-reset-btn" data-reset="beSaeumnishinweis">Standardtext</button></label>
+          <label class="pd-full">Rechtsgrundlage <span class="pd-hint" style="font-weight:normal">(optional, nur bei Bedarf — Art. 5 KAG steht bereits in der Begründung IV.; leer = keine zusätzliche Fußnote)</span><textarea id="beRechtsgrundlage" rows="2"></textarea><button type="button" class="btn btn-small be-reset-btn" data-reset="beRechtsgrundlage">Standardtext</button><span class="be-textstatus" id="beRechtsgrundlageStatus"></span></label>
+          <label class="pd-full">Rechtsbehelfsbelehrung <span class="pd-hint" style="font-weight:normal">(leer lassen = automatisch mit zuständigem Gericht)</span><textarea id="beRechtsbehelf" rows="4"></textarea><button type="button" class="btn btn-small be-reset-btn" data-reset="beRechtsbehelf">Standardtext</button><span class="be-textstatus" id="beRechtsbehelfStatus"></span></label>
+          <label class="pd-full">Hinweis Zahlungsverzug (Säumnis) <span class="pd-hint" style="font-weight:normal">(leer lassen = Standardtext)</span><textarea id="beSaeumnishinweis" rows="3"></textarea><button type="button" class="btn btn-small be-reset-btn" data-reset="beSaeumnishinweis">Standardtext</button><span class="be-textstatus" id="beSaeumnishinweisStatus"></span></label>
         </div>
       </fieldset>
 
-      <fieldset class="pd-block">
+      <fieldset class="pd-block" data-be-schritt="3">
         <legend>Unterschrift</legend>
         <p class="pd-hint">Regelfall: Name + Amtsbezeichnung (aus den Stammdaten) und der gesetzliche Hinweis, dass der Bescheid auch ohne Unterschrift gültig ist, erscheinen gemeinsam.</p>
         <label class="pp-check"><input type="checkbox" id="beMitUnterschrift"> Ausnahmefall: tatsächlich eigenhändig unterschriebene Ausfertigung (kein Maschinen-Hinweis)</label>
       </fieldset>
 
-      <details class="pd-block pd-block-details">
-        <summary>Begründung &amp; Hinweise <span class="pd-hint" style="font-weight:normal">(Begründung IV.: leer lassen = dynamischer Standardtext. Hinweise V.: leer lassen = Hinweis entfällt im Bescheid — Standardtext-Button zum Übernehmen)</span></summary>
+      <fieldset class="pd-block" data-be-schritt="4">
+        <legend>Begründung &amp; Hinweise</legend>
+        <p class="pd-hint">Begründung IV.: leer lassen = dynamischer Standardtext. Hinweise V.: leer lassen = Hinweis entfällt im Bescheid — Standardtext-Button zum Übernehmen.</p>
         <div class="pd-grid">
-          <label class="pd-full">Begründung (IV.)<textarea id="beBegruendung" rows="3"></textarea><button type="button" class="btn btn-small be-reset-btn" data-reset="beBegruendung">Standardtext</button></label>
+          <label class="pd-full">Begründung (IV.)<textarea id="beBegruendung" rows="3"></textarea><button type="button" class="btn btn-small be-reset-btn" data-reset="beBegruendung">Standardtext</button><span class="be-textstatus" id="beBegruendungStatus"></span></label>
           <label class="pd-full">Begründung – Einzelfall-Zusatz<textarea id="beBegruendungZusatz" rows="2"></textarea></label>
-          <label class="pd-full">Hinweis Gesamtschuldner<textarea id="beHinweisGesamtschuldner" rows="2"></textarea><button type="button" class="btn btn-small be-reset-btn" data-reset="beHinweisGesamtschuldner">Standardtext</button></label>
-          <label class="pd-full">Hinweis Öffentliche Last<textarea id="beHinweisOeffLast" rows="2"></textarea><button type="button" class="btn btn-small be-reset-btn" data-reset="beHinweisOeffLast">Standardtext</button></label>
-          <label class="pd-full">Hinweis Meldepflicht<textarea id="beHinweisMeldepflicht" rows="2"></textarea><button type="button" class="btn btn-small be-reset-btn" data-reset="beHinweisMeldepflicht">Standardtext</button></label>
-          <label class="pd-full">Hinweis Keine aufschiebende Wirkung (§ 80 VwGO)<textarea id="beHinweisAufschiebend" rows="2"></textarea><button type="button" class="btn btn-small be-reset-btn" data-reset="beHinweisAufschiebend">Standardtext</button></label>
-          <label class="pd-full">Hinweis Billigkeit (Stundung/Erlass)<textarea id="beHinweisBilligkeit" rows="2"></textarea><button type="button" class="btn btn-small be-reset-btn" data-reset="beHinweisBilligkeit">Standardtext</button></label>
+          <label class="pd-full">Hinweis Gesamtschuldner<textarea id="beHinweisGesamtschuldner" rows="2"></textarea><button type="button" class="btn btn-small be-reset-btn" data-reset="beHinweisGesamtschuldner">Standardtext</button><span class="be-textstatus" id="beHinweisGesamtschuldnerStatus"></span></label>
+          <label class="pd-full">Hinweis Öffentliche Last<textarea id="beHinweisOeffLast" rows="2"></textarea><button type="button" class="btn btn-small be-reset-btn" data-reset="beHinweisOeffLast">Standardtext</button><span class="be-textstatus" id="beHinweisOeffLastStatus"></span></label>
+          <label class="pd-full">Hinweis Meldepflicht<textarea id="beHinweisMeldepflicht" rows="2"></textarea><button type="button" class="btn btn-small be-reset-btn" data-reset="beHinweisMeldepflicht">Standardtext</button><span class="be-textstatus" id="beHinweisMeldepflichtStatus"></span></label>
+          <label class="pd-full">Hinweis Keine aufschiebende Wirkung (§ 80 VwGO)<textarea id="beHinweisAufschiebend" rows="2"></textarea><button type="button" class="btn btn-small be-reset-btn" data-reset="beHinweisAufschiebend">Standardtext</button><span class="be-textstatus" id="beHinweisAufschiebendStatus"></span></label>
+          <label class="pd-full">Hinweis Billigkeit (Stundung/Erlass)<textarea id="beHinweisBilligkeit" rows="2"></textarea><button type="button" class="btn btn-small be-reset-btn" data-reset="beHinweisBilligkeit">Standardtext</button><span class="be-textstatus" id="beHinweisBilligkeitStatus"></span></label>
         </div>
-      </details>
+      </fieldset>
+
+      <div class="be-wizard-nav">
+        <button type="button" class="btn" id="beWizardZurueck">← Zurück</button>
+        <button type="button" class="btn btn-primary" id="beWizardWeiter">Weiter →</button>
+      </div>
 
       <div class="be-vorschau" id="beVorschau">
         <div class="be-vorschau-betrag">Festgesetzter Beitrag: <strong id="beVorschauBetrag">–</strong></div>
         <div class="be-vorschau-detail" id="beVorschauDetail"></div>
         <ul class="be-fehler" id="beFehler" hidden></ul>
       </div>
+      <p class="pd-hint" id="beDoppelHinweis" hidden>Hinweis: Bei zwei Beitragsarten werden 2 Dateien erstellt (Wasser + Abwasser).</p>
       <p class="fk-fehler" id="beExportFehler" hidden></p>
     </div>
     <div class="modal-foot">
@@ -515,7 +536,11 @@
           <label>Telefon<input type="text" id="pdSachbearbeiterTelefon" placeholder="optional"></label>
           <label>E-Mail<input type="text" id="pdSachbearbeiterEmail" placeholder="optional"></label>
         </div>
-        <label class="pd-full">Amtsbezeichnung (Unterschriftszeile Beitragsbescheid) <span class="pd-hint" style="font-weight:normal">(aus Stammdaten vorbelegt, optional)</span><input type="text" id="pdUnterschriftAmtsbezeichnung" placeholder="optional"></label>
+        <div class="pd-grid pd-grid-13">
+          <label>Unterschrift-Zusatz <span class="pd-hint" style="font-weight:normal">(gehört zum Unterzeichner — wird beim Leeren des Unterzeichner-Feldes mit geleert, sofern er aus den Stammdaten stammt; optional)</span><input type="text" id="pdUnterschriftZusatz" maxlength="30" placeholder="z. B. i. A."></label>
+          <label>Unterzeichner <span class="pd-hint" style="font-weight:normal">(ein in den Stammdaten hinterlegter Unterzeichner steht beim Öffnen schon hier; Feld leeren = der Sachbearbeiter unterschreibt — beim nächsten Öffnen steht der Stammdaten-Unterzeichner wieder da)</span><input type="text" id="pdUnterschriftName" maxlength="120" placeholder="optional"></label>
+        </div>
+        <label class="pd-full">Amtsbezeichnung (Unterschriftszeile Beitragsbescheid) <span class="pd-hint" style="font-weight:normal">(gehört zum Unterzeichner — wird beim Leeren des Unterzeichner-Feldes mit geleert, sofern sie aus den Stammdaten stammt; optional)</span><input type="text" id="pdUnterschriftAmtsbezeichnung" placeholder="optional"></label>
         <label class="pd-full">Zusatzinfo (Freitext, mehrzeilig)<textarea id="pdZusatzinfo" rows="3" placeholder="Hinweise, die im Aufmaßprotokoll erscheinen sollen"></textarea></label>
       </fieldset>
 
@@ -562,7 +587,16 @@
           <label>Telefon (Sachbearbeiter)<input type="text" id="sdSachbearbeiterTelefon" maxlength="60" placeholder="optional"></label>
           <label>E-Mail (Sachbearbeiter)<input type="text" id="sdSachbearbeiterEmail" maxlength="120" placeholder="optional"></label>
         </div>
-        <label class="pd-full">Amtsbezeichnung (Unterschriftszeile Beitragsbescheid) <span class="pd-hint" style="font-weight:normal">(z. B. „Kämmerer", „Leiter des Bauamts" — optional, leer = „Sachbearbeiter/in")</span><input type="text" id="sdUnterschriftAmtsbezeichnung" maxlength="120" placeholder="optional"></label>
+      </fieldset>
+
+      <fieldset class="pd-block" id="sdUnterschriftBlock">
+        <legend>Unterschrift (Beitragsbescheid)</legend>
+        <p class="pd-hint">Leer lassen, wenn der Sachbearbeiter selbst unterschreibt. Unterschreibt jemand anderes — z. B. der Bürgermeister —, hier eintragen. Der Sachbearbeiter bleibt in jedem Fall als Ansprechpartner im Briefkopf.</p>
+        <div class="pd-grid pd-grid-13">
+          <label>Zusatz <span class="pd-hint" style="font-weight:normal">(nur, wenn der Unterzeichner <em>für</em> die Behördenleitung zeichnet: „i. A." = im Auftrag, „i. V." = in Vertretung. Der Erste Bürgermeister zeichnet als Behördenleiter <em>ohne</em> Zusatz.)</span><input type="text" id="sdUnterschriftZusatz" maxlength="30" placeholder="meist leer"></label>
+          <label>Name des Unterzeichners<input type="text" id="sdUnterschriftName" maxlength="120" placeholder="z. B. Josef Huber"></label>
+        </div>
+        <label class="pd-full">Amtsbezeichnung <span class="pd-hint" style="font-weight:normal">(z. B. „Erster Bürgermeister", „Kämmerer" — optional, leer = „Sachbearbeiter/in", wenn der Sachbearbeiter selbst zeichnet)</span><input type="text" id="sdUnterschriftAmtsbezeichnung" maxlength="120" placeholder="optional"></label>
       </fieldset>
 
       <fieldset class="pd-block">
@@ -613,11 +647,15 @@
         </div>
       </fieldset>
 
+      <div class="sd-ordner-row" id="sdOrdnerRow" hidden>
+        <button type="button" class="btn btn-small btn-outline" id="sdOrdnerWaehlen">data/-Ordner verknüpfen …</button>
+        <span class="tb-info" id="sdOrdnerName"></span>
+      </div>
       <p class="fk-fehler" id="sdStatus" hidden></p>
     </div>
     <div class="modal-foot">
       <button type="button" class="btn" id="sdSchliessen">Schließen</button>
-      <button type="button" class="btn btn-primary" id="sdErzeugen" title="Fertige data/kommune.js zum Ablegen erzeugen">Stammdaten-Datei erzeugen</button>
+      <button type="button" class="btn btn-primary" id="sdErzeugen" title="Stammdaten speichern">Stammdaten speichern</button>
     </div>
   </div>
 </div>
@@ -628,10 +666,10 @@
     <div class="modal-head"><h2 id="flaecheTitel">Fläche bearbeiten</h2></div>
     <div class="modal-body">
       <p class="fk-info">
-        Polygon: <strong id="flaecheModalName">—</strong>
+        Fläche: <strong id="flaecheModalName">—</strong>
       </p>
       <p class="fk-info">
-        Gemessen aus Polygon-Geometrie: <strong id="flaecheModalGemessen">—</strong>
+        Gemessen aus der Flächen-Geometrie: <strong id="flaecheModalGemessen">—</strong>
       </p>
       <label class="fk-label">Angesetzte Fläche (m²)</label>
       <input type="text" id="flaecheModalAngesetzt" inputmode="decimal" placeholder="z. B. 142,50">
@@ -667,7 +705,7 @@
           <input type="radio" name="exVgAnrechnung" value="voll" checked>
           <div class="ex-option-body">
             <strong>Volle Geschoss-Grundfläche</strong>
-            <span class="ex-option-hint">Polygonfläche — komplette Geschoss-Grundfläche.</span>
+            <span class="ex-option-hint">Gemessene Fläche — komplette Geschoss-Grundfläche.</span>
             <ul class="ex-vorschau" id="exVorschauVoll"></ul>
           </div>
         </label>
@@ -696,7 +734,7 @@
       <h2 id="vgTitel">Vollgeschoss-Beurteilung — <span id="vgGeschossName">Geschoss</span></h2>
       <div class="vg-head-rechts">
         <label class="vg-vergleich-label">
-          Vergleichs-Polygon
+          Vergleichs-Fläche
           <select id="vgVergleichPolygon"></select>
         </label>
         <span class="vg-vergleich-info" id="vgVergleichInfo">—</span>
@@ -1005,5 +1043,6 @@
 <script src="js/app.js"></script>
 <script src="js/demo-plan-data.js"></script>
 <script src="js/demo-bootstrap.js"></script>
+<script src="js/ux-lotse.js"></script>
 </body>
 </html>

@@ -7,8 +7,9 @@ legst du hier eine Datei "kommune.js" ab:
 
   1. Im Tool oben auf das Wappen-Symbol > "Gemeinde-Stammdaten verwalten".
   2. Name, Anschrift und (fuer den Bescheid) die Beitragssaetze eintragen.
-  3. Unten auf "Stammdaten-Datei erzeugen" klicken — es wird eine Datei
-     "kommune.js" heruntergeladen.
+  3. Unten auf "Stammdaten speichern" klicken. Bietet das Tool "data/-Ordner
+     verknuepfen" an: diesen Ordner waehlen, dann schreibt es direkt hierhin.
+     Sonst wird eine Datei "kommune.js" heruntergeladen.
   4. Diese Datei in genau diesen Ordner data/ legen (neben diese Anleitung).
   5. index.html neu laden (F5) oder neu oeffnen.
 

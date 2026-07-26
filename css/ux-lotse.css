@@ -1,0 +1,342 @@
+/* ============================================================================
+   ux-lotse.css — Visuelle Fuehrungsschicht (Ideen 1-4 der v1.4-UX-Liste).
+   Gehoert zu js/ux-lotse.js.
+   Additiv: setzt nur auf, ueberschreibt nichts aus style.css.
+   ========================================================================== */
+
+/* ---------- 1. Schritt-Leiste ---------- */
+.ux-schritte {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border);
+  padding: 6px 12px;
+  overflow-x: auto;
+}
+.ux-schritte-titel {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: .03em;
+  text-transform: uppercase;
+  padding-right: 14px;
+  white-space: nowrap;
+}
+.ux-schritt {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  font-size: 13px;
+  color: var(--text-muted);
+  padding: 6px 14px 6px 10px;
+  cursor: pointer;
+  white-space: nowrap;
+  border-radius: 6px;
+  transition: background .12s, color .12s;
+}
+.ux-schritt:hover { background: rgba(15, 45, 90, .06); color: var(--text); }
+.ux-schritt-nr {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-muted);
+  background: #fff;
+  flex: 0 0 auto;
+}
+.ux-schritt-pfeil {
+  display: flex;
+  align-items: center;
+  color: var(--border);
+  font-size: 13px;
+  user-select: none;
+}
+
+/* erledigt */
+.ux-schritt.fertig { color: var(--ok); }
+.ux-schritt.fertig .ux-schritt-nr {
+  border-color: var(--ok);
+  background: var(--ok);
+  color: #fff;
+}
+/* aktueller Schritt */
+.ux-schritt.dran {
+  color: var(--brand);
+  font-weight: 700;
+  background: rgba(30, 165, 150, .10);
+}
+.ux-schritt.dran .ux-schritt-nr {
+  border-color: var(--akzent);
+  background: var(--akzent);
+  color: #fff;
+  box-shadow: 0 0 0 3px rgba(30, 165, 150, .22);
+}
+/* noch nicht erreichbar */
+.ux-schritt.spaeter { opacity: .45; }
+
+.ux-schritte-hinweis {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12.5px;
+  color: var(--text-muted);
+  padding-left: 16px;
+  white-space: nowrap;
+}
+.ux-schritte-hinweis b { color: var(--brand); font-weight: 600; }
+.ux-schritte-zu {
+  border: 1px solid var(--border);
+  background: #fff;
+  color: var(--text-muted);
+  border-radius: 6px;
+  font: inherit;
+  font-size: 12px;
+  line-height: 1;
+  padding: 5px 8px;
+  cursor: pointer;
+}
+.ux-schritte-zu:hover { color: var(--text); border-color: var(--text-muted); }
+body.ux-leiste-zu .ux-schritte .ux-schritt,
+body.ux-leiste-zu .ux-schritte .ux-schritt-pfeil,
+body.ux-leiste-zu .ux-schritte .ux-schritte-hinweis { display: none; }
+body.ux-leiste-zu .ux-schritte::after {
+  content: 'Schritt-Anzeige ausgeblendet';
+  font-size: 12.5px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+}
+
+/* ---------- 2. Aktionsbalken am Canvas (beim Flaechen-Zeichnen) ---------- */
+/* Der Balken liegt ueber dem Plan, genau waehrend gezeichnet wird. Er darf
+   deshalb KEINE Klicks schlucken — sonst lassen sich Konturpunkte im unteren
+   Planbereich nicht setzen. Container durchlaessig, nur die Knoepfe fangen. */
+.ux-aktionsbalken {
+  position: absolute;
+  left: 50%;
+  bottom: 18px;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, .97);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, .14);
+  padding: 8px 10px;
+  z-index: 40;
+  pointer-events: none;
+}
+.ux-aktionsbalken .ux-ab-btn {
+  pointer-events: auto;
+}
+.ux-aktionsbalken .ux-ab-text {
+  font-size: 12.5px;
+  color: var(--text-muted);
+  padding: 0 6px 0 4px;
+  white-space: nowrap;
+}
+.ux-aktionsbalken .ux-ab-text b { color: var(--brand); }
+.ux-ab-btn {
+  border: 1px solid var(--border);
+  background: #fff;
+  color: var(--text);
+  border-radius: 7px;
+  font: inherit;
+  font-size: 13px;
+  padding: 7px 12px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.ux-ab-btn:hover { border-color: var(--brand); color: var(--brand); }
+.ux-ab-btn.primaer {
+  background: var(--akzent);
+  border-color: var(--akzent);
+  color: #fff;
+  font-weight: 600;
+}
+.ux-ab-btn.primaer:hover { background: #17897d; border-color: #17897d; color: #fff; }
+.ux-ab-btn:disabled { opacity: .45; cursor: not-allowed; }
+.ux-ab-btn .ux-ab-taste {
+  font-size: 11px;
+  opacity: .7;
+  margin-left: 6px;
+}
+
+/* ---------- 3. Erklaerung gesperrter Schaltflaechen ---------- */
+.ux-sperr-hinweis {
+  position: fixed;
+  z-index: 90;
+  max-width: 300px;
+  background: var(--brand);
+  color: #fff;
+  font-size: 12.5px;
+  line-height: 1.45;
+  padding: 9px 12px;
+  border-radius: 8px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, .22);
+  pointer-events: none;
+}
+.ux-sperr-hinweis::after {
+  content: '';
+  position: absolute;
+  top: -6px;
+  left: 22px;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-bottom: 6px solid var(--brand);
+}
+
+/* ---------- 4. Eigene Dialoge (statt prompt/confirm) ---------- */
+.ux-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 45, 90, .38);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 20px;
+}
+.ux-modal {
+  background: var(--bg-card);
+  border-radius: 12px;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, .30);
+  width: 100%;
+  max-width: 460px;
+  overflow: hidden;
+}
+.ux-modal-head {
+  padding: 16px 20px 12px;
+  border-bottom: 1px solid var(--border);
+}
+.ux-modal-head h2 {
+  margin: 0;
+  font-size: 16px;
+  color: var(--brand);
+}
+.ux-modal-head p {
+  margin: 6px 0 0;
+  font-size: 12.5px;
+  color: var(--text-muted);
+  line-height: 1.45;
+}
+.ux-modal-body { padding: 16px 20px; }
+.ux-feld { display: block; margin-bottom: 14px; }
+.ux-feld > span {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 5px;
+}
+.ux-feld > small {
+  display: block;
+  font-size: 11.5px;
+  color: var(--text-muted);
+  margin-top: 4px;
+  line-height: 1.4;
+}
+.ux-feld input,
+.ux-feld textarea {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  font: inherit;
+  font-size: 14px;
+  padding: 9px 10px;
+  color: var(--text);
+  background: #fff;
+}
+.ux-feld input:focus,
+.ux-feld textarea:focus {
+  outline: none;
+  border-color: var(--akzent);
+  box-shadow: 0 0 0 3px rgba(30, 165, 150, .18);
+}
+.ux-vorschlaege {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 7px;
+}
+.ux-chip {
+  border: 1px solid var(--border);
+  background: #fff;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 12px;
+  color: var(--text-muted);
+  padding: 4px 11px;
+  cursor: pointer;
+}
+.ux-chip:hover { border-color: var(--akzent); color: var(--akzent); }
+.ux-modal-fehler {
+  color: var(--fehlt);
+  font-size: 12.5px;
+  margin: 0 0 10px;
+}
+.ux-modal-foot {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px 16px;
+  border-top: 1px solid var(--border);
+  background: #fbfcfd;
+}
+.ux-modal-foot .ux-spacer { flex: 1; }
+.ux-modal-foot button {
+  border: 1px solid var(--border);
+  background: #fff;
+  color: var(--text);
+  border-radius: 7px;
+  font: inherit;
+  font-size: 13.5px;
+  padding: 9px 16px;
+  cursor: pointer;
+}
+.ux-modal-foot button.primaer {
+  background: var(--akzent);
+  border-color: var(--akzent);
+  color: #fff;
+  font-weight: 600;
+}
+.ux-modal-foot button.gefahr {
+  background: var(--fehlt);
+  border-color: var(--fehlt);
+  color: #fff;
+  font-weight: 600;
+}
+.ux-summe {
+  background: rgba(30, 165, 150, .09);
+  border: 1px solid rgba(30, 165, 150, .30);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 13px;
+  color: var(--text);
+  margin-bottom: 14px;
+}
+.ux-summe b { color: var(--brand); font-size: 15px; }
+.ux-warn {
+  background: rgba(217, 119, 6, .10);
+  border: 1px solid rgba(217, 119, 6, .35);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 12.5px;
+  color: #8a4c04;
+  line-height: 1.45;
+  margin-bottom: 14px;
+}

@@ -700,6 +700,7 @@ kbd {
 .modal-body textarea:focus { outline: 2px solid var(--brand); outline-offset: -1px; }
 .modal-body textarea { resize: vertical; min-height: 60px; }
 .fk-fehler { color: #c0392b; font-size: 12px; margin: 8px 0 0 0; }
+.sd-ordner-row { display: flex; align-items: center; gap: 10px; margin: 4px 0 0 0; flex-wrap: wrap; }
 
 /* Export-Anrechnungs-Dialog */
 .modal.modal-export { max-width: 560px; }
@@ -1267,18 +1268,6 @@ kbd {
   text-transform: uppercase;
   letter-spacing: 0.4px;
 }
-/* <details class="pd-block"> als eingeklapptes Pendant zum <fieldset> fuer
-   Sektionen, die im Regelfall unveraendert bleiben (Overrides mit Default-
-   Standardtext) — reduziert die Scroll-Laenge, ohne die Felder zu entfernen. */
-.pd-block-details summary {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--brand);
-  text-transform: uppercase;
-  letter-spacing: 0.4px;
-  cursor: pointer;
-}
-.pd-block-details[open] summary { margin-bottom: 8px; }
 .pd-block label {
   display: block;
   margin-top: 8px;
@@ -1426,6 +1415,48 @@ kbd {
   color: #c0392b;
 }
 .be-fehler li { margin: 1px 0; }
+
+/* Bescheidmaske als Wizard (Idee 8 v1.4-UX): 4 Schritte statt einer langen
+   Seite. Sichtbarkeit der Fieldsets steuert js/bescheid-ui.js ueber [hidden]
+   auf [data-be-schritt]-Elementen — hier nur die Leisten-/Status-Optik. */
+.be-wizard { margin: 0 0 16px 0; }
+.be-wizard-schritte { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+.be-wizard-schritt {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border: 1px solid transparent;
+  border-radius: 20px;
+  background: none;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+.be-wizard-schritt:hover { background: rgba(15, 45, 90, .06); color: var(--text); }
+.be-wizard-nr {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--border);
+  color: #fff;
+  font-size: 11px;
+}
+.be-wizard-schritt.fertig { color: var(--ok); }
+.be-wizard-schritt.fertig .be-wizard-nr { background: var(--ok); }
+.be-wizard-schritt.dran { color: var(--brand); border-color: var(--brand); background: rgba(15, 45, 90, .06); }
+.be-wizard-schritt.dran .be-wizard-nr { background: var(--brand); }
+.be-wizard-pfeil { color: var(--border); font-size: 12px; }
+.be-wizard-status { margin: 6px 0 0 0; font-size: 12px; color: var(--text-muted); }
+.be-wizard-status.be-wizard-status-vollstaendig { color: var(--ok); font-weight: 600; }
+.be-wizard-nav { display: flex; justify-content: space-between; margin: 4px 0 16px 0; }
+.be-textstatus { display: block; margin-top: 4px; font-size: 11px; }
+.be-textstatus-standard { color: var(--ok); }
+.be-textstatus-entfaellt { color: var(--text-muted); font-style: italic; }
 
 /* Polygon-Eintrag: manuelle Korrektur kennzeichnen */
 .polygon-item .pg-flaeche.korrigiert { font-weight: 600; }

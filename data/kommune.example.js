@@ -3,7 +3,7 @@
  * ---------------------------------------------------------------------
  * Neutrale Muster-Vorlage fuer die oeffentliche Browser-Demo. Kopiere
  * diese Datei zu data/kommune.js und passe die Werte an — ODER, bequemer:
- * erzeuge sie direkt im Tool ueber den Knopf "Stammdaten-Datei erzeugen"
+ * erzeuge sie direkt im Tool ueber den Knopf "Stammdaten speichern"
  * (Anschrift, Wappen, Sachbearbeiter selbst pflegen; auch mehrere
  * Gemeinden fuer eine Verwaltungsgemeinschaft).
  *
@@ -34,6 +34,12 @@ window.GF_KOMMUNE = {
       // im Briefkopf abgedruckt (Ansprechpartner-Block). Optional.
       defaultSachbearbeiterTelefon: '',
       defaultSachbearbeiterEmail: '',
+      // Unterschriftszeile des Beitragsbescheids: Zusatz ist der Zeichnungs-
+      // vermerk ueber dem Unterschriftsstrich (z. B. "i. A.", "i. V."), Name
+      // der Unterzeichner, wenn er vom Sachbearbeiter abweicht (leer = der
+      // Sachbearbeiter unterschreibt).
+      defaultUnterschriftZusatz: '',
+      defaultUnterschriftName: '',
       // Amtsbezeichnung fuer die Unterschriftszeile des Beitragsbescheids
       // (z. B. "Kämmerer", "Leiter des Bauamts"). Optional, leer = Fallback
       // "Sachbearbeiter/in".
