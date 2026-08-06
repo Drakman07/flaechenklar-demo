@@ -623,6 +623,33 @@ body {
 .demo-banner.aktiv { display: block; }
 .demo-banner.warn  { background: #ffdada; border-color: #cc4444; }
 
+/* ===================== Partner-Sperre (Fernsperre) ===================== */
+.partner-sperre-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: rgba(15, 45, 90, 0.97);
+  color: #fff;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 24px;
+}
+.partner-sperre-overlay.aktiv { display: flex; }
+.partner-sperre-box {
+  max-width: 480px;
+}
+.partner-sperre-box strong {
+  font-size: 22px;
+  display: block;
+  margin-bottom: 12px;
+}
+.partner-sperre-box p {
+  margin: 8px 0;
+  line-height: 1.5;
+}
+
 /* ===================== Modal ===================== */
 .modal-backdrop {
   display: none;

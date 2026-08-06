@@ -12,7 +12,7 @@
 <link rel="icon" type="image/svg+xml" href="assets/flaechenklar_icon.svg">
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/ux-lotse.css">
-  <meta name="fk-demo-version" content="1.4.1">
+  <meta name="fk-demo-version" content="1.4.2">
 <meta name="robots" content="noindex, nofollow">
 <style id="demo-styles">
   .demo-banner-inner{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
@@ -28,6 +28,14 @@
       <strong>Online-Demo</strong> · FlächenKlar mit vorgeladenem Musterplan — Geschossfläche nach Außenmaßen in Minuten.
     </div>
     <a class="demo-cta-btn" id="demoCtaVollversion" href="https://download.flaechenklar.de" target="_blank" rel="noopener">Vollversion 14 Tage kostenlos testen →</a>
+  </div>
+</div>
+
+<div class="partner-sperre-overlay" id="partnerSperreOverlay" role="alertdialog" aria-label="Lizenz gesperrt">
+  <div class="partner-sperre-box">
+    <strong>Lizenz gesperrt</strong>
+    <p>Diese Installation von FlächenKlar wurde vom Anbieter gesperrt.</p>
+    <p>Bitte wenden Sie sich an Alexander Geitner (FlächenKlar), um die Lizenz zu klären.</p>
   </div>
 </div>
 
@@ -347,7 +355,7 @@
         <legend>Grundstück</legend>
         <div class="pd-grid">
           <label>Grundstücksfläche (m²)<input type="text" id="beGrundflaeche" inputmode="decimal" placeholder="z. B. 750"></label>
-          <label>Geschossfläche neu (m²) <span class="pd-hint" style="font-weight:normal">(automatisch aus der Flächenermittlung)</span><input type="text" id="beGfNeu" readonly title="Aus der Flächenermittlung übernommen"></label>
+          <label>Geschossfläche neu (m²) <span class="pd-hint" style="font-weight:normal">(automatisch aus der Flächenermittlung)</span> <span class="pd-hint" id="beGfNeuHinweis" hidden>(unverändert aus Vorveranlagung übernommen)</span><input type="text" id="beGfNeu" readonly title="Aus der Flächenermittlung übernommen"></label>
         </div>
         <p class="pd-hint" id="beGrundInfo"></p>
         <button type="button" class="btn btn-small" id="beLinkProjektdaten">Projektdaten bearbeiten …</button>
@@ -362,6 +370,7 @@
           <label>bereits veranlagte Geschossfläche (m²)<input type="text" id="beVeranlagtGf" inputmode="decimal"></label>
           <label>Vorbescheid vom <span class="pd-hint" style="font-weight:normal">(optional)</span><input type="date" id="beVeranlagtBescheidDatum"></label>
           <label>Vorbescheid Az./Nr. <span class="pd-hint" style="font-weight:normal">(optional)</span><input type="text" id="beVeranlagtBescheidNummer" placeholder="z. B. 2024/7"></label>
+          <label class="pp-check pd-full" id="beGfUnveraendertZeile" hidden><input type="checkbox" id="beGfUnveraendert"> Geschossfläche unverändert — „Geschossfläche neu" übernimmt den bereits veranlagten Wert (nur Grundstücksmehrung)</label>
         </div>
       </fieldset>
 
