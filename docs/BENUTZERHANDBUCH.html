@@ -81,14 +81,14 @@ body {
 <header class="hb-head">
   <div>
     <h1>FlächenKlar — Benutzerhandbuch</h1>
-    <div class="hb-meta">Version 1.4.4 · Stand 2026-08-12</div>
+    <div class="hb-meta">Version 1.5.0 · Stand 2026-08-12</div>
   </div>
   <button type="button" class="hb-print-btn" onclick="window.print()">Drucken</button>
 </header>
 <main class="hb-main">
 <h1 id="benutzerhandbuch-flächenklar">Benutzerhandbuch — FlächenKlar</h1>
-<p><strong>Version:</strong> 1.4.2
-<strong>Stand:</strong> 2026-08-05</p>
+<p><strong>Version:</strong> 1.5.0
+<strong>Stand:</strong> 2026-08-12</p>
 <hr>
 <h2 id="inhalt">Inhalt</h2>
 <ol>
@@ -146,7 +146,10 @@ für die Entzerrung (siehe 3.1) werden von Hand angeklickt, nicht per KI</li>
 <li>Den vom Anbieter erhaltenen ZIP-Ordner an einen festen Ort entpacken
 (z. B. <code>C:\Programme\FlaechenKlar\</code> oder einen Ordner auf dem Netzlaufwerk).</li>
 <li>Lizenz-Datei <code>data/lizenz.js</code> einspielen — wird mit der Lizenzbestellung mitgeliefert.</li>
-<li><strong>Doppelklick auf <code>index.html</code></strong> — der Standardbrowser öffnet das Tool.</li>
+<li><strong>Doppelklick auf <code>FlaechenKlar.bat</code></strong> — öffnet das Tool im Standardbrowser und
+prüft dabei kurz, ob eine neue Version vorliegt (siehe Abschnitt 12). Ein
+direkter Doppelklick auf <code>index.html</code> funktioniert ebenfalls, dann entfällt
+nur die automatische Update-Prüfung.</li>
 </ol>
 <p>Ohne <code>data/lizenz.js</code> startet das Tool als <strong>14-Tage-Demo</strong>. Demo-PDFs tragen
 ein diagonales Wasserzeichen.</p>
@@ -683,11 +686,33 @@ Tool beim nächsten Start, ob der letzte Stand wiederhergestellt werden soll.</p
 auf <strong>„Auf Updates prüfen&quot;</strong> hashed das Tool die ID und vergleicht den Hash
 gegen die Online-Whitelist. Drei Ergebnisse:</p>
 <ul>
-<li><strong>Hash bekannt + neue Version verfügbar</strong> → Update-Hinweis erscheint.</li>
+<li><strong>Hash bekannt + neue Version verfügbar</strong> → Update-Hinweis erscheint, mit
+einer kurzen Liste, was sich seit Ihrer Version geändert hat.</li>
 <li><strong>Hash bekannt + aktuelle Version</strong> → „Sie sind auf dem neuesten Stand.&quot;</li>
 <li><strong>Hash nicht in Whitelist</strong> → „Wartungsvertrag abgelaufen.&quot; Das Tool selbst
 funktioniert weiter wie gewohnt — nur die Update-Suche ist gesperrt.</li>
 </ul>
+<h3 id="start-über-flaechenklar-bat-empfohlen">Start über FlaechenKlar.bat (empfohlen)</h3>
+<p>Starten Sie FlächenKlar über die Datei <code>FlaechenKlar.bat</code> im Programm-Ordner
+statt über <code>index.html</code>, prüft das Tool bei jedem Programmstart automatisch
+in wenigen Sekunden, ob eine neue Version vorliegt:</p>
+<ul>
+<li><strong>Kein Update verfügbar</strong> (oder kein Internetzugang) → das Tool öffnet sich
+direkt, ohne Rückfrage.</li>
+<li><strong>Update verfügbar</strong> → ein Dialogfenster zeigt die neue Versionsnummer und
+die wichtigsten Änderungen seit Ihrer Version, mit der Frage „Jetzt
+aktualisieren?&quot;. Bei <strong>Ja</strong> läuft das Update automatisch (derselbe Ablauf
+wie unten unter „Update durchführen&quot;), danach öffnet sich das Tool. Bei
+<strong>Nein</strong> öffnet sich das Tool sofort mit dem bisherigen Stand — beim
+nächsten Programmstart wird erneut gefragt.</li>
+</ul>
+<p><strong>Datenschutz:</strong> FlächenKlar bleibt dabei eine reine Offline-Anwendung. Beim
+Start wird lediglich die aktuelle Versionsnummer von einem Server abgerufen —
+es werden keine Projekt- oder Kundendaten übertragen. Heruntergeladen wird
+ausschließlich, wenn Sie die Ja/Nein-Abfrage bestätigen.</p>
+<p>Ein direkter Doppelklick auf <code>index.html</code> funktioniert weiterhin — dann
+entfällt nur die automatische Prüfung, und im Tool erscheint ein kurzer
+Hinweis, künftig über <code>FlaechenKlar.bat</code> zu starten.</p>
 <h3 id="lizenz-gesperrt">Lizenz gesperrt</h3>
 <p>Bei bestimmten Sonder-Lizenzen prüft das Tool die Whitelist automatisch beim
 Start (nicht nur auf Klick). Erscheint dabei der Hinweis <strong>„Lizenz
@@ -698,14 +723,15 @@ Festplatte bleiben davon unberührt. Bitte den Anbieter (Alexander Geitner,
 FlächenKlar) kontaktieren, um die Lizenz zu klären. Normale Gemeinde-
 Lizenzen sind von diesem automatischen Start-Check nicht betroffen.</p>
 <h3 id="update-durchführen">Update durchführen</h3>
-<p>Bei Update-Verfügbarkeit:</p>
+<p>Starten Sie über <code>FlaechenKlar.bat</code> (siehe oben), erledigt sich das mit der
+Ja/Nein-Abfrage von selbst. Manuell geht es weiterhin so:</p>
 <ol>
-<li>Den vom Tool angegebenen Befehl in PowerShell ausführen (siehe <code>update.bat</code>
-oder <code>update.ps1</code> im Tool-Ordner) — dafür kurz das Verzeichnis öffnen.</li>
+<li>FlächenKlar schließen, Programm-Ordner im Datei-Explorer öffnen.</li>
+<li>Doppelklick auf <code>update.bat</code> — lädt und installiert die neue Version.</li>
 <li>Das Skript prüft erneut die Lizenz, lädt die neue Version und ersetzt die
 Code-Dateien. <strong>Der <code>data/</code>-Ordner bleibt unangetastet</strong> — Wappen und
 Lizenz-Datei werden nicht überschrieben.</li>
-<li>Tool neu starten.</li>
+<li>Tool neu starten (am besten über <code>FlaechenKlar.bat</code>).</li>
 </ol>
 <h3 id="demo-modus">Demo-Modus</h3>
 <p>Ohne <code>data/lizenz.js</code> startet das Tool als <strong>14-Tage-Demo</strong>. Alle Funktionen

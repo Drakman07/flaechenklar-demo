@@ -623,6 +623,37 @@ body {
 .demo-banner.aktiv { display: block; }
 .demo-banner.warn  { background: #ffdada; border-color: #cc4444; }
 
+/* ===================== Start-Hinweis-Banner (Launcher-Migration) ===================== */
+.start-hinweis-banner {
+  display: none;
+  background: var(--brand-hell, #e8eef8);
+  border-bottom: 1px solid var(--brand-dark, #0a2142);
+  padding: 6px 16px;
+  font-size: 13px;
+  flex: none;
+}
+.start-hinweis-banner.aktiv { display: block; }
+.start-hinweis-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+.start-hinweis-text { text-align: center; }
+.start-hinweis-schliessen {
+  flex: none;
+  background: transparent;
+  border: none;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 2px 6px;
+  color: var(--brand-dark, #0a2142);
+}
+.start-hinweis-schliessen:hover { opacity: 0.7; }
+
 /* ===================== Partner-Sperre (Fernsperre) ===================== */
 .partner-sperre-overlay {
   display: none;
