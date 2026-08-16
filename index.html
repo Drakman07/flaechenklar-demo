@@ -12,7 +12,7 @@
 <link rel="icon" type="image/svg+xml" href="assets/flaechenklar_icon.svg">
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/ux-lotse.css">
-  <meta name="fk-demo-version" content="1.5.1">
+  <meta name="fk-demo-version" content="1.5.2">
 <meta name="robots" content="noindex, nofollow">
 <style id="demo-styles">
   .demo-banner-inner{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
@@ -69,6 +69,17 @@
     </div>
   </div>
 </header>
+
+<!-- Warnnetz (Design 2026-08-14): ruhige Hinweisbalken, kein Popup, blockieren
+     nichts. Je Balken eigenstaendig sicht-/unsichtbar (siehe app.js). -->
+<div id="hinweisGemeindeBalken" class="gf-hinweisbalken gf-hinweisbalken-warn" hidden>
+  <span class="gf-hinweisbalken-text">Die Gemeinde dieses Projekts ist nicht zugeordnet — Beitragssätze, Wappen und Briefkopf können deshalb fehlen.</span>
+  <button type="button" class="btn btn-small" id="btnHinweisGemeindeOeffnen">Projektdaten öffnen</button>
+</div>
+<div id="hinweisStammdatenBalken" class="gf-hinweisbalken gf-hinweisbalken-warn" hidden>
+  <span class="gf-hinweisbalken-text">Ihre Stammdaten sind noch nicht aktiv — die zuletzt eingegebenen Angaben wurden noch nicht als Datei gespeichert und im Tool geladen.</span>
+  <button type="button" class="btn btn-small" id="btnHinweisStammdatenOeffnen">Stammdaten öffnen</button>
+</div>
 
 <!-- ===================== Toolbar (Phase 1) ===================== -->
 <div class="toolbar">
@@ -403,6 +414,7 @@
           <label>Kassenzeichen<input type="text" id="beEKassenzeichen"></label>
           <label>Satzungsverweis Maßstab (II.)<input type="text" id="beESatzungsverweis" placeholder="z. B. § 5 BGS/EWS"></label>
         </div>
+        <button type="button" class="btn btn-small be-reset-gruppe-btn" data-reset-gruppe="beitragssaetze" title="Zieht die vier Satz-Felder (Wasser + Entwässerung) erneut aus den Stammdaten nach — z. B. nachdem die Gemeinde-Zuordnung des Projekts repariert wurde">Beitragssätze aus Stammdaten übernehmen</button>
       </fieldset>
 
       <fieldset class="pd-block" data-be-schritt="2">

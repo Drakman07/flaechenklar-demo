@@ -81,14 +81,14 @@ body {
 <header class="hb-head">
   <div>
     <h1>FlächenKlar — Benutzerhandbuch</h1>
-    <div class="hb-meta">Version 1.5.1 · Stand 2026-08-13</div>
+    <div class="hb-meta">Version 1.5.2 · Stand 2026-08-14</div>
   </div>
   <button type="button" class="hb-print-btn" onclick="window.print()">Drucken</button>
 </header>
 <main class="hb-main">
 <h1 id="benutzerhandbuch-flächenklar">Benutzerhandbuch — FlächenKlar</h1>
-<p><strong>Version:</strong> 1.5.1
-<strong>Stand:</strong> 2026-08-13</p>
+<p><strong>Version:</strong> 1.5.2
+<strong>Stand:</strong> 2026-08-15</p>
 <hr>
 <h2 id="inhalt">Inhalt</h2>
 <ol>
@@ -262,6 +262,15 @@ Verwaltungsgemeinschaften mit mehreren Gemeinden versehentlich immer das Wappen
 der Standard-Gemeinde). Bei nur einer hinterlegten Gemeinde ist das Feld
 ausgeblendet. Wie Gemeinden hinterlegt werden, steht in
 <a href="#16-gemeinde-stammdaten-selbst-pflegen">Abschnitt 16</a>.</p>
+<p><strong>Hinweisbalken „Die Gemeinde dieses Projekts ist nicht zugeordnet&quot;:</strong> Lässt
+sich beim Öffnen einer Akte keine eindeutige Gemeinde aus den Stammdaten
+ableiten — weil das Projekt auf keine oder auf mehrere gleich passende
+Gemeinden zeigt —, erscheint unter dem Programmkopf dieser Hinweisbalken.
+Beitragssätze, Wappen und Briefkopf können in diesem Zustand fehlen oder von
+der falschen Gemeinde stammen. Ein Klick auf „Projektdaten öffnen&quot; öffnet
+direkt diese Maske; dort im Auswahlfeld „Gemeinde&quot; die richtige Gemeinde
+wählen und „Übernehmen&quot; klicken — danach ist die Zuordnung fest in die Akte
+eingetragen und der Balken verschwindet.</p>
 <hr>
 <h2 id="5-geschosse-anlegen">5. Geschosse anlegen</h2>
 <ol>
@@ -801,6 +810,14 @@ Zustellanschrift, ist je Pflichtigem ein eigener Bescheid zu erstellen.</p>
 Entwässerung) gesetzt, erzeugt der Export automatisch <strong>zwei getrennte
 Bescheide</strong> (eigenes Abgabenverhältnis je Beitragsart) — ein Hinweis über
 den Export-Buttons macht das vorab sichtbar.</p>
+<p>In Schritt 2 („Beitragssätze&quot;) zieht der Knopf <strong>„Beitragssätze aus
+Stammdaten übernehmen&quot;</strong> die vier Satz-Felder (Wasser + Entwässerung, je
+€/m² Grundstücksfläche und €/m² Geschossfläche) erneut aus den Stammdaten
+nach. Nützlich, wenn die Gemeinde-Zuordnung des Projekts erst nachträglich
+repariert wurde (siehe Hinweisbalken in <a href="#4-projektdaten-erfassen">Abschnitt 4</a>)
+und die zunächst leer gebliebenen Sätze jetzt aus dem richtigen Profil
+nachgeladen werden sollen. Bereits eingetragene Werte werden dabei
+überschrieben — ein kurzer Rückfrage-Dialog bestätigt das vor dem Ausführen.</p>
 <h3 id="nacherhebung-bereits-teilweise-veranlagtes-grundstück">Nacherhebung (bereits teilweise veranlagtes Grundstück)</h3>
 <p>Wurde für ein Grundstück bereits früher ein Herstellungsbeitrag auf Basis
 einer kleineren Fläche festgesetzt (z. B. nach einer nachträglichen
@@ -1096,6 +1113,18 @@ ersetzen),</li>
 <p>Danach stehen die neuen Stammdaten für alle neuen Akten zur Verfügung. Weil die
 Datei im Installations-Ordner liegt, gilt die Änderung für <strong>alle Mitarbeiter</strong>, die
 aus diesem Ordner arbeiten — nichts wird im Browser-Profil gespeichert.</p>
+<h3 id="hinweisbalken-ihre-stammdaten-sind-noch-nicht-aktiv">Hinweisbalken „Ihre Stammdaten sind noch nicht aktiv&quot;</h3>
+<p>Im Stammdaten-Dialog Eingetragenes gilt zunächst nur als <strong>Entwurf im
+aktuellen Browser</strong> — er wirkt sich sofort auf neue Bescheide in dieser
+Sitzung aus (siehe „Übergangsweise Nutzung ohne Datei&quot; oben), betrifft aber
+noch keinen anderen Arbeitsplatz und übersteht keinen Rechner-Wechsel. Aktiv
+für die ganze Installation wird er erst, wenn daraus wie oben beschrieben
+eine <code>kommune.js</code> erzeugt, in den <code>data/</code>-Ordner gelegt und das Tool <strong>neu
+geladen</strong> wurde. Solange ein Entwurf im Browser steht, der von der zuletzt
+geladenen <code>kommune.js</code> abweicht, zeigt das Tool unter dem Programmkopf den
+Hinweisbalken „Ihre Stammdaten sind noch nicht aktiv&quot;. Ein Klick auf
+„Stammdaten öffnen&quot; führt direkt zurück in den Dialog; nach Ablage der
+Datei und Neuladen des Tools verschwindet der Balken.</p>
 <h3 id="bereits-gespeicherte-akten-bleiben-unverändert">Bereits gespeicherte Akten bleiben unverändert</h3>
 <p>Beim Anlegen einer Akte wird die gewählte Gemeinde als <strong>Momentaufnahme</strong> in die
 <code>.zip</code>-Datei eingefroren. Wird ein Profil später geändert, behalten bereits

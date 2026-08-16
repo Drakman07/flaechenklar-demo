@@ -587,6 +587,24 @@ body {
 .mass-banner.mass-banner-info #btnMassBannerOk { display: none; }
 .mass-banner.mass-banner-warn { border-color: var(--warn); border-left-color: var(--warn); }
 
+/* Hinweisbalken unterhalb des Headers (Gemeinde-Zuordnung/Stammdaten-Aktivierung,
+   Design 2026-08-14) -- ruhiger Balken im normalen Dokumentfluss (kein position:
+   absolute wie .mass-banner, da er unabhaengig vom Canvas sichtbar sein soll),
+   kein Popup, blockiert nichts. */
+.gf-hinweisbalken {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 14px;
+  padding: 8px 20px;
+  font-size: 13px;
+  line-height: 1.35;
+  border-bottom: 1px solid var(--warn);
+}
+.gf-hinweisbalken-warn { background: #fef3c7; color: #7a5300; }
+.gf-hinweisbalken-text { flex: 1 1 260px; min-width: 0; }
+.gf-hinweisbalken .btn { flex-shrink: 0; }
+
 /* Statusbar im Canvas-Host */
 .canvas-statusbar {
   position: absolute;
