@@ -38,12 +38,13 @@
   </div>
 </div>
 
-<div class="partner-sperre-overlay" id="partnerSperreOverlay" role="alertdialog" aria-label="Lizenz gesperrt">
-  <div class="partner-sperre-box">
-    <strong>Lizenz gesperrt</strong>
-    <p>Diese Installation von FlächenKlar wurde vom Anbieter gesperrt.</p>
-    <p>Bitte wenden Sie sich an Alexander Geitner (FlächenKlar), um die Lizenz zu klären.</p>
-  </div>
+<div class="partner-sperre-overlay" id="partnerSperreOverlay" role="alertdialog" aria-hidden="true">
+  <!-- Inhalt bewusst leer: der Alarmtext wird erst per JS (js/lizenz.js,
+       fuelleSperrOverlay) eingefuegt, wenn die Partner-Fernsperre wirklich
+       greift. Ein statischer Text hier wuerde beim Kopieren der Seite
+       (Strg+A/C in eine Mail) auch im unsichtbaren Ruhezustand mitkopiert
+       werden -- siehe Support-Fall Seubersdorf 17.08.2026. -->
+  <div class="partner-sperre-box"></div>
 </div>
 
 <div id="appRoot">
