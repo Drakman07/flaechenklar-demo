@@ -856,7 +856,7 @@ manuell setzen.</li>
 <li><strong>Versanddatum (Aufgabe zur Post)</strong> — rein intern für die Akte (§ 122 Abs. 2 AO),
 erscheint nicht im Bescheid selbst.</li>
 <li><strong>Fälligkeitsdatum (III.)</strong> — Button „Aus Versanddatum berechnen&quot; ermittelt es
-aus der Bekanntgabefiktion (Versand + 3 Tage + Zahlungsfrist). Berücksichtigt
+aus der Bekanntgabefiktion (Versand + 4 Tage + Zahlungsfrist). Berücksichtigt
 keine gemeindespezifischen Feiertage — vor dem Export prüfen. Wird beim
 Eintragen des Versanddatums automatisch vorgeschlagen, wenn das Feld noch leer
 ist; ein bereits gesetztes Datum bleibt unangetastet. Versanddatum am besten
@@ -897,12 +897,13 @@ Information enthalten sein soll:</p>
 <ul>
 <li><strong>Minimal</strong> — nur App-Version + Browser-Info. Wählen Sie das, wenn der
 Anbieter nur prüfen will, <em>welche</em> Version Sie installiert haben.</li>
-<li><strong>Standard</strong> — zusätzlich anonymisierte Projekt-Metadaten und Zahlen (z. B.
-Anzahl PDFs, Geschosse, Flächen, Gesamtfläche). Keine Namen.</li>
-<li><strong>Mit Projekt-Snapshot (Default)</strong> — zusätzlich das gesamte Projekt-Modell
-(Geschosse, Flächen, VG-Berechnungen) inklusive Koordinaten, <strong>ohne PDF-Inhalte
-und ohne personenbezogene Felder</strong>. Wählen Sie das, wenn der Anbieter einen
-Rechenfehler nachvollziehen soll.</li>
+<li><strong>Standard (Default)</strong> — zusätzlich anonymisierte Projekt-Metadaten und Zahlen
+(z. B. Anzahl PDFs, Geschosse, Flächen, Gesamtfläche). Keine Namen.</li>
+<li><strong>Mit Projekt-Snapshot</strong> — zusätzlich das gesamte Projekt-Modell (Geschosse,
+Flächen, VG-Berechnungen) inklusive Koordinaten, <strong>ohne PDF-Inhalte, ohne
+personenbezogene Felder und ohne Original-Dateinamen</strong> (werden durch einen
+Platzhalter ersetzt). Nur auf ausdrückliche Anforderung des Supports wählen
+— für den Regelfall genügt „Standard&quot;.</li>
 </ul>
 <p>Eine Vorschau zeigt Ihnen vor dem Speichern, <em>was genau</em> in die Datei kommt.
 Die Datei landet im Standard-Download-Ordner Ihres Browsers mit einem
