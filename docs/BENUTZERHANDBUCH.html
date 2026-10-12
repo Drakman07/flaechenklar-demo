@@ -197,6 +197,11 @@ navigieren. Aktuelle Seite wird angezeigt.</li>
 </ol>
 <p>Mehrere PDFs sind erlaubt — typischer Fall: ein PDF mit dem Grundriss DG, ein
 zweites mit OG. Beide werden im selben Projekt verwaltet.</p>
+<p>Große Pläne brauchen beim Anzeigen einen Moment („Plan wird vorbereitet …&quot;).
+Währenddessen lässt sich schon weiterblättern (gezählt ab der noch angezeigten
+Seite), eine andere PDF wählen oder ein Plan-Ausschnitt in der Sidebar
+anklicken. Angezeigt wird immer das zuletzt Angeklickte; die ältere
+Aufbereitung verwirft das Tool.</p>
 <h3 id="3-1-alternative-handyfoto-eines-plans-importieren-4-punkt-entzerrung">3.1 Alternative: Handyfoto eines Plans importieren (4-Punkt-Entzerrung)</h3>
 <p>Liegt kein PDF vor, sondern nur ein Foto einer Papierzeichnung (z. B. ein
 Handyfoto vom Bauantrag), lässt sich das Foto perspektivisch entzerren und
@@ -305,6 +310,18 @@ welchem Geschoss der Plan-Ausschnitt zugeordnet werden soll (nummerierte
 Liste, Nummer eintippen). Bei nur einem Geschoss erfolgt die Zuordnung
 automatisch.</li>
 </ol>
+<p>Der Plan-Ausschnitt erscheint danach in der <strong>Geschoss-Liste</strong> der Sidebar
+unter seinem Geschoss. Jeder Eintrag hat zwei Zeilen: oben die laufende Nummer
+und der Name der PDF sowie der Mülleimer (löscht nach Rückfrage nur diesen
+Plan-Ausschnitt samt seiner Flächen), darunter die Seite („S.1&quot;) und die
+Maßstab-Pille (siehe Schritt 2). Der Name ist der Anzeigename, den Sie beim
+Laden der PDF bestätigt haben (Vorschlag: der Dateiname); ein kurzer Name
+hält die Liste übersichtlich. Später lässt er sich mit <strong>„Umbenennen&quot;</strong> in der
+Plan-Werkzeugleiste ändern — das wirkt auf die gerade angezeigte PDF; ein Klick
+auf einen Eintrag der Liste schaltet zur PDF dieses Eintrags. Ein langer Name
+bricht auf eine zweite Zeile um und wird danach gekürzt — der Tooltip zeigt ihn
+ganz, wenn Sie mit der Maus darüber bleiben. Ein Klick auf den Eintrag springt
+zum Plan-Ausschnitt, auch in eine andere PDF oder auf eine andere Seite.</p>
 <h3 id="schritt-2-maßstab-festlegen-maßstab">Schritt 2 — Maßstab festlegen (<code>↔ Maßstab</code>)</h3>
 <p>Seit dem Maßstab-Redesign (v1.2.6) gibt es genau <strong>einen manuellen Weg</strong>:
 das <strong>Nachmessen eines bekannten Maßes</strong> (zwei Punkte anklicken + echte Länge
@@ -412,7 +429,14 @@ mit Linien.</li>
 </li>
 <li>Optional Bezeichnung eintragen (z. B. „Hauptgebäude&quot;).</li>
 </ol>
-<p>Die berechnete Fläche erscheint sofort in der Sidebar neben dem Eintrag.</p>
+<p>Die Fläche erscheint sofort in der Sidebar unter ihrem Plan-Ausschnitt. Jeder
+Eintrag zeigt oben Farbfeld, Bezeichnung und Mülleimer (Fläche löschen),
+darunter die Fläche in m² mit dem Bleistift-Symbol (Fläche überschreiben, siehe
+8.3) und rechts die Deckkraft der Einfärbung im Plan (Klick wechselt
+0/25/50/75/100 %). Bei einer überschriebenen Fläche steht vor der Zahl ein „≈&quot;,
+in einer weiteren Zeile folgt der gemessene Wert „(gem. …)&quot;. Ein Klick auf das
+Farbfeld ändert die Farbe, ein Klick auf den übrigen Eintrag wählt die Fläche
+aus. Eine lange Bezeichnung wird gekürzt, der Tooltip zeigt sie ganz.</p>
 <h3 id="zeichnen-abbrechen">Zeichnen abbrechen</h3>
 <p><code>ESC</code> während des Zeichnens → der letzte gesetzte Punkt fliegt zurück. Mehrfaches
 <code>ESC</code> baut Schritt für Schritt zurück, bis keine offene Kontur mehr existiert.
@@ -1006,7 +1030,9 @@ diese Meldung zeigt — statt den Browser-Tab endlos hängen zu lassen. Abhilfe:
 das Blatt in kleinere Bereiche aufteilen (z. B. je Geschoss/Ansicht ein
 eigenes PDF) und einzeln importieren. Bei sehr großen, aber noch handhabbaren
 Plänen reduziert das Tool außerdem automatisch die Render-Auflösung (Hinweis
-per Toast) — das ist normal und beeinträchtigt die Maßgenauigkeit nicht.</p>
+per Toast) — das ist normal und beeinträchtigt die Maßgenauigkeit nicht.
+Wurde vor Ablauf der 20 Sekunden schon ein anderes Blatt gewählt, entfällt die
+Meldung: das abgebrochene Blatt wird ohnehin nicht mehr angezeigt.</p>
 <h3 id="funktioniert-das-tool-auf-einem-mac">Funktioniert das Tool auf einem Mac?</h3>
 <p>Technisch ja (HTML/JS, Browser-basiert), aber nicht explizit getestet. Auch
 Safari ist nicht im Zielband. Für den behördlichen Einsatz: Firefox auf Windows.</p>

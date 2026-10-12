@@ -304,10 +304,23 @@ body {
   padding: 0 0 0 16px;
   font-size: 12px;
 }
+/* Plan-Ausschnitt in zwei Zeilen: oben Marker, Name und Loeschen, darunter
+   (.rg-werte, unter dem Namen ausgerichtet) Seite und Massstab-Pille. In EINER
+   Zeile blieb dem Namen in der 240 px breiten Sidebar bei realistischen PDF-Namen
+   nur ~54 px (mit Scrollbalken), die Seite am Textende gar keiner.
+   Der Name darf auf zwei Zeilen umbrechen: so bleiben zwei PDFs mit gleichem
+   Namensanfang unterscheidbar. Dateinamen haben oft keine Umbruchstelle
+   (Unterstriche, Bindestrich vor Ziffer), daher overflow-wrap: anywhere. Das bricht
+   aber erst mitten im Wort, wenn die Zeile keine andere Umbruchstelle hat -- darum
+   steht zwischen "N)" und Namen ein geschuetztes Leerzeichen (js/app.js), sonst
+   stuende "N)" allein in Zeile 1. Was auch dann nicht passt, kuerzt die
+   Zeilenbegrenzung mit "…"; der Tooltip am Namen zeigt ihn ganz. */
 .region-item {
-  display: flex;
-  align-items: center;
-  gap: 4px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: start;
+  column-gap: 4px;
+  row-gap: 1px;
   padding: 3px 6px;
   cursor: pointer;
   border-radius: 3px;
@@ -320,7 +333,24 @@ body {
   font-weight: 600;
 }
 .rg-marker { font-size: 11px; opacity: 0.7; }
-.rg-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rg-name {
+  min-width: 0;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+.rg-werte {
+  grid-column: 2 / 4;
+  display: flex;
+  flex-wrap: wrap;   /* Rueckfall: passen Seite und Pille nicht nebeneinander, bricht die Pille um */
+  align-items: center;
+  gap: 1px 6px;
+  min-width: 0;
+}
+.rg-seite { font-size: 11px; white-space: nowrap; }
 
 .rg-kal {
   font-size: 10px;
@@ -354,22 +384,41 @@ body {
 .mass-status.mass-status-pruefen { background: #fef3c7; color: var(--warn); }
 .mass-status.mass-status-fehlt   { background: #fee2e2; color: var(--fehlt); }
 
+/* Einrueckung bewusst knapp: die Punktlinie steht unter dem ▭ des Plan-
+   Ausschnitts. Mit 28 px blieb dem Flaechen-Eintrag in der 240 px breiten
+   Sidebar zu wenig Breite (mit Scrollbalken nur 125 px). */
 .polygon-subliste {
   list-style: none;
-  margin: 2px 0 4px 28px;
+  margin: 2px 0 4px 10px;
   padding: 0 0 0 8px;
   border-left: 1px dotted var(--border);
   font-size: 11px;
 }
+/* Flaechen-Eintrag in zwei Zeilen: oben Farbfeld, Name, Loeschen; darunter
+   .pg-werte (Flaeche, Stift, Deckkraft), "(gem. ...)" in eigener Zeile.
+   .pg-werte ist nicht eingerueckt: mit Scrollbalken passen sonst "≈ 1250,00 m²",
+   Stift und Deckkraft nicht mehr in eine Zeile. Reicht die Breite trotzdem
+   nicht (z. B. "≈ 12500,00 m²"), bricht der Deckkraft-Knopf rechtsbuendig in
+   eine eigene Zeile um: gewollter Rueckfall, nichts wird abgeschnitten. */
 .polygon-item {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 4px;
+  gap: 0 4px;
   padding: 2px 4px;
   cursor: pointer;
   border-radius: 3px;
   color: var(--text);
 }
+.polygon-item + .polygon-item { margin-top: 2px; }
+.pg-werte {
+  flex: 1 0 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 4px;
+}
+.pg-werte .pg-deckkraft { margin-left: auto; }   /* rechtsbuendig; der Stift bleibt an der Zahl */
 .polygon-item:hover { background: #f0f4fa; }
 .polygon-item.aktiv {
   background: #fff7ed;
@@ -388,7 +437,7 @@ body {
 }
 .pg-swatch:hover { transform: scale(1.25); border-color: var(--brand); }
 .pg-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.pg-flaeche { font-family: Consolas, monospace; color: var(--text-muted); font-size: 11px; }
+.pg-flaeche { font-family: Consolas, monospace; color: var(--text-muted); font-size: 11px; white-space: nowrap; }
 .pg-deckkraft {
   background: #eef2f9;
   border: 1px solid var(--border);
@@ -1541,7 +1590,9 @@ kbd {
   color: var(--text-muted);
   font-size: 11px;
   font-style: italic;
-  margin-left: 4px;
+  white-space: nowrap;
+  order: 1;              /* eigene Zeile unter der Flaeche (nicht fokussierbar, Tab-Folge bleibt) */
+  flex-basis: 100%;
 }
 .polygon-item .pg-edit-flaeche {
   background: transparent;
