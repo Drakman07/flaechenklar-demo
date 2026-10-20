@@ -81,14 +81,14 @@ body {
 <header class="hb-head">
   <div>
     <h1>FlächenKlar — Benutzerhandbuch</h1>
-    <div class="hb-meta">Version 1.5.4 · Stand 2026-10-15</div>
+    <div class="hb-meta">Version 1.5.5 · Stand 2026-10-20</div>
   </div>
   <button type="button" class="hb-print-btn" onclick="window.print()">Drucken</button>
 </header>
 <main class="hb-main">
 <h1 id="benutzerhandbuch-flächenklar">Benutzerhandbuch — FlächenKlar</h1>
-<p><strong>Version:</strong> 1.5.4
-<strong>Stand:</strong> 2026-10-15</p>
+<p><strong>Version:</strong> 1.5.5
+<strong>Stand:</strong> 2026-10-20</p>
 <hr>
 <h2 id="inhalt">Inhalt</h2>
 <ol>
@@ -498,6 +498,39 @@ durchgeführter Vollgeschoss-Beurteilung <strong>nicht</strong> — die VG-Rechn
 mit den Flächen A&lt;2,30/A&gt;2,30 bereits eigene Abzugsgrößen mit, ein
 zweiter Abzug wäre Doppelerfassung. Die Posten bleiben sichtbar, werden aber
 als „nicht angesetzt&quot; ausgewiesen.</p>
+<h3 id="8-5-bestand-abgerechnet-ersatzneubau">8.5 Bestand abgerechnet (Ersatzneubau)</h3>
+<p>Wird ein Gebäude abgebrochen und durch einen kleineren Neubau ersetzt, kann die
+für den Altbestand bereits abgerechnete Fläche größer sein als die neu
+ermittelte Gesamtfläche. Damit das Aufmaßblatt diesen Unterschied zeigt,
+tragen Sie die bereits abgerechnete Fläche ein:</p>
+<ol>
+<li>In der Sidebar steht unter der Geschossliste der Block <strong>„Gesamtfläche&quot;</strong>
+(sichtbar ab dem ersten Geschoss). Er zeigt die Summe aller Geschosse, also
+dieselbe Zahl wie der Balken „GESAMTFLÄCHE&quot; im Aufmaßprotokoll.</li>
+<li>Bei <strong>„Bestand abgerechnet&quot;</strong> auf <strong>„+ Bestand&quot;</strong> klicken. Im Formular die
+bereits abgerechnete Fläche in m² eintragen (Komma oder Punkt) und, wenn
+Sie möchten, einen Nachweis, z. B. „Bescheid Az. 123 vom 12.03.2009&quot;.
+Bearbeiten geht mit dem Stift-Symbol, Entfernen mit dem Papierkorb (mit
+Rückfrage).</li>
+<li>Darunter steht der <strong>Saldo</strong>: Gesamtfläche minus Bestand. Ist er negativ,
+ist der Neubau kleiner als die abgerechnete Fläche, und der Block sagt das.
+Das Tool rechnet den Saldo bewusst nicht auf 0 hoch.</li>
+</ol>
+<p>Der Bestand gilt für das ganze Projekt, nicht für ein einzelnes Geschoss. Er ist
+kein Abzug nach Abschnitt 8.4 und mindert keine Geschossfläche. Das Tool zeigt
+nur die Differenz der beiden Flächen; ob und in welcher Höhe sich daraus ein
+Guthaben ergibt, beurteilt die Gemeinde nach ihrer Satzung.</p>
+<p>Im Aufmaßprotokoll stehen unter dem Balken „GESAMTFLÄCHE&quot; zwei weitere Zeilen:
+„abzüglich bereits abgerechnet (Bestand)&quot; (mit dem Nachweis) und „SALDO&quot;. Der
+CSV-Export enthält die Zeilen „Bestand abgerechnet [m²]&quot; und „Saldo [m²]&quot;, der
+JSON-Export die Felder <code>summe.bestand_abgerechnet_qm</code>, <code>summe.saldo_qm</code> und
+<code>summe.saldo_negativ</code>. Die RIWA-Ausgabe bleibt unverändert.</p>
+<p>Wählen Sie beim Export „anteilig&quot; (Abschnitt 9), rechnet der Saldo mit der
+anteiligen Gesamtfläche, wie sie im Balken steht. Die Sidebar zeigt bis zu
+dieser Wahl die volle Anrechnung und vermerkt das. Ohne Eintrag eines
+Bestands bleiben Aufmaßprotokoll und CSV-Export unverändert; die Sidebar zeigt
+nur den Block „Gesamtfläche&quot; mit dem Knopf „+ Bestand&quot;, und der JSON-Export
+enthält die Bestandsfelder leer (<code>null</code>, <code>false</code>).</p>
 <hr>
 <h2 id="9-vollgeschoss-beurteilung">9. Vollgeschoss-Beurteilung</h2>
 <p><strong>Wann anwenden:</strong> Üblicherweise nur für das oberste Geschoss (meist DG), bei
@@ -690,6 +723,10 @@ Seitenzahl in der Fußzeile zählt die zusätzlichen Seiten mit.</p>
 <p>Die Abzugsposten eines Geschosses stehen im Aufmaßblatt einzeln unter seiner
 Zeile, höchstens sechs. Weitere fasst eine Zeile „u. a. … weitere Abzüge“
 mit ihrer Summe zusammen; die Einzelposten stehen im Datenexport.</p>
+<p>Ist ein Bestand abgerechnet erfasst (Abschnitt 8.5), folgen unter dem
+Gesamtbalken die Zeilen „abzüglich bereits abgerechnet (Bestand)&quot; und „SALDO&quot;,
+bei negativem Saldo mit einem Hinweis. Balken und Bestandszeilen stehen immer
+auf derselben Seite.</p>
 <p>Auch das VG-Beurteilungsblatt kann über mehr als eine Seite gehen: Ein langer
 Kommentar oder viele Hinweise laufen auf der nächsten Seite weiter, unter der
 Überschrift mit „(Fortsetzung)“. Passt der Methodik-Hinweis nicht mehr frei

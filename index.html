@@ -12,7 +12,7 @@
 <link rel="icon" type="image/svg+xml" href="assets/flaechenklar_icon.svg">
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/ux-lotse.css">
-  <meta name="fk-demo-version" content="1.5.4">
+  <meta name="fk-demo-version" content="1.5.5">
 <meta name="robots" content="noindex, nofollow">
 <style id="demo-styles">
   .demo-banner-inner{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
@@ -147,6 +147,10 @@
       <ul class="geschoss-liste" id="geschossListe">
         <li class="sb-empty">— noch keine Geschosse —</li>
       </ul>
+      <!-- Gesamtbilanz: Gesamtflaeche wie im Aufmassprotokoll, darunter Bestand
+           abgerechnet (Ersatzneubau) und Saldo. Gerendert von
+           aktualisiereGesamtBilanz() in app.js, erst ab dem ersten Geschoss sichtbar. -->
+      <div class="gb" id="gesamtBilanz" hidden></div>
     </section>
 
   </aside>
