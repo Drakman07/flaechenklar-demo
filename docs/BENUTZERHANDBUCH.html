@@ -81,14 +81,14 @@ body {
 <header class="hb-head">
   <div>
     <h1>FlächenKlar — Benutzerhandbuch</h1>
-    <div class="hb-meta">Version 1.5.5 · Stand 2026-10-20</div>
+    <div class="hb-meta">Version 1.5.6 · Stand 2026-10-21</div>
   </div>
   <button type="button" class="hb-print-btn" onclick="window.print()">Drucken</button>
 </header>
 <main class="hb-main">
 <h1 id="benutzerhandbuch-flächenklar">Benutzerhandbuch — FlächenKlar</h1>
-<p><strong>Version:</strong> 1.5.5
-<strong>Stand:</strong> 2026-10-20</p>
+<p><strong>Version:</strong> 1.5.6
+<strong>Stand:</strong> 2026-10-21</p>
 <hr>
 <h2 id="inhalt">Inhalt</h2>
 <ol>
@@ -911,6 +911,24 @@ Beitragsberechnung eine nachvollziehbare Herleitung: Fläche gesamt (neu
 ermittelt) minus bereits veranlagte Fläche = beitragspflichtige Mehrfläche —
 damit für den Empfänger erkennbar bleibt, warum der Betrag niedriger ausfällt
 als bei einer Vollveranlagung.</p>
+<p><strong>Rundung der Flächen im Bescheid.</strong> Das Aufmaß speichert Flächen mit drei
+Nachkommastellen (z. B. 185,695 m²), der Bescheid druckt sie mit zwei. Der
+Betrag wird aus der <strong>gedruckten</strong> Fläche gerechnet (185,70 m² × 19,30 EUR/m²
+= 3.584,01 EUR), damit sich jede Zahl im Bescheid aus den danebenstehenden
+Faktoren nachrechnen lässt. Die Mehrfläche bei Nacherhebung ist die Differenz
+der beiden gedruckten Flächen.</p>
+<p>Beitragssätze druckt der Bescheid nicht auf zwei Stellen gerundet, sondern mit
+bis zu vier Nachkommastellen (z. B. 19,305 EUR/m²), damit auch hier Fläche ×
+Satz = Betrag aufgeht. Einen Satz mit mehr als vier Nachkommastellen lehnt die
+Prüfung vor dem Export ab. Die Masken für Stammdaten und Bescheid zeigen die
+Sätze ebenfalls mit allen Stellen und runden sie beim Speichern nicht mehr auf
+zwei Stellen.</p>
+<p>Wurde für ein Projekt schon ein Beitragsbescheid mit einer Programmversion vor
+1.5.6 erstellt, erscheint in der Bescheidmaske über dem Export ein Hinweis: Ein
+erneut erzeugter Bescheid kann wegen der Rundung um wenige Cent abweichen. Der
+Hinweis verschwindet, sobald im Projekt ein Bescheid mit Version 1.5.6 oder
+neuer erstellt wurde (Eintrag „Beitragsbescheid erstellt … Flächen gerundet
+(ab 1.5.6)“ in der Projekthistorie).</p>
 <p><strong>Bescheid ohne Aufmaß (reine Grundstücksmehrung).</strong> Für eine Nacherhebung,
 bei der sich <strong>nur</strong> die Grundstücksfläche geändert hat (z. B. ein Zukauf)
 und die Geschossfläche <strong>unverändert</strong> bleibt, gibt es konzeptionell keinen
@@ -1119,7 +1137,9 @@ anderes — üblicherweise der Bürgermeister —, lässt sich das im Stammdaten
 <strong>„Unterschrift (Beitragsbescheid)&quot;</strong> hinterlegen:</p>
 <ul>
 <li><strong>Name des Unterzeichners</strong> — steht dann statt des Sachbearbeiters über dem Strich.
-Der Sachbearbeiter bleibt in jedem Fall Ansprechpartner im Briefkopf.</li>
+Der Sachbearbeiter bleibt in jedem Fall Ansprechpartner; sein Block („Ihr
+Ansprechpartner&quot; mit Name, Telefon, E-Mail) steht rechts neben dem
+Anschriftenfeld.</li>
 <li><strong>Amtsbezeichnung</strong> — z. B. „Erster Bürgermeister&quot;, „Kämmerer&quot;. Wichtig: Trägt ein
 abweichender Unterzeichner <strong>keine</strong> Amtsbezeichnung, bleibt die Zeile leer statt
 auf „Sachbearbeiter/in&quot; zurückzufallen — unter einem fremden Namen wäre das eine
